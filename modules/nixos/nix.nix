@@ -10,9 +10,19 @@ with lib; {
   config = mkMerge [
     {
       nixpkgs.config.allowUnfree = true;
+      nixpkgs.overlays = [
+        (self: super: {
+          nixos-rebuild = super.nixos-rebuild.override {
+              nix = super.nix-monitored;
+          };
+          nix-direnv = super.nix-direnv.override {
+              nix = super.nix-monitored;
+          };
+        })
+      ];
 
       nix = {
-        package = pkgs.lix;
+        package = pkgs.nix-monitored;
         extraOptions = ''
           experimental-features = nix-command flakes
         '';

@@ -5,14 +5,20 @@
 # This includes the shell config scripts (i.e. `.zshrc` and friends), and
 # prompt configuration for Starship.
 #
-{ config, lib, ... }: with lib; {
+{
+  config,
+  lib,
+  ...
+}:
+with lib; {
   imports = [
     ./zsh.nix
     ./starship.nix
   ];
 
   config = mkMerge [
-    { }
+    {
+    }
     (mkIf config.programs.nushell.enable {
       programs.nushell.configFile.text = ''
         let $config = {

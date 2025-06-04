@@ -1,6 +1,8 @@
-{ pkgs, lib, ... }:
-
 {
+  pkgs,
+  lib,
+  ...
+}: {
   imports = [
     ./nix.nix
     ./hardware/ergodox.nix
@@ -25,26 +27,26 @@
   ];
 
   # Set your time zone.
-  time.timeZone = "America/Los_Angeles";
+  time.timeZone = "America/Toronto";
 
   # Select internationalisation properties.
-  console = { keyMap = "us"; };
-  i18n =
-    let locale = "en_US.UTF-8";
-    in {
-      defaultLocale = locale;
-      extraLocaleSettings = {
-        LC_ADDRESS = locale;
-        LC_IDENTIFICATION = locale;
-        LC_MEASUREMENT = locale;
-        LC_MONETARY = locale;
-        LC_NAME = locale;
-        LC_NUMERIC = locale;
-        LC_PAPER = locale;
-        LC_TELEPHONE = locale;
-        LC_TIME = locale;
-      };
+  console = {keyMap = "us";};
+  i18n = let
+    locale = "en_CA.UTF-8";
+  in {
+    defaultLocale = locale;
+    extraLocaleSettings = {
+      LC_ADDRESS = locale;
+      LC_IDENTIFICATION = locale;
+      LC_MEASUREMENT = locale;
+      LC_MONETARY = locale;
+      LC_NAME = locale;
+      LC_NUMERIC = locale;
+      LC_PAPER = locale;
+      LC_TELEPHONE = locale;
+      LC_TIME = locale;
     };
+  };
 
   #### Programs & Packages ####
 
@@ -53,7 +55,7 @@
   environment = {
     systemPackages = with pkgs; [
       wget
-      vim
+      helix
       ddate
       testdisk
       git
@@ -71,7 +73,7 @@
     # "Don't forget to add `environment.pathsToLink = [ "/share/zsh" ];` to your
     # system configuration to get completion for system packages (e.g. systemd)."
     #  --- https://nix-community.github.io/home-manager/options.html#opt-programs.zsh.enableCompletion
-    pathsToLink = [ "/share/zsh" ];
+    pathsToLink = ["/share/zsh"];
   };
 
   programs = {
@@ -79,6 +81,7 @@
     # started in user sessions.
     mtr.enable = true;
     zsh.enable = true;
+    fish.enable = true;
   };
 
   profiles = {
@@ -150,6 +153,5 @@
     };
     # allow using SSH keys to authenticate when on a remote connection.
     pam.sshAgentAuth.enable = lib.mkDefault true;
-
   };
 }

@@ -66,4 +66,7 @@ in
     # fontconfig binary
     fontconfig
   ] ++ nerdfonts;
+
+
+
 }

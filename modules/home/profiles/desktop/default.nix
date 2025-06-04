@@ -1,31 +1,31 @@
 # Profile for desktop machines (i.e. not servers).
-{ config, lib, pkgs, ... }:
-let cfg = config.profiles.desktop;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
+  cfg = config.profiles.desktop;
 in {
-  imports = [ ./gnome3.nix ./kde.nix ];
+  imports = [./gnome3.nix ./kde.nix ./niri.nix];
 
   options.profiles.desktop = with lib; {
     enable = mkEnableOption "Profile for desktop machines (i.e. not servers)";
   };
 
   config = lib.mkIf cfg.enable {
-
-    home.packages = with pkgs;
-      let
-        unfreePkgs = [
-          slack
-          discord
-          signal-desktop-bin
-          zoom-us
-          keybase
-          keybase-gui
-          spotify
-          tdesktop
-          obsidian
-        ];
-      in
-      ([
-
+    home.packages = with pkgs; let
+      unfreePkgs = [
+        slack
+        (vesktop.override {withSystemVencord = false;})
+        signal-desktop-bin
+        zoom-us
+        spotify
+        tdesktop
+        obsidian
+        beeper-beta
+      ];
+    in ([
         ### images, media, etc ###
         kdePackages.ark
         darktable
@@ -49,7 +49,8 @@ in {
         ### chat clients & stuff
         element-desktop
         mumble
-      ] ++ unfreePkgs);
+      ]
+      ++ unfreePkgs);
     #############################################################################
     ## Programs                                                                 #
     #############################################################################
@@ -60,7 +61,7 @@ in {
       keychain = {
         enable = true;
         enableXsessionIntegration = true;
-        keys = [ "id_ed25519" ];
+        keys = ["id_ed25519"];
       };
     };
 
@@ -71,5 +72,31 @@ in {
       gpg-agent.enable = true;
     };
 
+    stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";
+    stylix.enable = true;
+    stylix.polarity = "dark";
+    stylix.image = ./abstract-colorful-5k-wallpaper-5120x3200_577747-mm-90.jpg;
+    stylix.targets.firefox.enable = false;
+    stylix.fonts = {
+      serif = {
+        package = pkgs.ibm-plex;
+        name = "IBM Plex";
+      };
+
+      sansSerif = {
+        package = pkgs.ibm-plex;
+        name = "IBM Plex Sans";
+      };
+
+      monospace = {
+        package = pkgs.nerd-fonts.blex-mono;
+        name = "BlexMono Nerd Font";
+      };
+
+      emoji = {
+        package = pkgs.noto-fonts-emoji;
+        name = "Noto Color Emoji";
+      };
+    };
   };
 }

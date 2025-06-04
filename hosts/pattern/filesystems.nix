@@ -2,31 +2,35 @@
 
 {
 
-  boot.supportedFilesystems = [ "zfs" "xfs" "ext4" ];
+  boot.supportedFilesystems = [ "zfs" "xfs" "ext4" "btrfs" ];
 
   fileSystems."/" = {
-    device = "nvme-pool/system/root";
+    device = "ssd-pool/system/root";
     fsType = "zfs";
+    options = [ "zfsutil" ];
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-id/nvme-Sabrent_17A807051DBE02076339-part1";
+    device = "/dev/disk/by-id/nvme-CT2000P3PSSD8_2504E9A23FD6_1-part2";
     fsType = "vfat";
   };
 
   fileSystems."/nix" = {
-    device = "nvme-pool/local/nix";
+    device = "ssd-pool/local/nix";
     fsType = "zfs";
+    options = [ "zfsutil" ];
   };
 
   fileSystems."/home/orual" = {
-    device = "nvme-pool/home/orual";
+    device = "ssd-pool/home/orual";
     fsType = "zfs";
+    options = [ "zfsutil" ];
   };
 
   fileSystems."/root" = {
-    device = "nvme-pool/home/root";
+    device = "ssd-pool/home/root";
     fsType = "zfs";
+    options = [ "zfsutil" ];
   };
 
   # zvols formatted with other filesystems to run software that doesn't like
@@ -35,20 +39,20 @@
   # 1. xfs zvol for docker, because k3d volume mounts don't behave nicely on a
   #    zfs volume
   fileSystems."/var/lib/docker" = {
-    device = "/dev/zvol/nvme-pool/system/docker";
+    device = "/dev/zvol/ssd-pool/system/docker";
     fsType = "xfs";
   };
   # 2. ext4 zvol for atuin; see: https://github.com/atuinsh/atuin/issues/952
   fileSystems."/home/orual/.local/share/atuin" =
     {
-      device = "/dev/zvol/nvme-pool/home/atuin";
+      device = "/dev/zvol/ssd-pool/home/atuin";
       fsType = "ext4";
     };
 
-  # swapDevices = [
-  #   {
-  #     device = "/dev/disk/by-id/nvme-ADATA_SX8100NP_2J4620041364-part2";
-  #     randomEncryption.enable = true;
-  #   }
-  # ];
+  swapDevices = [
+    {
+      device = "/dev/disk/by-id/nvme-CT2000P3PSSD8_2504E9A23FD6_1-part1";
+      randomEncryption.enable = true;
+    }
+  ];
 }

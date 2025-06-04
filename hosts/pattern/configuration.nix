@@ -1,31 +1,37 @@
-{ config, pkgs, lib, ... }:
-
 {
-
-  imports = [ ./hardware-configuration.nix ./filesystems.nix ];
+  config,
+  pkgs,
+  lib,
+  ...
+}: {
+  imports = [./hardware-configuration.nix ./filesystems.nix];
 
   system.stateVersion = "24.11";
 
-  profiles = let rootDomain = "nonbinary.computer"; in {
+  profiles = let
+    rootDomain = "nonbinary.computer";
+  in {
     docs.enable = true;
     games.enable = true;
     desktop = {
       gnome3.enable = true;
+      niri.enable = true;
     };
-    observability = {
-      enable = true;
-      observer = {
-        enable = true;
-        enableUnifi = true;
-        inherit rootDomain;
-      };
-      snmp.enable = true;
-    };
-    nginx = {
-      enable = true;
-      domain = rootDomain;
-      acmeSubdomain = "home";
-    };
+    # observability = {
+    #   enable = true;
+    #   observer = {
+    #     enable = true;
+    #     enableUnifi = true;
+    #     inherit rootDomain;
+    #   };
+    #   snmp.enable = true;
+    # };
+    ### Turn this back on when I get the DNS stuff set up right
+    # nginx = {
+    #   enable = true;
+    #   domain = rootDomain;
+    #   acmeSubdomain = "home";
+    # };
     # enable the correct perf tools for this kernel version
     perftools.enable = true;
     zfs.enable = true;
@@ -39,6 +45,8 @@
       cmsis-dap.enable = true;
       espressif.enable = true;
       st-link.enable = true;
+      cynthion.enable = true;
+      glasgow.enable = true;
     };
   };
 
@@ -54,7 +62,10 @@
       };
       efi.canTouchEfiVariables = true;
     };
-
+    # Fixes some issues with the Focusrite Scarlett 8i6
+    extraModprobeConfig = ''
+      options snd_usb_audio vid=0x1235 pid=0x8212 device_setup=1
+    '';
     # Use this to track the latest Linux kernel that has ZFS support.
     # This is generally not as necessary while using `zfsUnstable = true`.
     # kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
@@ -69,15 +80,15 @@
     #
     # TO REMOTELY UNLOCK ZPOOL:
     #
-    # ssh root@10.0.10.42 -p 22
+    # ssh root@10.1.2.58 -p 22
     # zfs load-key -a
     # <enter password>
     #
     # kernel modules for network adapters
-    kernelModules = [ "e1000e" "alx" "r8169" "igb" "cdc_ether" "r8152" ];
+    kernelModules = ["e1000e" "alx" "r8169" "igb" "cdc_ether" "r8152"];
     # TODO(orual): this could be a static IP so that we don't depend on DHCP
     # working to boot...
-    kernelParams = [ "ip=dhcp" ];
+    kernelParams = ["ip=dhcp"];
 
     # additional kernel modules
     initrd.availableKernelModules = [
@@ -86,10 +97,10 @@
       # enable initrd kernel modules for network adapters.
       #
       # these can be found using `sudo lspci -v -nn -d '::0200'` to find Ethernet
-      # controllers and `sudo lscpi -v -nn -d '::0280'` to find wireless
+      # controllers and `sudo lspci -v -nn -d '::0280'` to find wireless
       # controllers, and then looking for the "Kernel driver in use" line.
-      "igb" # Intel GigaBit Ethernet
-      "iwlwifi" # Intel WiFi
+      "r8169" # Realtek 2.5G Ethernet
+      "rtw89_8852be" # Realtek Wifi
       # other network adapters. these aren't currently present on my system, but
       # let's enable them anyway in case it grows additional hardware
       # later.abort
@@ -112,7 +123,6 @@
         ];
       };
     };
-
   };
 
   #### System configuration ####
@@ -126,22 +136,17 @@
     # Per-interface useDHCP will be mandatory in the future, so this generated config
     # replicates the default behaviour.
     useDHCP = false;
-    interfaces =
-      let
-        wakeOnLan = {
-          enable = true;
-          policy = [ "unicast" "magic" ];
-        };
-        # disable dhcpd and use networkmanager instead.
-        useDHCP = true;
-      in
-      {
-        enp5s0 = { inherit wakeOnLan useDHCP; };
-        enp7s0 = { inherit wakeOnLan useDHCP; };
-        enp8s0f1u1u1u2 = { inherit wakeOnLan useDHCP; };
-        wlp4s0 = { inherit useDHCP; };
-        wlp7s0 = { inherit useDHCP; };
+    interfaces = let
+      wakeOnLan = {
+        enable = true;
+        policy = ["unicast" "magic"];
       };
+      # disable dhcpd and use networkmanager instead.
+      useDHCP = true;
+    in {
+      eno1 = {inherit wakeOnLan useDHCP;};
+      wlp12s0 = {inherit useDHCP;};
+    };
   };
 
   # This is a deskop machine. Use the high-performance frequency profile rather
@@ -149,7 +154,7 @@
   powerManagement.cpuFreqGovernor = "performance";
 
   # high-DPI console font
-  console.font = "${pkgs.terminus_font}/share/consolefonts/ter-u28n.psf.gz";
+  #console.font = "${pkgs.terminus_font}/share/consolefonts/ter-u28n.psf.gz";
 
   # i have 24 cores
   nix.settings.max-jobs = 24;
@@ -189,7 +194,7 @@
 
   users.motd = ''
     ┌┬────────────────┐
-    ││ orual NETWORKS │
+    ││ ORUAL NETWORKS │
     └┴────────────────┘
     ${config.networking.hostName}: workstation
   '';
