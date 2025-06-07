@@ -22,7 +22,7 @@ in {
       };
       sizePt = mkOption {
         type = int;
-        default = 13;
+        default = 12;
         example = 12;
         description = "The font size in points to use in the terminal.";
       };
@@ -30,13 +30,13 @@ in {
     padding = {
       x = mkOption {
         type = int;
-        default = 30;
+        default = 15;
         example = 30;
         description = "Terminal window x-padding, in pixels (if supported)";
       };
       y = mkOption {
         type = int;
-        default = 30;
+        default = 15;
         example = 30;
         description = "Terminal window y-padding, in pixels (if supported)";
       };
@@ -226,9 +226,15 @@ in {
     (mkIf config.programs.ghostty.enable
       {
         programs.ghostty = {
+          enableBashIntegration = true;
+          enableFishIntegration = true;
+          enableZshIntegration = true;
           settings = {
             font-family = cfg.font.family;
             font-size = cfg.font.sizePt;
+            window-padding-x = cfg.padding.x;
+            window-padding-y = cfg.padding.y;
+            window-padding-color = "extend";
           };
         };
       })

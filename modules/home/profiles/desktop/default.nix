@@ -37,18 +37,13 @@ in {
         gimp
         syncplay
         vlc
-        plex-media-player
+        plex-desktop
         ghostscriptX
         losslesscut-bin
 
         ### stuff ###
-        pywal
         chromium
         torrential
-
-        ### chat clients & stuff
-        element-desktop
-        mumble
       ]
       ++ unfreePkgs);
     #############################################################################

@@ -165,7 +165,7 @@
     gnome-terminal.enable = true;
     openrgb.enable = true;
 
-    xfel.enable = true;
+    #xfel.enable = true;
   };
 
   #### Services ####
@@ -189,8 +189,8 @@
 
   # disable the Gnome keyring, since we are using 1password to manage secrets
   # instead.
-  services.gnome.gnome-keyring.enable = lib.mkForce false;
-  security.pam.services.login.enableGnomeKeyring = lib.mkForce false;
+  # services.gnome.gnome-keyring.enable = lib.mkForce false;
+  # security.pam.services.login.enableGnomeKeyring = lib.mkForce false;
 
   users.motd = ''
     ┌┬────────────────┐

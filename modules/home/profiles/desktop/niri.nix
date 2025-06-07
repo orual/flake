@@ -45,9 +45,17 @@ in
 
     config = mkIf cfg.enable {
       programs.niri.package = pkgs.niri-unstable;
+      gtk = {
+        enable = true;
+        iconTheme = {
+          name = "Papirus"; # or whatever you want
+          package = pkgs.papirus-icon-theme;
+        };
+      };
       programs.niri.settings = {
         environment."NIXOS_OZONE_WL" = "1";
         environment."DISPLAY" = ":0";
+        environment."GTK_THEME" = "Papirus:dark";
         input.keyboard.xkb.options = "compose:rwin";
         prefer-no-csd = true;
 
@@ -59,7 +67,10 @@ in
           gaps = 12;
           struts.left = 64;
           struts.right = 64;
-          border.width = 2;
+          border = {
+            enable = true;
+            width = 1;
+          };
           always-center-single-column = true;
 
           empty-workspace-above-first = true;
@@ -98,6 +109,7 @@ in
 
             # active.color = "red";
           };
+          #background-color = "#10031433";
         };
         #hotkey-overlay.skip-at-startup = !nixosConfig.is-virtual-machine;
         #clipboard.disable-primary = true;
@@ -246,7 +258,7 @@ in
               "${only-on-session}"
               "${pkgs.gammastep}"
               "-l"
-              "59:11" # lol, doxxed
+              "43:-79" # lol, doxxed
             ];
           }
           {
@@ -310,7 +322,7 @@ in
           }
           {
             matches = [{is-focused = false;}];
-            opacity = 0.95;
+            opacity = 0.97;
           }
           {
             # the terminal is already transparent from stylix
@@ -329,7 +341,7 @@ in
             opacity = 1.0;
             focus-ring = {
               enable = true;
-              width = 2;
+              width = 4;
               active.color = "#f38ba8";
               inactive.color = "#7d0d2d";
             };

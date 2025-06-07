@@ -71,7 +71,7 @@ in {
     ### hardware ###
     hardware = {
       bluetooth.enable = lib.mkDefault true;
-      ergodox.enable = lib.mkDefault true;
+      keyboard.qmk.enable = lib.mkDefault true;
     };
 
     ### programs ###
@@ -85,6 +85,16 @@ in {
 
       firefox.enable = true;
     };
+
+    security.pam.services = {
+      login.u2fAuth = true;
+      sudo.u2fAuth = true;
+    };
+
+    environment.systemPackages = with pkgs; [
+      yubikey-agent
+      yubikey-manager
+    ];
 
     stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";
     stylix.enable = true;
@@ -111,5 +121,10 @@ in {
         name = "Noto Color Emoji";
       };
     };
+    # stylix.cursor = {
+    #   package = pkgs.quintom-cursor-theme;
+    #   name = "Quintom_Snow";
+    #   size = 24;
+    # };
   };
 }

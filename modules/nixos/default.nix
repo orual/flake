@@ -68,6 +68,8 @@
       home-manager
       lm_sensors
       smartmontools
+      virt-manager
+      virtio-win
     ];
 
     # "Don't forget to add `environment.pathsToLink = [ "/share/zsh" ];` to your
@@ -122,6 +124,10 @@
   };
   virtualisation.oci-containers = {
     backend = "docker";
+  };
+  virtualisation.libvirtd = {
+    enable = true;
+    qemu.ovmf.enable = true;
   };
 
   #### users ####

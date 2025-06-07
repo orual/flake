@@ -13,17 +13,22 @@
     battery.vertical = ["󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹"];
     battery.levels = battery.vertical;
     network.disconnected = "󰤮 ";
-    network.ethernet = "󰈀 ";
-    network.strength = ["󰤟 " "󰤢 " "󰤥 " "󰤨 "];
+    network.ethernet = " 󰈀 ";
+    network.strength = [" 󰤟 " " 󰤢 " " 󰤥 " " 󰤨 "];
     bluetooth.on = "󰂯";
     bluetooth.off = "󰂲";
     bluetooth.battery = "󰥉";
-    volume.source = "󱄠";
+    volume.source = "󱄠 ";
     volume.muted = "󰝟";
     volume.levels = ["󰕿" "󰖀" "󰕾"];
-    idle.on = "󰈈 ";
-    idle.off = "󰈉 ";
+    idle.on = " 󰈈 ";
+    idle.off = " 󰈉 ";
     vpn = "󰌆 ";
+    spotify = "󰓇 ";
+    youtube = " ";
+    play = "󰐊 ";
+    pause = "󰏤 ";
+    play-pause = "󰐎 ";
 
     notification.red_badge = "<span foreground='red'><sup></sup></span>";
     notification.bell = "󰂚";
@@ -31,12 +36,54 @@
     notification.bell-outline = "󰂜";
     notification.bell-outline-badge = "󰅸";
   };
+  spotifyWidget = pkgs.writeShellScript "spotify-waybar" ''
+    #!${pkgs.bash}/bin/bash
+
+    if ! ${pkgs.procps}/bin/pgrep -x spotify > /dev/null; then
+      echo '{"text": "", "class": "stopped"}'
+      exit 0
+    fi
+
+    status=$(${pkgs.dbus}/bin/dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify \
+      /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get \
+      string:"org.mpris.MediaPlayer2.Player" string:"PlaybackStatus" 2>/dev/null \
+      | ${pkgs.gnugrep}/bin/grep -o '"[^"]*"' | ${pkgs.coreutils}/bin/tail -1 | ${pkgs.coreutils}/bin/tr -d '"')
+
+    if [ -z "$status" ] || [ "$status" = "Stopped" ]; then
+      echo '{"text": "", "class": "stopped"}'
+      exit 0
+    fi
+
+    metadata=$(${pkgs.dbus}/bin/dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify \
+      /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get \
+      string:"org.mpris.MediaPlayer2.Player" string:"Metadata" 2>/dev/null)
+
+    title=$(echo "$metadata" | ${pkgs.gnused}/bin/sed -n '/xesam:title/{n;n;p}' | ${pkgs.coreutils}/bin/cut -d '"' -f 2 | ${pkgs.coreutils}/bin/cut -c1-25)
+    artist=$(echo "$metadata" | ${pkgs.gnused}/bin/sed -n '/xesam:artist/{n;n;n;p}' | ${pkgs.coreutils}/bin/cut -d '"' -f 2 | ${pkgs.coreutils}/bin/cut -c1-20)
+
+    if [ "$status" = "Playing" ]; then
+      icon=${icons.play}
+      class="playing"
+    else
+      icon=${icons.pause}
+      class="paused"
+    fi
+
+    # simple json output, no fancy escaping needed
+    ${pkgs.jq}/bin/jq -n \
+      --arg text "$icon $artist - $title" \
+      --arg class "$class" \
+      '{text: $text, class: $class}'
+  '';
 in {
   options.profiles.waybar = with lib; {
     enable = mkEnableOption "waybar profile";
   };
 
   config = lib.mkIf cfg.enable {
+    home.packages = [
+      pkgs.playerctl
+    ];
     programs.waybar = {
       enable = true;
       systemd.enable = true;
@@ -44,18 +91,18 @@ in {
     programs.waybar.settings.mainBar = {
       layer = "top";
       #position = "bottom";
-      modules-left = ["wireplumber" "wireplumber#source" "idle_inhibitor"];
+      modules-left = ["wireplumber" "wireplumber#source" "mpris" "idle_inhibitor"];
       modules-center = ["niri/workspaces" "niri/window" "clock#date" "clock"];
       modules-right = ["tray" "network" "bluetooth" "bluetooth#battery" "custom/swaync"];
 
-      battery = {
-        interval = 5;
-        format = "{icon}  {capacity}%";
-        format-charging = "{icon}  {capacity}% ${icons.battery.charging}";
-        format-icons = icons.battery.levels;
-        states.warning = 30;
-        states.critical = 15;
-      };
+      # battery = {
+      #   interval = 5;
+      #   format = "{icon}  {capacity}%";
+      #   format-charging = "{icon}  {capacity}% ${icons.battery.charging}";
+      #   format-icons = icons.battery.levels;
+      #   states.warning = 30;
+      #   states.critical = 15;
+      # };
 
       clock = {
         interval = 1;
@@ -93,7 +140,8 @@ in {
 
       tray = {
         show-passive-items = true;
-        spacing = "40";
+        icon-size = 15;
+        spacing = 10;
       };
 
       wireplumber = {
@@ -108,6 +156,26 @@ in {
         format = "${icons.volume.source} {node_name}";
         tooltip = false;
         on-click = "${pkgs.helvum}";
+      };
+      "custom/spotify" = {
+        exec = "${spotifyWidget}";
+        return-type = "json";
+        interval = 2;
+        on-click = "${pkgs.dbus}/bin/dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause";
+        on-scroll-up = "${pkgs.dbus}/bin/dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next";
+        on-scroll-down = "${pkgs.dbus}/bin/dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous";
+      };
+      mpris = {
+        format = "{player_icon} {artist} - {title}";
+        format-paused = "{status_icon} <i>{artist} - {title}</i>";
+        player-icons.spotify = icons.spotify;
+        player-icons.firefox = icons.youtube;
+        player-icons.default = icons.play;
+        status-icons.playing = icons.play;
+        status-icons.paused = icons.pause;
+        max-length = 40;
+        dynamic-order = true;
+        dynamic-importance-order = ["spotify" "vlc" "mpv"];
       };
 
       # "group/volume" = {
@@ -178,7 +246,7 @@ in {
 
       ${modules lib.id} {
           background: transparent;
-          margin: 3px 7px;
+          margin: 2px 7px;
       }
 
       ${module "*"} {
@@ -236,12 +304,19 @@ in {
       #battery.critical:not(.charging) {
           animation: critical-blink steps(8) 1s infinite alternate;
       }
+      #tray {
+
+        -gtk-icon-effect: dim;
+      }
+
+
 
       @keyframes critical-blink {
           to {
               color: #${colors.red};
           }
       }
+
     '';
   };
 }

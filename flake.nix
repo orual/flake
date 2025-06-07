@@ -1,17 +1,197 @@
 {
-  description = "orual's NixOS and Home-Manager configuration flake";
+  description = "Orual's NixOS and Home-Manager configuration flake, based on Eliza Weisman's";
+
+  ############################################################################
+  #### OUTPUTS ###############################################################
+  outputs = {
+    self,
+    nixpkgs,
+    nixos-hardware,
+    nixos-raspberrypi,
+    home,
+    utils,
+    rust-overlay,
+    deploy-rs,
+    flake-parts,
+    ...
+  } @ inputs: let
+    config = {
+      allowUnfree = true;
+      input-fonts.acceptLicense = true;
+      # needed for Obsidian 1.4.16; this version of Electron is EOL but the nixpkgs
+      # package for Obsidian hasn't been updated to a newer electron yet.
+      #
+      # TODO: remove this once https://github.com/NixOS/nixpkgs/issues/263764
+      # is resolved...
+      permittedInsecurePackages = ["electron-26.3.0"];
+    };
+    overlays = [
+      (import ./pkgs/overlay.nix)
+      rust-overlay.overlays.default
+      # inputs.atuin.overlays.default
+
+      # add alejandra package
+      (_: prev: {alejandra = inputs.alejandra.defaultPackage.${prev.system};})
+      # add ghostty package
+      (_: prev: {ghostty = inputs.ghostty.packages.${prev.system}.ghostty;})
+      # add ECLSSD
+      (_: prev: {eclssd = inputs.eclssd.packages.${prev.system}.eclssd;})
+      # add fw-ectool package
+      # TODO(orual): it would be nice if this was only added for the framework
+      # system config...
+      (_: prev: {fw-ectool = inputs.fw-ectool.packages.${prev.system}.ectool;})
+      # add niri overlay
+      # TODO(orual): similar to the above, would be good to add only for desktop configs
+      inputs.niri.overlays.niri
+      (_: prev: {zed-editor = inputs.zed-editor-flake.packages.${prev.system}.zed-editor-preview;})
+    ];
+
+    lib = import ./lib;
+  in
+    flake-parts.lib.mkFlake {inherit inputs;}
+    {
+      perSystem = {
+        pkgs,
+        system,
+        ...
+      }:
+        with pkgs;
+        with lib; {
+          devShells.default = mkShell {buildInputs = [deploy-rs.packages.${system}.default];};
+        };
+      flake = {
+        ###########
+        ## NixOS ##
+        ###########
+        nixosConfigurations = lib.genNixOSHosts {
+          inherit inputs config overlays self;
+
+          baseModules = [
+            utils.nixosModules.autoGenFromInputs
+            self.nixosModules.default
+            home.nixosModules.home-manager
+            inputs.eclssd.nixosModules.default
+            inputs.disko.nixosModules.disko
+            inputs.stylix.nixosModules.stylix
+            inputs.nix-monitored.nixosModules.default
+            inputs.niri.nixosModules.niri
+            inputs.vscode-server.nixosModules.default
+
+            # inputs.nixos-cosmic.nixosModules.default
+          ];
+        };
+
+        ####################
+        ## NixOS modules ###
+        ####################
+        nixosModules.default = import ./modules/nixos;
+
+        #           ####################
+        #           ## NixOS (images) ##
+        #           ####################
+        #           images =
+        #             let
+        #               mkPiImage = { hostname, imageKind ? "sd-image-rpi3" }:
+        #                 (self.nixosConfigurations.${hostname}.extendModules {
+        #                   modules = [
+        #                     nixos-raspberrypi.nixosModules.${imageKind}
+        #                   ];
+        #                 }).config.system.build.sdImage;
+        #             in
+        #             {
+        #               clavius = mkPiImage { hostname = "clavius"; };
+        #               tycho = mkPiImage { hostname = "tycho"; };
+        #             };
+
+        #####################
+        ## deploy-rs nodes ##
+        #####################
+        deploy.nodes = let
+          mkNode = {
+            hostname,
+            system ? "x86_64-linux",
+            extraOpts ? {},
+          }: {
+            inherit hostname;
+            profiles.system =
+              {
+                sshUser = "orual";
+                path = deploy-rs.lib.${system}.activate.nixos self.nixosConfigurations.${hostname};
+                user = "root";
+              }
+              // extraOpts;
+          };
+        in {
+          #               clavius = mkNode {
+          #                 hostname = "clavius";
+          #                 system = "aarch64-linux";
+          #                 extraOpts = { sshOpts = [ "-t" ]; };
+          #               };
+          #
+          #               tycho = mkNode {
+          #                 hostname = "tycho";
+          #                 system = "aarch64-linux";
+          #                 extraOpts = { sshOpts = [ "-t" ]; };
+          #               };
+
+          pattern = mkNode {hostname = "pattern";};
+
+          archive = {
+            hostname = "archive.sys.home.nonbinary.computer";
+            profiles.system = {
+              sshUser = "orual";
+              path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.archive;
+              user = "root";
+            };
+          };
+        };
+
+        ##################
+        ## Home Manager ##
+        ##################
+        homeConfigurations = lib.genHomeHosts {
+          inherit inputs config overlays;
+
+          user = "orual";
+
+          baseModules = [
+            self.homeModules.default
+            inputs.zed-extensions.homeManagerModules.default
+            inputs.zen-browser.homeModules.beta
+            inputs.niri.homeModules.niri
+            inputs.stylix.homeModules.stylix
+          ];
+        };
+
+        homeModules.default = import ./modules/home;
+
+        ################
+        ## checks ######
+        ################
+        checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
+      };
+
+      systems = ["x86_64-linux" "aarch64-linux"];
+    };
 
   ############################################################################
   #### NIX CONFIG ############################################################
   nixConfig = {
     extra-substituters = [
+      "https://cache.nixos.org"
+      "https://cache.lix.systems"
       "https://nix-community.cachix.org"
       "https://cache.garnix.io"
+      "https://niri.cachix.org"
       # "https://cosmic.cachix.org/"
     ];
     extra-trusted-public-keys = [
+      "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
+      "cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
       "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
+      "niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSl7Z6oezYhGhR+3W2964="
+      "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
       # "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE="
     ];
   };
@@ -135,6 +315,8 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    astal-shell.url = "github:knoopx/ags";
+
     vscode-server = {
       url = "github:nix-community/nixos-vscode-server";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -161,176 +343,4 @@
       inputs.flake-utils.follows = "flake-utils";
     };
   };
-
-  ############################################################################
-  #### OUTPUTS ###############################################################
-  outputs = {
-    self,
-    nixpkgs,
-    nixos-hardware,
-    nixos-raspberrypi,
-    home,
-    utils,
-    rust-overlay,
-    deploy-rs,
-    flake-parts,
-    ...
-  } @ inputs: let
-    config = {
-      allowUnfree = true;
-      input-fonts.acceptLicense = true;
-      # needed for Obsidian 1.4.16; this version of Electron is EOL but the nixpkgs
-      # package for Obsidian hasn't been updated to a newer electron yet.
-      #
-      # TODO: remove this once https://github.com/NixOS/nixpkgs/issues/263764
-      # is resolved...
-      permittedInsecurePackages = ["electron-26.3.0"];
-    };
-    overlays = [
-      (import ./pkgs/overlay.nix)
-      rust-overlay.overlays.default
-      # inputs.atuin.overlays.default
-
-      # add alejandra package
-      (_: prev: {alejandra = inputs.alejandra.defaultPackage.${prev.system};})
-      # add ghostty package
-      (_: prev: {ghostty = inputs.ghostty.packages.${prev.system}.ghostty;})
-      # add ECLSSD
-      (_: prev: {eclssd = inputs.eclssd.packages.${prev.system}.eclssd;})
-      # add fw-ectool package
-      # TODO(orual): it would be nice if this was only added for the framework
-      # system config...
-      (_: prev: {fw-ectool = inputs.fw-ectool.packages.${prev.system}.ectool;})
-      # add niri overlay
-      # TODO(orual): similar to the above, would be good to add only for desktop configs
-      inputs.niri.overlays.niri
-      (_: prev: {zed-editor = inputs.zed-editor-flake.packages.${prev.system}.zed-editor-preview;})
-    ];
-
-    lib = import ./lib;
-  in
-    flake-parts.lib.mkFlake {inherit inputs;}
-    {
-      perSystem = {
-        pkgs,
-        system,
-        ...
-      }:
-        with pkgs;
-        with lib; {
-          devShells.default = mkShell {buildInputs = [deploy-rs.packages.${system}.default];};
-        };
-      flake = {
-        ###########
-        ## NixOS ##
-        ###########
-        nixosConfigurations = lib.genNixOSHosts {
-          inherit inputs config overlays self;
-
-          baseModules = [
-            utils.nixosModules.autoGenFromInputs
-            self.nixosModules.default
-            home.nixosModules.home-manager
-            inputs.eclssd.nixosModules.default
-            inputs.disko.nixosModules.disko
-            inputs.stylix.nixosModules.stylix
-            inputs.nix-monitored.nixosModules.default
-            inputs.niri.nixosModules.niri
-            inputs.vscode-server.nixosModules.default
-            # inputs.nixos-cosmic.nixosModules.default
-          ];
-        };
-
-        ####################
-        ## NixOS modules ###
-        ####################
-        nixosModules.default = import ./modules/nixos;
-
-        #           ####################
-        #           ## NixOS (images) ##
-        #           ####################
-        #           images =
-        #             let
-        #               mkPiImage = { hostname, imageKind ? "sd-image-rpi3" }:
-        #                 (self.nixosConfigurations.${hostname}.extendModules {
-        #                   modules = [
-        #                     nixos-raspberrypi.nixosModules.${imageKind}
-        #                   ];
-        #                 }).config.system.build.sdImage;
-        #             in
-        #             {
-        #               clavius = mkPiImage { hostname = "clavius"; };
-        #               tycho = mkPiImage { hostname = "tycho"; };
-        #             };
-
-        #####################
-        ## deploy-rs nodes ##
-        #####################
-        deploy.nodes = let
-          mkNode = {
-            hostname,
-            system ? "x86_64-linux",
-            extraOpts ? {},
-          }: {
-            inherit hostname;
-            profiles.system =
-              {
-                sshUser = "orual";
-                path = deploy-rs.lib.${system}.activate.nixos self.nixosConfigurations.${hostname};
-                user = "root";
-              }
-              // extraOpts;
-          };
-        in {
-          #               clavius = mkNode {
-          #                 hostname = "clavius";
-          #                 system = "aarch64-linux";
-          #                 extraOpts = { sshOpts = [ "-t" ]; };
-          #               };
-          #
-          #               tycho = mkNode {
-          #                 hostname = "tycho";
-          #                 system = "aarch64-linux";
-          #                 extraOpts = { sshOpts = [ "-t" ]; };
-          #               };
-
-          pattern = mkNode {hostname = "pattern";};
-
-          archive = {
-            hostname = "archive.sys.home.nonbinary.computer";
-            profiles.system = {
-              sshUser = "orual";
-              path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.archive;
-              user = "root";
-            };
-          };
-        };
-
-        ##################
-        ## Home Manager ##
-        ##################
-        homeConfigurations = lib.genHomeHosts {
-          inherit inputs config overlays;
-
-          user = "orual";
-
-          baseModules = [
-            self.homeModules.default
-            inputs.zed-extensions.homeManagerModules.default
-            inputs.zen-browser.homeModules.beta
-            inputs.niri.homeModules.niri
-            inputs.stylix.homeModules.stylix
-          ];
-        };
-
-        homeModules.default = import ./modules/home;
-
-        ################
-        ## checks ######
-        ################
-        checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
-      };
-
-      systems = ["x86_64-linux" "aarch64-linux"];
-    };
 }
