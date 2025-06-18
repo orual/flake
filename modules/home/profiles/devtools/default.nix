@@ -91,6 +91,7 @@ in {
         programs = {
           zed-editor = {
             enable = config.profiles.desktop.enable;
+            package = pkgs.zed-prerelease;
           };
           # Nice terminal UI for gdb
           gdb.dashboard = {

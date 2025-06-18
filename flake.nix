@@ -23,7 +23,7 @@
       #
       # TODO: remove this once https://github.com/NixOS/nixpkgs/issues/263764
       # is resolved...
-      permittedInsecurePackages = ["electron-26.3.0"];
+      #permittedInsecurePackages = ["electron-26.3.0"];
     };
     overlays = [
       (import ./pkgs/overlay.nix)

@@ -16,11 +16,11 @@ in
 
       hardware.graphics.enable = true;
       hardware.graphics.enable32Bit = true;
+      hardware.amdgpu.overdrive.enable = true;
 
       #hardware.amdgpu.opencl.enable = true;
       programs.tuxclocker = {
         enable = true;
-        enableAMD = true;
       };
     };
   }

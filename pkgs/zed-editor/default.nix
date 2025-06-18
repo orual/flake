@@ -18,7 +18,7 @@
   testers,
   lib,
 }: let
-  version = "0.188.5";
+  version = "0.191.3-pre";
 
   # Map from Nix system → { url, sha256, type }
   assets = {
@@ -26,10 +26,9 @@
       url =
         "https://github.com/zed-industries/zed/releases/download/"
         + "v${version}/zed-linux-x86_64.tar.gz";
-      sha256 = lib.fakeSha256;
+      sha256 = "sha256-PWiwZztDr/IdryXhwXgB2w2AUdkOPG+8Z6gkgZAE87c=";
       type = "tar.gz";
     };
-
   };
 
   system = stdenv.hostPlatform.system; # or simply `stdenv.system`

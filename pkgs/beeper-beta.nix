@@ -24,7 +24,7 @@ in
       install -m 444 -D ${appimageContents}/usr/share/icons/hicolor/512x512/apps/beepertexts.png \
         $out/share/icons/hicolor/512x512/apps/beepertexts.png
       substituteInPlace $out/share/applications/beeper.desktop \
-        --replace-fail 'Exec=AppRun --no-sandbox %U' 'Exec=${pkgs.cage} -- beeper --no-sandbox'
+        --replace-fail 'Exec=AppRun --no-sandbox %U' 'Exec=beeper --no-sandbox'
     '';
 
     meta = {

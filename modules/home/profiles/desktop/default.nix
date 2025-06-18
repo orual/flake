@@ -21,7 +21,6 @@ in {
         signal-desktop-bin
         zoom-us
         spotify
-        tdesktop
         obsidian
         beeper-beta
       ];
@@ -44,6 +43,8 @@ in {
         ### stuff ###
         chromium
         torrential
+        zulip
+        zulip-term
       ]
       ++ unfreePkgs);
     #############################################################################

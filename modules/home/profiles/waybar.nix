@@ -36,45 +36,6 @@
     notification.bell-outline = "󰂜";
     notification.bell-outline-badge = "󰅸";
   };
-  spotifyWidget = pkgs.writeShellScript "spotify-waybar" ''
-    #!${pkgs.bash}/bin/bash
-
-    if ! ${pkgs.procps}/bin/pgrep -x spotify > /dev/null; then
-      echo '{"text": "", "class": "stopped"}'
-      exit 0
-    fi
-
-    status=$(${pkgs.dbus}/bin/dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify \
-      /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get \
-      string:"org.mpris.MediaPlayer2.Player" string:"PlaybackStatus" 2>/dev/null \
-      | ${pkgs.gnugrep}/bin/grep -o '"[^"]*"' | ${pkgs.coreutils}/bin/tail -1 | ${pkgs.coreutils}/bin/tr -d '"')
-
-    if [ -z "$status" ] || [ "$status" = "Stopped" ]; then
-      echo '{"text": "", "class": "stopped"}'
-      exit 0
-    fi
-
-    metadata=$(${pkgs.dbus}/bin/dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify \
-      /org/mpris/MediaPlayer2 org.freedesktop.DBus.Properties.Get \
-      string:"org.mpris.MediaPlayer2.Player" string:"Metadata" 2>/dev/null)
-
-    title=$(echo "$metadata" | ${pkgs.gnused}/bin/sed -n '/xesam:title/{n;n;p}' | ${pkgs.coreutils}/bin/cut -d '"' -f 2 | ${pkgs.coreutils}/bin/cut -c1-25)
-    artist=$(echo "$metadata" | ${pkgs.gnused}/bin/sed -n '/xesam:artist/{n;n;n;p}' | ${pkgs.coreutils}/bin/cut -d '"' -f 2 | ${pkgs.coreutils}/bin/cut -c1-20)
-
-    if [ "$status" = "Playing" ]; then
-      icon=${icons.play}
-      class="playing"
-    else
-      icon=${icons.pause}
-      class="paused"
-    fi
-
-    # simple json output, no fancy escaping needed
-    ${pkgs.jq}/bin/jq -n \
-      --arg text "$icon $artist - $title" \
-      --arg class "$class" \
-      '{text: $text, class: $class}'
-  '';
 in {
   options.profiles.waybar = with lib; {
     enable = mkEnableOption "waybar profile";
@@ -157,14 +118,7 @@ in {
         tooltip = false;
         on-click = "${pkgs.helvum}";
       };
-      "custom/spotify" = {
-        exec = "${spotifyWidget}";
-        return-type = "json";
-        interval = 2;
-        on-click = "${pkgs.dbus}/bin/dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.PlayPause";
-        on-scroll-up = "${pkgs.dbus}/bin/dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Next";
-        on-scroll-down = "${pkgs.dbus}/bin/dbus-send --print-reply --dest=org.mpris.MediaPlayer2.spotify /org/mpris/MediaPlayer2 org.mpris.MediaPlayer2.Player.Previous";
-      };
+
       mpris = {
         format = "{player_icon} {artist} - {title}";
         format-paused = "{status_icon} <i>{artist} - {title}</i>";

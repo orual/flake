@@ -48,21 +48,18 @@ in
       gtk = {
         enable = true;
         iconTheme = {
-          name = "Papirus"; # or whatever you want
-          package = pkgs.papirus-icon-theme;
+          name = "Adwaita"; # or whatever you want
+          package = pkgs.adwaita-icon-theme;
         };
       };
       programs.niri.settings = {
-        environment."NIXOS_OZONE_WL" = "1";
-        environment."DISPLAY" = ":0";
-        environment."GTK_THEME" = "Papirus:dark";
+        environment."GTK_THEME" = "Adwaita:dark";
         input.keyboard.xkb.options = "compose:rwin";
         prefer-no-csd = true;
 
         workspaces."main" = {};
         # workspaces."work" = {};
         # workspaces."gaming" = {};
-
         layout = {
           gaps = 12;
           struts.left = 64;
@@ -79,22 +76,24 @@ in
             {proportion = 1.0 / 6.0;}
             {proportion = 1.0 / 4.0;}
             {proportion = 1.0 / 3.0;}
+            {proportion = 1.0 / 2.5;}
             {proportion = 1.0 / 2.0;}
             {proportion = 2.0 / 3.0;}
             {proportion = 3.0 / 4.0;}
             {proportion = 5.0 / 6.0;}
           ];
           preset-window-heights = [
-            {proportion = 0.33333;}
+            {proportion = 1.0 / 3.0;}
+            {proportion = 0.4;}
             {proportion = 0.5;}
-            {proportion = 0.66667;}
+            {proportion = 2.0 / 3.0;}
           ];
-          default-column-width = {proportion = 1.0 / 3.0;};
+          default-column-width = {proportion = 1.0 / 2.5;};
           # fog of war
           focus-ring = {
             # enable = true;
             width = 10000;
-            active.color = "#00000055";
+            active.color = "#00000022";
           };
           shadow.enable = true;
 
@@ -110,6 +109,9 @@ in
             # active.color = "red";
           };
           #background-color = "#10031433";
+        };
+        input.trackball = {
+          accel-profile = "adaptive";
         };
         #hotkey-overlay.skip-at-startup = !nixosConfig.is-virtual-machine;
         #clipboard.disable-primary = true;
@@ -286,6 +288,7 @@ in
                 "xdg-desktop-portal-gnome"
                 "waybar"
                 "pipewire"
+
                 "${pkgs.xwayland-satellite}/bin/xwayland-satellite"
               ];
               commands = builtins.concatStringsSep ";" (map (unit: "systemctl --user status ${unit}") units);
@@ -300,6 +303,11 @@ in
 
         outputs = {
           "DP-1" = {
+            scale = 1.0;
+            variable-refresh-rate = "on-demand";
+            backdrop-color = "#191724";
+          };
+          "DP-4" = {
             scale = 1.0;
             variable-refresh-rate = "on-demand";
             backdrop-color = "#191724";
@@ -325,13 +333,11 @@ in
             opacity = 0.97;
           }
           {
-            # the terminal is already transparent from stylix
-            matches = [{app-id = "^kitty$";}];
-            opacity = 1.0;
-          }
-          {
-            # the terminal is already transparent from stylix
-            matches = [{app-id = "^org.kde.polkit-kde-authentication-agent";}];
+            # float auth stuff
+            matches = [
+              {app-id = "^org.kde.polkit-kde-authentication-agent";}
+              {app-id = "^1Password$";}
+            ];
             open-floating = true;
           }
 
@@ -399,7 +405,12 @@ in
           }
           {
             # the terminal is already transparent from stylix
-            matches = [{app-id = "^wezterm$";}];
+            matches = [
+              {app-id = "^kitty$";}
+              {app-id = "^alacritty$";}
+              {app-id = "^ghostty$";}
+              {app-id = "^wezterm$";}
+            ];
             opacity = 1.0;
             default-window-height = {
               proportion = 0.4;
@@ -423,11 +434,6 @@ in
               {
                 app-id = "^signal$";
               }
-            ];
-            block-out-from = "screencast";
-          }
-          {
-            matches = [
               {
                 app-id = "^BeeperTexts$";
               }
@@ -459,6 +465,7 @@ in
         cheese
         libnotify
         xwayland-satellite
+        cage
       ];
 
       programs.zen-browser = {
@@ -472,7 +479,7 @@ in
       };
       programs.fuzzel = {
         enable = true;
-        settings.main.terminal = "wezterm";
+        settings.main.terminal = "ghostty";
       };
       services.swaync = {
         enable = true;

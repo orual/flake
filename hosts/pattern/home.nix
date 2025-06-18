@@ -29,6 +29,8 @@
     bitwig-studio
 
     systemctl-tui
+    vmware-workstation
+    remmina
   ];
 
   services = {

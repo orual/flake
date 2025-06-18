@@ -9,6 +9,7 @@
     ./hardware/framework-amd.nix
     ./hardware/tpm.nix
     ./hardware/probes.nix
+    ./hardware/amdgpu.nix
     ./profiles/arm-cross-dev.nix
     ./profiles/desktop
     ./profiles/docs.nix
@@ -127,7 +128,7 @@
   };
   virtualisation.libvirtd = {
     enable = true;
-    qemu.ovmf.enable = true;
+    #qemu.ovmf.enable = true;
   };
 
   #### users ####

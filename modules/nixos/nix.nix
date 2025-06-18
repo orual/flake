@@ -1,7 +1,10 @@
-{ config, pkgs, lib, ... }:
-
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 with lib; {
-
   options.profiles.nix-ld = {
     enable = mkEnableOption "nix-ld profile";
   };
@@ -13,10 +16,10 @@ with lib; {
       nixpkgs.overlays = [
         (self: super: {
           nixos-rebuild = super.nixos-rebuild.override {
-              nix = super.nix-monitored;
+            nix = super.nix-monitored;
           };
           nix-direnv = super.nix-direnv.override {
-              nix = super.nix-monitored;
+            nix = super.nix-monitored;
           };
         })
       ];
@@ -35,28 +38,27 @@ with lib; {
           automatic = true;
           dates = "monthly"; # See `man systemd.time 7`
         };
+        # daemonCPUSchedPolicy = "idle";
+        # daemonIOSchedClass = "idle";
 
-        settings =
-          let
-            substituters = [
-              "https://nix-community.cachix.org"
-              "https://cache.garnix.io"
-            ];
-          in
-          {
-            trusted-users = [ "root" "orual" ];
-            extra-substituters = substituters;
-            trusted-substituters = substituters;
-            extra-trusted-public-keys = [
-              "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-              "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
-            ];
-          };
+        settings = let
+          substituters = [
+            "https://nix-community.cachix.org"
+            #"https://cache.garnix.io"
+          ];
+        in {
+          trusted-users = ["root" "orual"];
+          extra-substituters = substituters;
+          trusted-substituters = substituters;
+          extra-trusted-public-keys = [
+            "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+            #"cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
+          ];
+        };
       };
     }
 
     (mkIf config.profiles.nix-ld.enable {
-
       # Enable nix ld
       programs.nix-ld = {
         enable = true;
@@ -116,6 +118,4 @@ with lib; {
       };
     })
   ];
-
-
 }

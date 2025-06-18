@@ -14,24 +14,26 @@
     docs.enable = true;
     games.enable = true;
     desktop = {
-      gnome3.enable = true;
+      #gnome3.enable = true;
       niri.enable = true;
     };
-    # observability = {
-    #   enable = true;
-    #   observer = {
-    #     enable = true;
-    #     enableUnifi = true;
-    #     inherit rootDomain;
-    #   };
-    #   snmp.enable = true;
-    # };
+    #observability.enable = false;
+    observability = {
+      enable = true;
+      observer = {
+        enable = true;
+        enableUnifi = true;
+        victoriametrics.enable = false;
+        inherit rootDomain;
+      };
+      snmp.enable = true;
+    };
     ### Turn this back on when I get the DNS stuff set up right
-    # nginx = {
-    #   enable = true;
-    #   domain = rootDomain;
-    #   acmeSubdomain = "home";
-    # };
+    nginx = {
+      enable = true;
+      domain = rootDomain;
+      acmeSubdomain = "home";
+    };
     # enable the correct perf tools for this kernel version
     perftools.enable = true;
     zfs.enable = true;
@@ -41,6 +43,8 @@
   };
 
   hardware = {
+    amdgpu.enable = true;
+    graphics.extraPackages = [pkgs.mesa];
     probes = {
       cmsis-dap.enable = true;
       espressif.enable = true;
@@ -88,7 +92,12 @@
     kernelModules = ["e1000e" "alx" "r8169" "igb" "cdc_ether" "r8152"];
     # TODO(orual): this could be a static IP so that we don't depend on DHCP
     # working to boot...
-    kernelParams = ["ip=dhcp"];
+    kernelParams = [
+      "ip=dhcp"
+      "reboot=acpi"
+      "amd_pstate=guided"
+      #"amdgpu.dcdebugmask=0x12"
+    ];
 
     # additional kernel modules
     initrd.availableKernelModules = [
@@ -110,6 +119,7 @@
       "igc"
       "cdc_ether"
     ];
+    initrd.kernelModules = ["amdgpu"];
     initrd.network = {
       enable = true;
       ssh = {
@@ -123,6 +133,9 @@
         ];
       };
     };
+  };
+  virtualisation.vmware.host = {
+    enable = true;
   };
 
   #### System configuration ####
@@ -170,9 +183,39 @@
 
   #### Services ####
   services = {
+    ollama = {
+      enable = true;
+      acceleration = "rocm";
+      rocmOverrideGfx = "10.3.6";
+    };
+    displayManager.gdm.autoSuspend = false;
     openrgb.enable = true;
     # FOR CVE REASONS
     printing.enable = lib.mkForce false;
+
+    # Fix immediate wakeups from suspend
+    udev.extraRules = ''
+      ACTION=="add", SUBSYSTEM=="pci", DRIVER=="pcieport", ATTR{power/wakeup}="disabled"
+      ACTION=="remove",\
+        ENV{ID_BUS}=="usb",\
+        ENV{ID_MODEL_ID}=="0407",\
+        ENV{ID_VENDOR_ID}=="1050",\
+        ENV{ID_VENDOR}=="Yubico",\
+        RUN+="${pkgs.systemd}/bin/loginctl lock-sessions"
+    '';
+    pcscd.enable = true;
+    udev.packages = [pkgs.yubikey-personalization];
+  };
+
+  security.pam.services = {
+    login.u2fAuth = true;
+    sudo.u2fAuth = true;
+  };
+  security.pam.yubico = {
+    enable = true;
+    debug = true;
+    mode = "challenge-response";
+    id = ["26917133"];
   };
 
   # services.tailscale =
