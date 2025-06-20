@@ -84,6 +84,7 @@ in {
       };
 
       firefox.enable = true;
+      kdeconnect.enable = true;
     };
 
     security.pam.services = {

@@ -58,7 +58,8 @@ in {
           certs.${acmeDomain} = {
             domain = "${acmeDomain}";
             dnsProvider = "cloudflare";
-            environmentFile = "/etc/secrets/cloudflare-api-key.key";
+            credentialsFile = "/etc/secrets/cloudflare-api-key.key";
+            group = config.services.nginx.group;
             extraDomainNames = trivial.pipe config.services.nginx.virtualHosts [
               # include any configured NGINX virtual host that's configured to
               # use the root domain ACME host.
@@ -81,8 +82,8 @@ in {
 
           virtualHosts."${acmeDomain}" = {
             forceSSL = true;
-            enableACME = true;
-            acmeRoot = null;
+            # enableACME = true;
+            useACMEHost = "${acmeDomain}";
           };
 
           # Log to journald rather than to `/var/log/nginx` (by logging errors

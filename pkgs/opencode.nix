@@ -1,0 +1,37 @@
+{
+  lib,
+  fetchFromGitHub,
+  buildGoModule,
+}:
+buildGoModule (finalAttrs: {
+  pname = "opencode";
+  version = "0.1.115";
+
+  src = fetchFromGitHub {
+    owner = "sst";
+    repo = "opencode";
+    tag = "v${finalAttrs.version}";
+    hash = "sha256-vatXS5mrvBFNPqIQYmg3AcFyXTSvMCODAAP/kYLGS8k=";
+  };
+
+  vendorHash = "";
+
+  checkFlags = let
+    skippedTests = [
+      # permission denied
+      "TestBashTool_Run"
+      "TestSourcegraphTool_Run"
+      "TestLsTool_Run"
+    ];
+  in ["-skip=^${lib.concatStringsSep "$|^" skippedTests}$"];
+
+  meta = {
+    description = "Powerful terminal-based AI assistant providing intelligent coding assistance";
+    homepage = "https://github.com/sst/opencode";
+    mainProgram = "opencode";
+    license = lib.licenses.mit;
+    maintainers = with lib.maintainers; [
+      zestsystem
+    ];
+  };
+})

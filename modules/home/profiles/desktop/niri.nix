@@ -113,6 +113,8 @@ in
         input.trackball = {
           accel-profile = "adaptive";
         };
+        xwayland-satellite.enable = true;
+        xwayland-satellite.path = "${pkgs.xwayland-satellite}/bin/xwayland-satellite";
         #hotkey-overlay.skip-at-startup = !nixosConfig.is-virtual-machine;
         #clipboard.disable-primary = true;
 
@@ -152,7 +154,7 @@ in
               ]);
 
               "${Mod}+L".action = spawn "blurred-locker";
-
+              "${Mod}+B".action = toggle-overview;
               "${Mod}+Shift+S".action = screenshot;
               "Print".action.screenshot-screen = [];
               "${Mod}+Print".action = screenshot-window;
@@ -288,8 +290,6 @@ in
                 "xdg-desktop-portal-gnome"
                 "waybar"
                 "pipewire"
-
-                "${pkgs.xwayland-satellite}/bin/xwayland-satellite"
               ];
               commands = builtins.concatStringsSep ";" (map (unit: "systemctl --user status ${unit}") units);
             in ["${only-on-session}" "kitty" "--" "sh" "-c" "env SYSTEMD_COLORS=1 watch -n 1 -d --color '${commands}'"];
@@ -299,7 +299,7 @@ in
           }
         ];
 
-        animations.shaders.window-resize = builtins.readFile ./resize.glsl;
+        animations.window-resize.custom-shader = builtins.readFile ./resize.glsl;
 
         outputs = {
           "DP-1" = {
@@ -386,6 +386,10 @@ in
               }
               {
                 app-id = "^zen-beta$";
+                title = "^Picture-in-Picture$";
+              }
+              {
+                app-id = "^zen-twilight$";
                 title = "^Picture-in-Picture$";
               }
             ];

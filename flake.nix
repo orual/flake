@@ -57,7 +57,17 @@
       }:
         with pkgs;
         with lib; {
-          devShells.default = mkShell {buildInputs = [deploy-rs.packages.${system}.default];};
+          devShells.default = mkShell {
+            buildInputs = [
+              deploy-rs.packages.${system}.default
+              alejandra
+              nix-update
+              nodejs
+              curl
+              jq
+              git
+            ];
+          };
         };
       flake = {
         ###########
@@ -157,7 +167,7 @@
           baseModules = [
             self.homeModules.default
             inputs.zed-extensions.homeManagerModules.default
-            inputs.zen-browser.homeModules.beta
+            inputs.zen-browser.homeModules.twilight
             inputs.niri.homeModules.niri
             inputs.stylix.homeModules.stylix
           ];

@@ -126,5 +126,9 @@ in
       security.pam.services = {
         login.enableGnomeKeyring = mkDefault true;
       };
+
+      services.gnome = {
+        core-apps.enable = true;
+      };
     };
   }

@@ -36,6 +36,7 @@ in {
           just
           # V I B E C O D I N G
           claude-code-latest
+          #opencode-latest
           # TURNS OUT THIS HAS TO BE IN SYSTEMPACKAGES LOL
           # # xfel --- FEL tools for Allwinner SoCs
           # xfel
@@ -76,6 +77,7 @@ in {
 
           # STM32 flasher
           stlink-gui
+          stm32cubeprog
           # serial terminal
           minicom
           # rom programmer

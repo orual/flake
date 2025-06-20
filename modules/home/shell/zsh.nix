@@ -27,6 +27,7 @@ in
           };
 
           initContent = ''
+            PATH=/home/orual/.opencode/bin:$PATH
             # xterm title setting stuff
             autoload -Uz add-zsh-hook
 
