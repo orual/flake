@@ -11,7 +11,7 @@ buildGoModule (finalAttrs: {
     owner = "sst";
     repo = "opencode";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-vatXS5mrvBFNPqIQYmg3AcFyXTSvMCODAAP/kYLGS8k=";
+    hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
   };
 
   vendorHash = "";
