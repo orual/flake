@@ -68,6 +68,31 @@
               git
             ];
           };
+          packages = {
+            update-packages = writeShellApplication {
+              name = "update-packages";
+              meta = {
+                description = "update script for custom packages";
+              };
+              runtimeInputs = with pkgs; [
+                alejandra
+                nix-update
+                nodejs
+                curl
+                jq
+                git
+                nix
+              ];
+              text = ''
+                ${builtins.readFile ./update-packages.sh}
+              '';
+            };
+          };
+
+          apps.update-packages = {
+            type = "app";
+            program = "${self.packages.${system}.update-packages}/bin/update-packages";
+          };
         };
       flake = {
         ###########
