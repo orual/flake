@@ -68,6 +68,26 @@
               git
             ];
           };
+
+          apps.update-packages = {
+            type = "app";
+            program = "${pkgs.writeShellApplication {
+              name = "update-packages";
+              runtimeInputs = with pkgs; [
+                alejandra
+                nix-update
+                nodejs
+                curl
+                jq
+                git
+                nix
+              ];
+              text = ''
+                export FLAKE_ROOT="${self}"
+                ${builtins.readFile ./update-packages.sh}
+              '';
+            }}/bin/update-packages";
+          };
         };
       flake = {
         ###########

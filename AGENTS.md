@@ -7,6 +7,7 @@
 - **Format code**: `alejandra .` (Nix formatter included in flake)
 - **Deploy**: `deploy .#pattern` or `deploy .#archive` (via deploy-rs)
 - **Dev shell**: `nix develop` (includes deploy-rs tools)
+- **Update packages**: `nix run .#update-packages` (updates custom packages in pkgs/)
 
 ## Code Style Guidelines
 - **Nix formatting**: Use alejandra formatter (enforced)
@@ -18,3 +19,4 @@
 - **Error handling**: Use `assert` for preconditions, `lib.optional` for conditional lists
 - **Comments**: Minimal, only for non-obvious logic or TODOs
 - **Flake inputs**: Follow existing patterns, use `.follows` to reduce duplication
+- **Linting**: ALWAYS fix linting issues properly - never disable linters/checkers as workarounds
