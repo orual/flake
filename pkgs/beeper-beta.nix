@@ -4,12 +4,12 @@
   fetchurl,
   pkgs,
 }: let
-  version = "4.0.732";
+  version = "4.0.779";
   pname = "beeper";
 
   src = fetchurl {
-    url = "https://api.beeper.com/desktop/download/linux/x64/stable/com.automattic.beeper.desktop";
-    hash = "sha256-8HcWEMrMpq+QCnkCf7Yn79fADy98KFqL/m1erXtM8XU=";
+    url = "https://beeper-desktop.download.beeper.com/builds/Beeper-${version}.AppImage";
+    hash = "sha256-eRA/9OAWcYsn1C8xuC6NFj2/HxOHT0YISDC9Kp8H/Yg=";
   };
   appimageContents = appimageTools.extract {
     inherit pname version src;
