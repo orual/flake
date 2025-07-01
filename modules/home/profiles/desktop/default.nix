@@ -36,7 +36,7 @@ in {
         gimp
         syncplay
         vlc
-        plex-desktop
+        #plex-desktop
         ghostscriptX
         losslesscut-bin
 
@@ -44,7 +44,6 @@ in {
         chromium
         torrential
         zulip
-        zulip-term
       ]
       ++ unfreePkgs);
     #############################################################################

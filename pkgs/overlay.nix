@@ -18,4 +18,5 @@ final: prev: {
   glasgow-latest = prev.callPackage ./glasgow-latest.nix {};
   #minipro-git = prev.callPackage ./minipro-git { };
   stm32cubeprog = prev.callPackage ./stm32cubeprogrammer.nix {};
+  atuin-desktop = prev.callPackage ./atuin-desktop.nix {};
 }

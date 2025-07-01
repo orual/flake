@@ -29,7 +29,7 @@
       (import ./pkgs/overlay.nix)
       rust-overlay.overlays.default
       # inputs.atuin.overlays.default
-
+      (_: prev: {claude-desktop = inputs.claude-desktop.packages.${prev.system}.claude-desktop-with-fhs;})
       # add alejandra package
       (_: prev: {alejandra = inputs.alejandra.defaultPackage.${prev.system};})
       # add ghostty package
@@ -377,5 +377,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
       inputs.flake-utils.follows = "flake-utils";
     };
+
+    claude-desktop.url = "github:k3d3/claude-desktop-linux-flake";
+    # claude-desktop.inputs.nixpkgs.follows = "nixpkgs";
+    # claude-desktop.inputs.flake-utils.follows = "flake-utils";
   };
 }

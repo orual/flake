@@ -56,6 +56,7 @@
 
   #### Boot configuration ####
   boot = {
+    supportedFilesystems = ["nfs"];
     loader = {
       # Use the systemd-boot EFI boot loader.
       systemd-boot = {
@@ -213,7 +214,7 @@
   };
   security.pam.yubico = {
     enable = true;
-    debug = true;
+    debug = false;
     mode = "challenge-response";
     id = ["26917133"];
   };

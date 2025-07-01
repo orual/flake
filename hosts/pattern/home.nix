@@ -31,6 +31,8 @@
     systemctl-tui
     vmware-workstation
     remmina
+    atuin-desktop
+    claude-desktop
   ];
 
   services = {
