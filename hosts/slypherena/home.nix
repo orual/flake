@@ -28,5 +28,9 @@
     pkg-config
     qemu
     screen
+    yubioath-flutter
+    protonup-qt
+    bitwig-studio
+    atuin-desktop
   ];
 }

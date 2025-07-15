@@ -32,7 +32,7 @@
     vmware-workstation
     remmina
     atuin-desktop
-    claude-desktop
+    #claude-desktop
   ];
 
   services = {

@@ -13,7 +13,8 @@ with lib; {
     laptop.enable = true;
     desktop = {
       enable = true;
-      gnome3.enable = true;
+      #gnome3.enable = true;
+      niri.enable = true;
     };
     # vu-dials.enable = true;
     observability.enable = true;
@@ -27,9 +28,11 @@ with lib; {
       cmsis-dap.enable = true;
       espressif.enable = true;
       st-link.enable = true;
+      cynthion.enable = true;
+      glasgow.enable = true;
     };
     tpm.enable = true;
-    framework-amd.enable = true;
+    framework-twelve.enable = true;
   };
 
   #### System configuration ####
@@ -41,24 +44,24 @@ with lib; {
     # use the latest stable Linux kernel
     kernelPackages = pkgs.linuxPackages_latest;
 
-    initrd.luks.devices."luks-c8e922ff-11e1-473c-a52e-c2b86a042e44".device =
-      "/dev/disk/by-uuid/c8e922ff-11e1-473c-a52e-c2b86a042e44";
+    # initrd.luks.devices."luks-c8e922ff-11e1-473c-a52e-c2b86a042e44".device =
+    #   "/dev/disk/by-uuid/c8e922ff-11e1-473c-a52e-c2b86a042e44";
 
     ### secureboot using Lanzaboote ###
     # TODO: move this to a module?
-    lanzaboote = {
-      enable = true;
-      pkiBundle = "/etc/secureboot";
-      # don't keep more than 16 old configurations, to keep the /boot partition
-      # from filling up.
-      configurationLimit = 16;
-    };
+    # lanzaboote = {
+    #   enable = true;
+    #   pkiBundle = "/etc/secureboot";
+    #   # don't keep more than 16 old configurations, to keep the /boot partition
+    #   # from filling up.
+    #   configurationLimit = 16;
+    # };
 
     # Lanzaboote currently replaces the systemd-boot module.
     # This setting is usually set to true in configuration.nix
     # generated at installation time. So we force it to false
     # for now.
-    loader.systemd-boot.enable = mkForce false;
+    #loader.systemd-boot.enable = mkForce false;
   };
 
   environment.systemPackages = with pkgs; [
@@ -70,13 +73,31 @@ with lib; {
     # Used specifically for its (quite magical) "copy as html" function.
     gnome-terminal.enable = true;
 
-    xfel.enable = true;
+    #xfel.enable = true;
+  };
+
+  services = {
+
+    pcscd.enable = true;
+    udev.packages = [pkgs.yubikey-personalization];
+  };
+
+
+  security.pam.services = {
+    login.u2fAuth = true;
+    sudo.u2fAuth = true;
+  };
+  security.pam.yubico = {
+    enable = true;
+    debug = false;
+    mode = "challenge-response";
+    id = ["26917133"];
   };
 
   # disable the Gnome keyring, since we are using 1password to manage secrets
   # instead.
-  services.gnome.gnome-keyring.enable = mkForce false;
-  security.pam.services.login.enableGnomeKeyring = mkForce false;
+  # services.gnome.gnome-keyring.enable = mkForce false;
+  # security.pam.services.login.enableGnomeKeyring = mkForce false;
   # services = {
   #   desktopManager.cosmic.enable = true;
   # };

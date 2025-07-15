@@ -40,6 +40,17 @@ in
             # };
           };
 
+          jujutsu = {
+            enable = true;
+            settings = {
+              user = {
+                email = cfg.user.email;
+                name = "Orual";
+                default-command = "log";
+              };
+            };
+          };
+
           git = {
             enable = true;
             userName = cfg.user.name;

@@ -3,8 +3,8 @@
 
   modules = [
     ./configuration.nix
-    nixos-hardware.nixosModules.framework-13-7040-amd
-    lanzaboote.nixosModules.lanzaboote
+    nixos-hardware.nixosModules.framework-12-13th-gen-intel
+    #lanzaboote.nixosModules.lanzaboote
   ];
 
   home.modules = [ ./home.nix ];

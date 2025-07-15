@@ -5,13 +5,13 @@
 }:
 buildGoModule (finalAttrs: {
   pname = "opencode";
-  version = "0.1.115";
+  version = "0.1.171";
 
   src = fetchFromGitHub {
     owner = "sst";
     repo = "opencode";
     tag = "v${finalAttrs.version}";
-    hash = "sha256-vatXS5mrvBFNPqIQYmg3AcFyXTSvMCODAAP/kYLGS8k=";
+    hash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
   };
 
   vendorHash = "";

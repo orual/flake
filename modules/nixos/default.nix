@@ -7,6 +7,7 @@
     ./nix.nix
     ./hardware/ergodox.nix
     ./hardware/framework-amd.nix
+    ./hardware/framework-twelve.nix
     ./hardware/tpm.nix
     ./hardware/probes.nix
     ./hardware/amdgpu.nix
