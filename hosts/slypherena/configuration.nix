@@ -6,17 +6,16 @@ with lib; {
     ./hardware-configuration.nix
   ];
 
-  #networking.hostName = "sylpherena"; # Define your hostname.
+  networking.hostName = "sylpherena"; # Define your hostname.
 
   profiles = {
     docs.enable = true;
     laptop.enable = true;
     desktop = {
       enable = true;
-      #gnome3.enable = true;
+      gnome3.enable = true;
       niri.enable = true;
     };
-    # vu-dials.enable = true;
     observability.enable = true;
     arm-cross-dev.enable = true;
     nix-ld.enable = true;
