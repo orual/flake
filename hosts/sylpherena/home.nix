@@ -11,7 +11,7 @@
       enable = true;
       enablePython = true;
     };
-    waybar.enable = true;
+    #waybar.enable = true;
     quickshell.enable = true;
     #terminal.font.family = "TX-02";
   };

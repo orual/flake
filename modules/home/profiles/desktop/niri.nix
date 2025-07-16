@@ -66,7 +66,7 @@ with lib;
     programs.niri.settings = {
       environment."GTK_THEME" = "Adwaita:dark";
       input.keyboard.xkb.options = "compose:rwin";
-      prefer-no-csd = true;
+      prefer-no-csd = false;
 
       workspaces."main" = { };
       # workspaces."work" = {};
@@ -316,6 +316,7 @@ with lib;
                   "xdg-desktop-portal-gnome"
                   "waybar"
                   "pipewire"
+                  "qs"
                 ];
                 commands = builtins.concatStringsSep ";" (map (unit: "systemctl --user status ${unit}") units);
               in
