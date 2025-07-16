@@ -1,17 +1,18 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+
+{
   profiles = {
-    games.enable = true;
     desktop = {
       enable = true;
       gnome3.enable = true;
       niri.enable = true;
     };
-    k8s.enable = true;
     devtools = {
       enable = true;
       enablePython = true;
     };
     waybar.enable = true;
+    #terminal.font.family = "TX-02";
   };
 
   home.packages = with pkgs; [
@@ -19,22 +20,16 @@
     clang
     # global pkgconfig too
     pkg-config
-    lm_sensors
-    conky
-
-    hyperbeam-watch-party
-    wechat-uos
+    qemu
+    screen
     yubioath-flutter
     protonup-qt
     bitwig-studio
-
-    systemctl-tui
-    vmware-workstation
-    remmina
-    atuin-desktop
-    #claude-desktop
+    #atuin-desktop
   ];
-
+  
+  programs.gdb.dashboard.enable = false;
+  programs._1password-gui.enableSshAgent = false;
   services = {
     gpg-agent = {
       enable = true;

@@ -35,7 +35,7 @@ in {
           # `just` --- a command runner
           just
           # V I B E C O D I N G
-          claude-code-latest
+          #claude-code-latest
           #opencode-latest
           # TURNS OUT THIS HAS TO BE IN SYSTEMPACKAGES LOL
           # # xfel --- FEL tools for Allwinner SoCs
@@ -77,7 +77,7 @@ in {
 
           # STM32 flasher
           stlink-gui
-          stm32cubeprog
+          #stm32cubeprog
           # serial terminal
           minicom
           # rom programmer
@@ -93,7 +93,7 @@ in {
         programs = {
           zed-editor = {
             enable = config.profiles.desktop.enable;
-            package = pkgs.zed-prerelease;
+            package = pkgs.zed-editor;
           };
           # Nice terminal UI for gdb
           gdb.dashboard = {

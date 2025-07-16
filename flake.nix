@@ -43,7 +43,7 @@
       # add niri overlay
       # TODO(orual): similar to the above, would be good to add only for desktop configs
       inputs.niri.overlays.niri
-      (_: prev: {zed-editor = inputs.zed-editor-flake.packages.${prev.system}.zed-editor-preview;})
+      #(_: prev: {zed-editor = inputs.zed-editor-flake.packages.${prev.system}.zed-editor-preview;})
     ];
 
     lib = import ./lib;
@@ -218,7 +218,7 @@
       "https://nix-community.cachix.org"
       "https://cache.garnix.io"
       "https://niri.cachix.org"
-      # "https://cosmic.cachix.org/"
+      "https://cosmic.cachix.org/"
     ];
     extra-trusted-public-keys = [
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
@@ -227,7 +227,7 @@
       "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
       "niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSl7Z6oezYhGhR+3W2964="
       "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
-      # "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE="
+      "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE="
     ];
   };
 
@@ -238,9 +238,9 @@
     # nixpkgs-stable.follows = "nixos-cosmic/nixpkgs-stable";
     nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-unstable";
     # NOTE:change "nixpkgs" to "nixpkgs-stable" to use stable NixOS release
-    # nixpkgs.follows = "nixos-cosmic/nixpkgs";
+    nixpkgs.follows = "nixos-cosmic/nixpkgs";
 
-    # nixos-cosmic.url = "github:lilyinstarlight/nixos-cosmic";
+    nixos-cosmic.url = "github:lilyinstarlight/nixos-cosmic";
     flake-utils.url = "github:numtide/flake-utils";
     flake-parts.url = "github:hercules-ci/flake-parts";
 

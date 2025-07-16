@@ -52,7 +52,7 @@ in {
     programs = {
       firefox.enable = true;
       ghostty.enable = true;
-      _1password-gui.enableSshAgent = true;
+      _1password-gui.enableSshAgent = lib.mkDefault true;
       keychain = {
         enable = true;
         enableXsessionIntegration = true;
