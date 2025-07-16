@@ -11,5 +11,6 @@
     ./opstools.nix
     ./waybar.nix
     ./astal.nix
+    ./quickshell.nix
   ];
 }

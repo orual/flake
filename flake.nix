@@ -47,9 +47,10 @@
         # add niri overlay
         # TODO(orual): similar to the above, would be good to add only for desktop configs
         inputs.niri.overlays.niri
+        (_: prev: { quickshell = inputs.quickshell.packages.${prev.system}.default; })
         #(_: prev: {zed-editor = inputs.zed-editor-flake.packages.${prev.system}.zed-editor-preview;})
         # add astal package
-        inputs.astal-shell.overlays.default
+        #inputs.astal-shell.overlays.default
       ];
 
       lib = import ./lib;
@@ -365,6 +366,15 @@
 
     stylix = {
       url = "github:danth/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    quickshell = {
+      # add ?ref=<tag> to track a tag
+      url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
+
+      # THIS IS IMPORTANT
+      # Mismatched system dependencies will lead to crashes and other issues.
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
