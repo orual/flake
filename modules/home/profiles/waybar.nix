@@ -3,24 +3,51 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.profiles.waybar;
   icons = rec {
     calendar = "󰃭 ";
     clock = " ";
     battery.charging = "󱐋";
-    battery.horizontal = [" " " " " " " " " "];
-    battery.vertical = ["󰁺" "󰁻" "󰁼" "󰁽" "󰁾" "󰁿" "󰂀" "󰂁" "󰂂" "󰁹"];
+    battery.horizontal = [
+      " "
+      " "
+      " "
+      " "
+      " "
+    ];
+    battery.vertical = [
+      "󰁺"
+      "󰁻"
+      "󰁼"
+      "󰁽"
+      "󰁾"
+      "󰁿"
+      "󰂀"
+      "󰂁"
+      "󰂂"
+      "󰁹"
+    ];
     battery.levels = battery.vertical;
     network.disconnected = "󰤮 ";
     network.ethernet = " 󰈀 ";
-    network.strength = [" 󰤟 " " 󰤢 " " 󰤥 " " 󰤨 "];
+    network.strength = [
+      " 󰤟 "
+      " 󰤢 "
+      " 󰤥 "
+      " 󰤨 "
+    ];
     bluetooth.on = "󰂯";
     bluetooth.off = "󰂲";
     bluetooth.battery = "󰥉";
     volume.source = "󱄠 ";
     volume.muted = "󰝟";
-    volume.levels = ["󰕿" "󰖀" "󰕾"];
+    volume.levels = [
+      "󰕿"
+      "󰖀"
+      "󰕾"
+    ];
     idle.on = " 󰈈 ";
     idle.off = " 󰈉 ";
     vpn = "󰌆 ";
@@ -36,7 +63,8 @@
     notification.bell-outline = "󰂜";
     notification.bell-outline-badge = "󰅸";
   };
-in {
+in
+{
   options.profiles.waybar = with lib; {
     enable = mkEnableOption "waybar profile";
   };
@@ -52,18 +80,35 @@ in {
     programs.waybar.settings.mainBar = {
       layer = "top";
       #position = "bottom";
-      modules-left = ["wireplumber" "wireplumber#source" "mpris" "idle_inhibitor"];
-      modules-center = ["niri/workspaces" "niri/window" "clock#date" "clock"];
-      modules-right = ["tray" "network" "bluetooth" "bluetooth#battery" "custom/swaync"];
+      modules-left = [
+        "wireplumber"
+        "wireplumber#source"
+        "mpris"
+        "idle_inhibitor"
+      ];
+      modules-center = [
+        "niri/workspaces"
+        "niri/window"
+        "clock#date"
+        "clock"
+      ];
+      modules-right = [
+        "tray"
+        "network"
+        "bluetooth"
+        "bluetooth#battery"
+        "battery"
+        "custom/swaync"
+      ];
 
-      # battery = {
-      #   interval = 5;
-      #   format = "{icon}  {capacity}%";
-      #   format-charging = "{icon}  {capacity}% ${icons.battery.charging}";
-      #   format-icons = icons.battery.levels;
-      #   states.warning = 30;
-      #   states.critical = 15;
-      # };
+      battery = {
+        interval = 5;
+        format = "{icon}  {capacity}%";
+        format-charging = "{icon}  {capacity}% ${icons.battery.charging}";
+        format-icons = icons.battery.levels;
+        states.warning = 30;
+        states.critical = 15;
+      };
 
       clock = {
         interval = 1;
@@ -129,7 +174,11 @@ in {
         status-icons.paused = icons.pause;
         max-length = 40;
         dynamic-order = true;
-        dynamic-importance-order = ["spotify" "vlc" "mpv"];
+        dynamic-importance-order = [
+          "spotify"
+          "vlc"
+          "mpv"
+        ];
       };
 
       # "group/volume" = {
@@ -181,96 +230,98 @@ in {
       };
     };
     stylix.targets.waybar.enable = false;
-    programs.waybar.style = let
-      colors = config.lib.stylix.colors;
-      modules = s: "${s ".modules-left"}, ${s ".modules-center"}, ${s ".modules-right"}";
-      module = s: modules (m: "${m} > ${s} > *");
-    in ''
-      * {
-          border: none;
-          font-family: ${config.stylix.fonts.sansSerif.name};
-          font-size: 16px;
-          color: #${colors.base06};
-      }
+    programs.waybar.style =
+      let
+        colors = config.lib.stylix.colors;
+        modules = s: "${s ".modules-left"}, ${s ".modules-center"}, ${s ".modules-right"}";
+        module = s: modules (m: "${m} > ${s} > *");
+      in
+      ''
+        * {
+            border: none;
+            font-family: ${config.stylix.fonts.sansSerif.name};
+            font-size: 16px;
+            color: #${colors.base06};
+        }
 
-      window#waybar {
-          background: transparent;
-          font-size: 2em;
-      }
+        window#waybar {
+            background: transparent;
+            font-size: 2em;
+        }
 
-      ${modules lib.id} {
-          background: transparent;
-          margin: 2px 7px;
-      }
+        ${modules lib.id} {
+            background: transparent;
+            margin: 2px 7px;
+        }
 
-      ${module "*"} {
-        margin: 3px 1px;
-        padding: 5px 7px;
-        background: #${colors.base00};
-      }
-      ${module ":first-child"} {
-          padding-left: 10px;
-          border-top-left-radius: 10px;
-          border-bottom-left-radius: 10px;
-      }
+        ${module "*"} {
+          margin: 3px 1px;
+          padding: 5px 7px;
+          background: #${colors.base00};
+        }
+        ${module ":first-child"} {
+            padding-left: 10px;
+            border-top-left-radius: 10px;
+            border-bottom-left-radius: 10px;
+        }
 
-      ${module ":last-child"} {
-          padding-right: 10px;
-          border-top-right-radius: 10px;
-          border-bottom-right-radius: 10px;
-      }
+        ${module ":last-child"} {
+            padding-right: 10px;
+            border-top-right-radius: 10px;
+            border-bottom-right-radius: 10px;
+        }
 
-      ${module ":not(:first-child)"} {
-          border-top-left-radius: 3px;
-          border-bottom-left-radius: 3px;
-      }
+        ${module ":not(:first-child)"} {
+            border-top-left-radius: 3px;
+            border-bottom-left-radius: 3px;
+        }
 
-      ${module ":not(last-child)"} {
-          border-top-right-radius: 3px;
-          border-bottom-right-radius: 3px;
-      }
+        ${module ":not(last-child)"} {
+            border-top-right-radius: 3px;
+            border-bottom-right-radius: 3px;
+        }
 
-      #workspaces button.focused {
-        background: #${colors.base07}
+        #workspaces button.focused {
+          background: #${colors.base07}
 
-      }
-      #window {
-        padding-left: 15px;
-        padding-right: 15px;
-      }
+        }
+        #window {
+          padding-left: 15px;
+          padding-right: 15px;
+        }
 
-      #wireplumber:not(.source).muted {
+        #wireplumber:not(.source).muted {
+            color: #${colors.yellow};
+        }
+
+        #idle_inhibitor.activated {
           color: #${colors.yellow};
-      }
+        }
 
-      #idle_inhibitor.activated {
-        color: #${colors.yellow};
-      }
+        #battery.charging {
+            color: #${colors.green};
+        }
 
-      #battery.charging {
-          color: #${colors.green};
-      }
+        #battery.warning:not(.charging) {
+            color: #${colors.yellow};
+        }
 
-      #battery.warning:not(.charging) {
-          color: #${colors.yellow};
-      }
+        #battery.critical:not(.charging) {
+            animation: critical-blink steps(8) 1s infinite alternate;
+        }
+        #tray {
 
-      #battery.critical:not(.charging) {
-          animation: critical-blink steps(8) 1s infinite alternate;
-      }
-      #tray {
-
-        -gtk-icon-effect: dim;
-      }
+          -gtk-icon-effect: dim;
+        }
 
 
 
-      @keyframes critical-blink {
-          to {
-              color: #${colors.red};
-          }
-      }
+        @keyframes critical-blink {
+            to {
+                color: #${colors.red};
+            }
+        }
 
-    '';
+      '';
   };
 }

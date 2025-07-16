@@ -3,60 +3,67 @@
 
   ############################################################################
   #### OUTPUTS ###############################################################
-  outputs = {
-    self,
-    nixpkgs,
-    nixos-hardware,
-    nixos-raspberrypi,
-    home,
-    utils,
-    rust-overlay,
-    deploy-rs,
-    flake-parts,
-    ...
-  } @ inputs: let
-    config = {
-      allowUnfree = true;
-      input-fonts.acceptLicense = true;
-      # needed for Obsidian 1.4.16; this version of Electron is EOL but the nixpkgs
-      # package for Obsidian hasn't been updated to a newer electron yet.
-      #
-      # TODO: remove this once https://github.com/NixOS/nixpkgs/issues/263764
-      # is resolved...
-      #permittedInsecurePackages = ["electron-26.3.0"];
-    };
-    overlays = [
-      (import ./pkgs/overlay.nix)
-      rust-overlay.overlays.default
-      # inputs.atuin.overlays.default
-      (_: prev: {claude-desktop = inputs.claude-desktop.packages.${prev.system}.claude-desktop-with-fhs;})
-      # add alejandra package
-      (_: prev: {alejandra = inputs.alejandra.defaultPackage.${prev.system};})
-      # add ghostty package
-      (_: prev: {ghostty = inputs.ghostty.packages.${prev.system}.ghostty;})
-      # add ECLSSD
-      (_: prev: {eclssd = inputs.eclssd.packages.${prev.system}.eclssd;})
-      # add fw-ectool package
-      # TODO(orual): it would be nice if this was only added for the framework
-      # system config...
-      (_: prev: {fw-ectool = inputs.fw-ectool.packages.${prev.system}.ectool;})
-      # add niri overlay
-      # TODO(orual): similar to the above, would be good to add only for desktop configs
-      inputs.niri.overlays.niri
-      #(_: prev: {zed-editor = inputs.zed-editor-flake.packages.${prev.system}.zed-editor-preview;})
-    ];
-
-    lib = import ./lib;
-  in
-    flake-parts.lib.mkFlake {inherit inputs;}
+  outputs =
     {
-      perSystem = {
-        pkgs,
-        system,
-        ...
-      }:
+      self,
+      nixpkgs,
+      nixos-hardware,
+      nixos-raspberrypi,
+      home,
+      utils,
+      rust-overlay,
+      deploy-rs,
+      flake-parts,
+      ...
+    }@inputs:
+    let
+      config = {
+        allowUnfree = true;
+        input-fonts.acceptLicense = true;
+        # needed for Obsidian 1.4.16; this version of Electron is EOL but the nixpkgs
+        # package for Obsidian hasn't been updated to a newer electron yet.
+        #
+        # TODO: remove this once https://github.com/NixOS/nixpkgs/issues/263764
+        # is resolved...
+        #permittedInsecurePackages = ["electron-26.3.0"];
+      };
+      overlays = [
+        (import ./pkgs/overlay.nix)
+        rust-overlay.overlays.default
+        # inputs.atuin.overlays.default
+        (_: prev: {
+          claude-desktop = inputs.claude-desktop.packages.${prev.system}.claude-desktop-with-fhs;
+        })
+        # add alejandra package
+        (_: prev: { alejandra = inputs.alejandra.defaultPackage.${prev.system}; })
+        # add ghostty package
+        (_: prev: { ghostty = inputs.ghostty.packages.${prev.system}.ghostty; })
+        # add ECLSSD
+        (_: prev: { eclssd = inputs.eclssd.packages.${prev.system}.eclssd; })
+        # add fw-ectool package
+        # TODO(orual): it would be nice if this was only added for the framework
+        # system config...
+        (_: prev: { fw-ectool = inputs.fw-ectool.packages.${prev.system}.ectool; })
+        # add niri overlay
+        # TODO(orual): similar to the above, would be good to add only for desktop configs
+        inputs.niri.overlays.niri
+        #(_: prev: {zed-editor = inputs.zed-editor-flake.packages.${prev.system}.zed-editor-preview;})
+        # add astal package
+        inputs.astal-shell.overlays.default
+      ];
+
+      lib = import ./lib;
+    in
+    flake-parts.lib.mkFlake { inherit inputs; } {
+      perSystem =
+        {
+          pkgs,
+          system,
+          ...
+        }:
         with pkgs;
-        with lib; {
+        with lib;
+        {
           devShells.default = mkShell {
             buildInputs = [
               deploy-rs.packages.${system}.default
@@ -99,7 +106,12 @@
         ## NixOS ##
         ###########
         nixosConfigurations = lib.genNixOSHosts {
-          inherit inputs config overlays self;
+          inherit
+            inputs
+            config
+            overlays
+            self
+            ;
 
           baseModules = [
             utils.nixosModules.autoGenFromInputs
@@ -141,45 +153,47 @@
         #####################
         ## deploy-rs nodes ##
         #####################
-        deploy.nodes = let
-          mkNode = {
-            hostname,
-            system ? "x86_64-linux",
-            extraOpts ? {},
-          }: {
-            inherit hostname;
-            profiles.system =
+        deploy.nodes =
+          let
+            mkNode =
               {
+                hostname,
+                system ? "x86_64-linux",
+                extraOpts ? { },
+              }:
+              {
+                inherit hostname;
+                profiles.system = {
+                  sshUser = "orual";
+                  path = deploy-rs.lib.${system}.activate.nixos self.nixosConfigurations.${hostname};
+                  user = "root";
+                } // extraOpts;
+              };
+          in
+          {
+            #               clavius = mkNode {
+            #                 hostname = "clavius";
+            #                 system = "aarch64-linux";
+            #                 extraOpts = { sshOpts = [ "-t" ]; };
+            #               };
+            #
+            #               tycho = mkNode {
+            #                 hostname = "tycho";
+            #                 system = "aarch64-linux";
+            #                 extraOpts = { sshOpts = [ "-t" ]; };
+            #               };
+
+            pattern = mkNode { hostname = "pattern"; };
+
+            archive = {
+              hostname = "archive.sys.home.nonbinary.computer";
+              profiles.system = {
                 sshUser = "orual";
-                path = deploy-rs.lib.${system}.activate.nixos self.nixosConfigurations.${hostname};
+                path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.archive;
                 user = "root";
-              }
-              // extraOpts;
-          };
-        in {
-          #               clavius = mkNode {
-          #                 hostname = "clavius";
-          #                 system = "aarch64-linux";
-          #                 extraOpts = { sshOpts = [ "-t" ]; };
-          #               };
-          #
-          #               tycho = mkNode {
-          #                 hostname = "tycho";
-          #                 system = "aarch64-linux";
-          #                 extraOpts = { sshOpts = [ "-t" ]; };
-          #               };
-
-          pattern = mkNode {hostname = "pattern";};
-
-          archive = {
-            hostname = "archive.sys.home.nonbinary.computer";
-            profiles.system = {
-              sshUser = "orual";
-              path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.archive;
-              user = "root";
+              };
             };
           };
-        };
 
         ##################
         ## Home Manager ##
@@ -195,6 +209,7 @@
             inputs.zen-browser.homeModules.twilight
             inputs.niri.homeModules.niri
             inputs.stylix.homeModules.stylix
+            inputs.ags.homeManagerModules.default
           ];
         };
 
@@ -206,7 +221,10 @@
         checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
       };
 
-      systems = ["x86_64-linux" "aarch64-linux"];
+      systems = [
+        "x86_64-linux"
+        "aarch64-linux"
+      ];
     };
 
   ############################################################################
@@ -351,6 +369,7 @@
     };
 
     astal-shell.url = "github:knoopx/ags";
+    ags.url = "github:aylur/ags";
 
     vscode-server = {
       url = "github:nix-community/nixos-vscode-server";

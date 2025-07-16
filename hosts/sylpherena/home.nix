@@ -27,9 +27,9 @@
     bitwig-studio
     #atuin-desktop
   ];
-  
+
   programs.gdb.dashboard.enable = false;
-  programs._1password-gui.enableSshAgent = false;
+  #programs._1password-gui.enableSshAgent = false;
   services = {
     gpg-agent = {
       enable = true;

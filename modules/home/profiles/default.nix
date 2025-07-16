@@ -1,4 +1,5 @@
-{...}: {
+{ ... }:
+{
   imports = [
     ./desktop
     ./devtools
@@ -9,5 +10,6 @@
     ./nix-tools.nix
     ./opstools.nix
     ./waybar.nix
+    ./astal.nix
   ];
 }

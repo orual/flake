@@ -9,9 +9,11 @@
   lib,
   ...
 }:
-with lib; let
+with lib;
+let
   cfg = config.profiles.terminal;
-in {
+in
+{
   options.profiles.terminal = with types; {
     font = {
       family = mkOption {
@@ -61,182 +63,180 @@ in {
           fi
         '';
       in
-        mkMerge [
-          {
-            programs.alacritty = {
-              settings = {
-                # Configuration for Alacritty, the GPU enhanced terminal emulator
-                # Live config reload (changes require restart)
-                live_config_reload = true;
-                window = {
-                  dynamic_title = true;
-                  # Window dimensions in character columns and lines
-                  # (changes require restart)
-                  dimensions = {
-                    columns = 120;
-                    lines = 80;
-                  };
-
-                  # Adds this many blank pixels of padding around the window
-                  # This is DPI-aware.
-                  # (change requires restart)
-                  padding = {
-                    x = cfg.padding.x;
-                    y = cfg.padding.y;
-                  };
-
-                  # Window decorations
-                  # Setting this to false will result in window without borders and title bar.
-                  # decorations: false
-                  decorations_theme_variant = "Dark";
-                  class = {
-                    instance = "Alacritty";
-                    general = "Alacritty";
-                  };
+      mkMerge [
+        {
+          programs.alacritty = {
+            settings = {
+              # Configuration for Alacritty, the GPU enhanced terminal emulator
+              # Live config reload (changes require restart)
+              #live_config_reload = true;
+              window = {
+                dynamic_title = true;
+                # Window dimensions in character columns and lines
+                # (changes require restart)
+                dimensions = {
+                  columns = 120;
+                  lines = 80;
                 };
 
-                cursor = {
-                  style = {
-                    blinking = "On";
-                    shape = "Block";
-                  };
+                # Adds this many blank pixels of padding around the window
+                # This is DPI-aware.
+                # (change requires restart)
+                padding = {
+                  x = cfg.padding.x;
+                  y = cfg.padding.y;
                 };
 
-                # When true, bold text is drawn using the bright variant of colors.
-                colors.draw_bold_text_with_bright_colors = true;
+                # Window decorations
+                # Setting this to false will result in window without borders and title bar.
+                # decorations: false
+                decorations_theme_variant = "Dark";
+                class = {
+                  instance = "Alacritty";
+                  general = "Alacritty";
+                };
+              };
 
-                # Font configuration for alacritty (changes require restart)
-                font = {
-                  # Point size of the font
-                  size = mkDefault cfg.font.sizePt;
-                  # The normal (roman) font face to use.
-                  normal = {
-                    family = mkDefault cfg.font.family;
-                    style = "Regular";
-                  };
+              cursor = {
+                style = {
+                  blinking = "On";
+                  shape = "Block";
+                };
+              };
 
-                  bold = {
-                    family = mkDefault cfg.font.family;
-                    style = "Bold";
-                  };
+              # When true, bold text is drawn using the bright variant of colors.
+              colors.draw_bold_text_with_bright_colors = true;
 
-                  italic = {
-                    family = mkDefault cfg.font.family;
-                    style = "Italic";
-                  };
+              # Font configuration for alacritty (changes require restart)
+              font = {
+                # Point size of the font
+                size = mkDefault cfg.font.sizePt;
+                # The normal (roman) font face to use.
+                normal = {
+                  family = mkDefault cfg.font.family;
+                  style = "Regular";
+                };
+
+                bold = {
+                  family = mkDefault cfg.font.family;
+                  style = "Bold";
+                };
+
+                italic = {
+                  family = mkDefault cfg.font.family;
+                  style = "Italic";
                 };
               };
             };
-          }
-          (mkIf config.programs.zsh.enable {
-            programs.zsh.initExtra = fixTermEnvVar;
-          })
-          (mkIf config.programs.bash.enable {
-            programs.bash.initExtra = fixTermEnvVar;
-          })
-        ]
+          };
+        }
+        (mkIf config.programs.zsh.enable {
+          programs.zsh.initExtra = fixTermEnvVar;
+        })
+        (mkIf config.programs.bash.enable {
+          programs.bash.initExtra = fixTermEnvVar;
+        })
+      ]
     ))
     #
     # WezTerm
     #
-    (
-      mkIf config.programs.wezterm.enable (
-        let
-          waylandGnomeScript = "wayland_gnome";
-          bgColor = "#242424";
-        in {
-          programs.wezterm = {
-            enableZshIntegration = true;
-            enableBashIntegration = true;
-            extraConfig = ''
-              -- Pull in the wezterm API
-              local wezterm = require 'wezterm'
+    (mkIf config.programs.wezterm.enable (
+      let
+        waylandGnomeScript = "wayland_gnome";
+        bgColor = "#242424";
+      in
+      {
+        programs.wezterm = {
+          enableZshIntegration = true;
+          enableBashIntegration = true;
+          extraConfig = ''
+            -- Pull in the wezterm API
+            local wezterm = require 'wezterm'
 
-              -- This will hold the configuration.
-              local config = wezterm.config_builder()
+            -- This will hold the configuration.
+            local config = wezterm.config_builder()
 
-              config.font = wezterm.font_with_fallback {
-                '${cfg.font.family}',
-                -- Prefer monochrome emoji
-                { family = 'Noto Emoji', assume_emoji_presentation = true },
-              }
-              config.font_size = ${toString cfg.font.sizePt}.0
-              config.harfbuzz_features = { 'calt=1', 'clig=1', 'liga=1' }
+            config.font = wezterm.font_with_fallback {
+              '${cfg.font.family}',
+              -- Prefer monochrome emoji
+              { family = 'Noto Emoji', assume_emoji_presentation = true },
+            }
+            config.font_size = ${toString cfg.font.sizePt}.0
+            config.harfbuzz_features = { 'calt=1', 'clig=1', 'liga=1' }
 
-              -- This fixes broken font rendering on recent NixOS; see:
-              -- https://github.com/wez/wezterm/issues/5990#issuecomment-2305416553
-              -- https://github.com/NixOS/nixpkgs/issues/336069
-              config.front_end = "WebGpu"
+            -- This fixes broken font rendering on recent NixOS; see:
+            -- https://github.com/wez/wezterm/issues/5990#issuecomment-2305416553
+            -- https://github.com/NixOS/nixpkgs/issues/336069
+            config.front_end = "WebGpu"
 
-              -- Window padding
-              config.window_padding = {
-                top = '${toString cfg.padding.y}px',
-                bottom = '${toString cfg.padding.y}px',
-                left = '${toString cfg.padding.x}px',
-                right = '${toString cfg.padding.x}px',
-              }
+            -- Window padding
+            config.window_padding = {
+              top = '${toString cfg.padding.y}px',
+              bottom = '${toString cfg.padding.y}px',
+              left = '${toString cfg.padding.x}px',
+              right = '${toString cfg.padding.x}px',
+            }
 
-              config.enable_tab_bar = true
-              config.hide_tab_bar_if_only_one_tab = true
-              config.window_decorations ="INTEGRATED_BUTTONS|RESIZE"
-              config.window_frame = {
-                font = wezterm.font { family = '${cfg.font.family}', weight = 'Bold', },
-                font_size = ${toString cfg.font.sizePt}.0,
+            config.enable_tab_bar = true
+            config.hide_tab_bar_if_only_one_tab = true
+            config.window_decorations ="INTEGRATED_BUTTONS|RESIZE"
+            config.window_frame = {
+              font = wezterm.font { family = '${cfg.font.family}', weight = 'Bold', },
+              font_size = ${toString cfg.font.sizePt}.0,
 
-                -- The overall background color of the tab bar when
-                -- the window is focused
-                active_titlebar_bg = '${bgColor}',
+              -- The overall background color of the tab bar when
+              -- the window is focused
+              active_titlebar_bg = '${bgColor}',
 
-                -- The overall background color of the tab bar when
-                -- the window is not focused
-                inactive_titlebar_bg = '${bgColor}',
-              }
+              -- The overall background color of the tab bar when
+              -- the window is not focused
+              inactive_titlebar_bg = '${bgColor}',
+            }
 
-              -- This config appears to make the mouse cursor disappear whenever
-              -- it's over a Wezterm window, not just when actively typing, at
-              -- least on my system (GNOME3 on Wayland). This makes it impossible
-              -- to use the mouse to select text in the terminal, which is
-              -- borderline unusable.
-              config.hide_mouse_cursor_when_typing = false
+            -- This config appears to make the mouse cursor disappear whenever
+            -- it's over a Wezterm window, not just when actively typing, at
+            -- least on my system (GNOME3 on Wayland). This makes it impossible
+            -- to use the mouse to select text in the terminal, which is
+            -- borderline unusable.
+            config.hide_mouse_cursor_when_typing = false
 
-              config.ssh_domains = {
-                {
-                  -- This name identifies the domain
-                  name = 'pattern',
-                  -- The hostname or address to connect to. Will be used to match settings
-                  -- from your ssh config file
-                  remote_address = 'pattern',
-                  -- The username to use on the remote host
-                  username = 'orual',
-                },
-              }
-              local ${waylandGnomeScript} = require '${waylandGnomeScript}'
-              ${waylandGnomeScript}.apply_to_config(config)
+            config.ssh_domains = {
+              {
+                -- This name identifies the domain
+                name = 'pattern',
+                -- The hostname or address to connect to. Will be used to match settings
+                -- from your ssh config file
+                remote_address = 'pattern',
+                -- The username to use on the remote host
+                username = 'orual',
+              },
+            }
+            local ${waylandGnomeScript} = require '${waylandGnomeScript}'
+            ${waylandGnomeScript}.apply_to_config(config)
 
-              return config
-            '';
-          };
-          xdg.configFile."wezterm/${waylandGnomeScript}.lua".source = ./wezterm/wayland_gnome.lua;
-        }
-      )
-    )
+            return config
+          '';
+        };
+        xdg.configFile."wezterm/${waylandGnomeScript}.lua".source = ./wezterm/wayland_gnome.lua;
+      }
+    ))
     #
     # GhosTTY
     #
-    (mkIf config.programs.ghostty.enable
-      {
-        programs.ghostty = {
-          enableBashIntegration = true;
-          enableFishIntegration = true;
-          enableZshIntegration = true;
-          settings = {
-            font-family = cfg.font.family;
-            font-size = cfg.font.sizePt;
-            window-padding-x = cfg.padding.x;
-            window-padding-y = cfg.padding.y;
-            window-padding-color = "extend";
-          };
+    (mkIf config.programs.ghostty.enable {
+      programs.ghostty = {
+        enableBashIntegration = true;
+        enableFishIntegration = true;
+        enableZshIntegration = true;
+        settings = {
+          font-family = cfg.font.family;
+          font-size = cfg.font.sizePt;
+          window-padding-x = cfg.padding.x;
+          window-padding-y = cfg.padding.y;
+          window-padding-color = "extend";
         };
-      })
+      };
+    })
   ];
 }
