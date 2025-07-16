@@ -20,6 +20,10 @@ in
 
     home.packages = with pkgs; [
       quickshell
+      qt6Packages.qt5compat
+      libsforQt5.qt5.qgraphicaleffects
+      kdePackages.qtbase
+      kdePackages.qtdeclarative
     ];
   };
 }

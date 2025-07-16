@@ -546,6 +546,10 @@ with lib;
     services.swaync = {
       enable = true;
     };
+    services.cliphist = {
+      enable = true;
+      allowImages = true;
+    };
     systemd.user.services."swaybg" = {
       Unit = {
         Description = "wallpapers! brought to you by stylix! :3";
