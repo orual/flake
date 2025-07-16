@@ -1,8 +1,18 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 let
-  gdbinitPkg = { stdenv, lib, pkgs }:
+  gdbinitPkg =
+    {
+      stdenv,
+      lib,
+      pkgs,
+    }:
     stdenv.mkDerivation {
       pname = "gdb-dashboard";
       version = "latest";
@@ -70,8 +80,10 @@ in
     ];
 
     home.file.".gdbinit".text =
-      let pkg = pkgs.callPackage gdbinitPkg { };
-      in builtins.readFile "${pkg}/.gdbinit";
+      let
+        pkg = pkgs.callPackage gdbinitPkg { };
+      in
+      builtins.readFile "${pkg}/.gdbinit";
 
     xdg.configFile."gdb-dashboard/extraConfig".text = cfg.extraConfig;
   };

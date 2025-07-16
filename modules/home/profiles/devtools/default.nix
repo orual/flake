@@ -3,17 +3,20 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.profiles.devtools;
-in {
-  imports = [./gdb-dashboard.nix];
+in
+{
+  imports = [ ./gdb-dashboard.nix ];
 
   options.profiles.devtools = with lib; {
     enable = mkEnableOption "Profile for development tools";
     enablePython = mkEnableOption "Enable Python";
   };
 
-  config = with lib;
+  config =
+    with lib;
     mkMerge [
       (mkIf cfg.enable {
         home.packages = with pkgs; [
@@ -35,7 +38,7 @@ in {
           # `just` --- a command runner
           just
           # V I B E C O D I N G
-          #claude-code-latest
+          claude-code-latest
           #opencode-latest
           # TURNS OUT THIS HAS TO BE IN SYSTEMPACKAGES LOL
           # # xfel --- FEL tools for Allwinner SoCs
@@ -87,7 +90,9 @@ in {
           kicad
         ];
 
-        home.sessionPath = ["$HOME/.config/Code/User/globalStorage/ms-vscode-remote.remote-containers/cli-bin"];
+        home.sessionPath = [
+          "$HOME/.config/Code/User/globalStorage/ms-vscode-remote.remote-containers/cli-bin"
+        ];
 
         # Dev tools with extra configuration
         programs = {
@@ -108,9 +113,7 @@ in {
           };
           helix.enable = mkDefault true;
 
-          jq.enable =
-            mkDefault
-            true;
+          jq.enable = mkDefault true;
 
           direnv = {
             enable = mkDefault true;
@@ -120,7 +123,10 @@ in {
       })
 
       (mkIf cfg.enablePython {
-        home.packages = with pkgs; [python312 python312Packages.pip];
+        home.packages = with pkgs; [
+          python312
+          python312Packages.pip
+        ];
       })
 
       (mkIf config.programs.zed-editor.enable {
@@ -162,9 +168,26 @@ in {
                 render = true;
               };
               statusline = {
-                left = ["mode" "spinner" "spacer" "version-control"];
-                center = ["file-name" "read-only-indicator" "file-modification-indicator"];
-                right = ["diagnostics" "selections" "register" "position" "file-encoding" "file-line-ending" "file-type"];
+                left = [
+                  "mode"
+                  "spinner"
+                  "spacer"
+                  "version-control"
+                ];
+                center = [
+                  "file-name"
+                  "read-only-indicator"
+                  "file-modification-indicator"
+                ];
+                right = [
+                  "diagnostics"
+                  "selections"
+                  "register"
+                  "position"
+                  "file-encoding"
+                  "file-line-ending"
+                  "file-type"
+                ];
                 separator = "│";
                 mode.normal = "NOR";
                 mode.insert = "INS";

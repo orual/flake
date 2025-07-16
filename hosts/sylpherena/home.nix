@@ -25,11 +25,11 @@
     yubioath-flutter
     protonup-qt
     bitwig-studio
-    #atuin-desktop
+    atuin-desktop
   ];
 
-  programs.gdb.dashboard.enable = false;
-  #programs._1password-gui.enableSshAgent = false;
+  #programs.gdb.dashboard.enable = false;
+
   services = {
     gpg-agent = {
       enable = true;

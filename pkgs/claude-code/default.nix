@@ -15,7 +15,7 @@ buildNpmPackage rec {
     hash = "sha256-flG9VlnQfMfGFBbs6RdQKSbceD/Tke19Euo8znR5OG0=";
   };
 
-  npmDepsHash = "sha256-ahBFLMx/9QCohp1Wexv9F4BRz6ou4T6NTPnUe+bz5vM=";
+  npmDepsHash = "sha256-+lnLOD3Hq794tJKXvBZdAbHGYv5/Tbr79qEThP1MG6w=";
 
   postPatch = ''
     cp ${./package-lock.json} package-lock.json
@@ -39,7 +39,7 @@ buildNpmPackage rec {
     homepage = "https://github.com/anthropics/claude-code";
     downloadPage = "https://www.npmjs.com/package/@anthropic-ai/claude-code";
     license = lib.licenses.unfree;
-    maintainers = [lib.maintainers.malo];
+    maintainers = [ lib.maintainers.malo ];
     mainProgram = "claude";
   };
 }
