@@ -110,7 +110,7 @@ with lib;
         };
         shadow.enable = true;
 
-        # default-column-display = "tabbed";
+        default-column-display = "tabbed";
 
         tab-indicator = {
           position = "bottom";
@@ -126,12 +126,34 @@ with lib;
       input.trackball = {
         accel-profile = "adaptive";
       };
+      input.touchpad = {
+        tap = true;
+        dwt = true;
+        natural-scroll = true;
+        click-method = "clickfinger";
+      };
+      input.tablet = {
+        map-to-output = "eDP-1";
+      };
+      input.touch.map-to-output = "eDP-1";
       xwayland-satellite.enable = true;
       xwayland-satellite.path = "${pkgs.xwayland-satellite}/bin/xwayland-satellite";
       #hotkey-overlay.skip-at-startup = !nixosConfig.is-virtual-machine;
       #clipboard.disable-primary = true;
 
       screenshot-path = "~/Pictures/Screenshots/%Y-%m-%dT%H:%M:%S.png";
+
+      switch-events =
+        with config.lib.niri.actions;
+        let
+          sh = spawn "sh" "-c";
+        in
+        {
+          tablet-mode-on.action = sh "notify-send tablet-mode-on";
+          tablet-mode-off.action = sh "notify-send tablet-mode-off";
+          lid-open.action = sh "notify-send lid-open";
+          lid-close.action = sh "notify-send lid-close";
+        };
 
       binds =
         with config.lib.niri.actions;
@@ -523,9 +545,7 @@ with lib;
     home.packages = with pkgs; [
       # useful for testing webcams, etc
       cheese
-      libnotify
-      xwayland-satellite
-      cage
+
     ];
 
     programs.zen-browser = {
