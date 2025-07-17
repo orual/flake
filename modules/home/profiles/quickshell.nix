@@ -3,11 +3,14 @@
   lib,
   pkgs,
   ...
-}:
-let
+}: let
   cfg = config.profiles.quickshell;
-in
-{
+  homeDir = config.home.homeDirectory;
+  quickshellDir = "${homeDir}/flake/modules/home/profiles/quickshell/qml";
+  quickshellTarget = "${homeDir}/.config/quickshell";
+  faceIconSource = "${homeDir}/flake/modules/home/profiles/Vin_Pride_pfp.png";
+  faceIconTarget = "${homeDir}/.face.icon";
+in {
   options.profiles.quickshell = with lib; {
     enable = mkEnableOption "quickshell profile";
   };
@@ -19,6 +22,10 @@ in
       systemd.enable = true;
       systemd.target = "niri-session.target";
     };
+    home.activation.symlinkQuickshellAndFaceIcon = lib.hm.dag.entryAfter ["writeBoundary"] ''
+      ln -sfn "${quickshellDir}" "${quickshellTarget}"
+      ln -sfn "${faceIconSource}" "${faceIconTarget}"
+    '';
 
     home.packages = with pkgs; [
       quickshell
