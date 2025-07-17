@@ -56,17 +56,17 @@ with lib;
 
   config = mkIf cfg.enable {
     programs.niri.package = pkgs.niri-unstable;
-    gtk = {
-      enable = true;
-      iconTheme = {
-        name = "Adwaita"; # or whatever you want
-        package = pkgs.adwaita-icon-theme;
-      };
-    };
+    # gtk = {
+    #   enable = true;
+    #   iconTheme = {
+    #     name = "Adwaita"; # or whatever you want
+    #     package = pkgs.adwaita-icon-theme;
+    #   };
+    # };
     programs.niri.settings = {
-      environment."GTK_THEME" = "Adwaita:dark";
+      # environment."GTK_THEME" = "Adwaita:dark";
       input.keyboard.xkb.options = "compose:rwin";
-      prefer-no-csd = false;
+      prefer-no-csd = true;
 
       workspaces."main" = { };
       # workspaces."work" = {};

@@ -1,9 +1,9 @@
 {
-    "isDarkTheme": true,
-    "avatarSource": "https://cdn.discordapp.com/avatars/158005126638993408/de403b05fd7f74bb17e01a9b066a30fa?size=64",
-    "weatherLocation": "Dinslaken",
-    "displayTime": 6000,
-    "videoPath": "~/Videos/",
-    "wallpaperDirectory": "/home/lysec/nixos/assets/wallpapers/",
-    "lastWallpaperPath": "/home/lysec/nixos/assets/wallpapers/girl.jpg"
+  "isDarkTheme": true,
+  "avatarSource": "/home/orual/.face.icon",
+  "weatherLocation": "Toronto",
+  "displayTime": 6000,
+  "videoPath": "~/Videos/",
+  "wallpaperDirectory": "/home/orual/Pictures/Wallpapers/",
+  "lastWallpaperPath": "/home/orual/Pictures/Wallpapers/abstract-colorful-5k-wallpaper-5120x3200_577747-mm-90.jpg"
 }

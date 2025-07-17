@@ -1,6 +1,12 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
-with lib; {
+with lib;
+{
   imports = [
     # Include the results of the hardware scan.
     ./hardware-configuration.nix
@@ -48,32 +54,34 @@ with lib; {
 
     ### secureboot using Lanzaboote ###
     # TODO: move this to a module?
-    # lanzaboote = {
-    #   enable = true;
-    #   pkiBundle = "/etc/secureboot";
-    #   # don't keep more than 16 old configurations, to keep the /boot partition
-    #   # from filling up.
-    #   configurationLimit = 16;
-    # };
+    lanzaboote = {
+      enable = true;
+      pkiBundle = "/var/lib/sbctl";
+      # don't keep more than 16 old configurations, to keep the /boot partition
+      # from filling up.
+      configurationLimit = 16;
+    };
 
     # Lanzaboote currently replaces the systemd-boot module.
     # This setting is usually set to true in configuration.nix
     # generated at installation time. So we force it to false
     # for now.
-    #loader.systemd-boot.enable = mkForce false;
-    loader.systemd-boot.enable = true;
+    loader.systemd-boot.enable = mkForce false;
+    #loader.systemd-boot.enable = true;
   };
   fileSystems = {
     "/".options = [ "compress=zstd" ];
     "/home".options = [ "compress=zstd" ];
-    "/nix".options = [ "compress=zstd" "noatime" ];
+    "/nix".options = [
+      "compress=zstd"
+      "noatime"
+    ];
     #"/swap".options = [ "noatime" ];
   };
-  #swapDevices = [{ 
-  #  device = "/swap/swapfile"; 
-  #  size = 72*1024; # Creates an 8GB swap file 
+  #swapDevices = [{
+  #  device = "/swap/swapfile";
+  #  size = 72*1024; # Creates an 8GB swap file
   #}];
-
 
   environment.systemPackages = with pkgs; [
     # For debugging and troubleshooting Secure Boot.
@@ -96,9 +104,8 @@ with lib; {
     };
 
     pcscd.enable = true;
-    udev.packages = [pkgs.yubikey-personalization];
+    udev.packages = [ pkgs.yubikey-personalization ];
   };
-
 
   security.pam.services = {
     login.u2fAuth = true;
@@ -108,7 +115,7 @@ with lib; {
     enable = true;
     debug = false;
     mode = "challenge-response";
-    id = ["26917133"];
+    id = [ "26917133" ];
   };
 
   # disable the Gnome keyring, since we are using 1password to manage secrets
