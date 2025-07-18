@@ -67,21 +67,25 @@ in
   with lib; {
     options.profiles.desktop.niri = {
       enable = mkEnableOption "niri profile";
+      enableTablet = mkEnableOption "tablet-specific ux stuff";
     };
 
     config = mkIf cfg.enable {
       programs.niri.package = pkgs.niri-unstable;
-      gtk = {
-        enable = true;
-        iconTheme = {
-          name = "Adwaita"; # or whatever you want
-          package = pkgs.adwaita-icon-theme;
-        };
-      };
+      # gtk = {
+      #   enable = true;
+      #   iconTheme = {
+      #     name = "Adwaita"; # or whatever you want
+      #     package = pkgs.adwaita-icon-theme;
+      #   };
+      # };
       programs.niri.settings = {
-        environment."GTK_THEME" = "Adwaita:dark";
+        # environment."GTK_THEME" = "Adwaita:dark";
         input.keyboard.xkb.options = "compose:rwin";
-        prefer-no-csd = false;
+        prefer-no-csd =
+          if cfg.enableTablet
+          then false
+          else true;
 
         workspaces."main" = {};
         # workspaces."work" = {};
@@ -115,7 +119,10 @@ in
             {proportion = 2.0 / 3.0;}
           ];
           default-column-width = {
-            proportion = 1.0 / 2.5;
+            proportion =
+              if cfg.enableTablet
+              then 2.0 / 3.0
+              else 1.0 / 2.5;
           };
           # fog of war
           focus-ring = {
@@ -125,7 +132,10 @@ in
           };
           shadow.enable = true;
 
-          default-column-display = "tabbed";
+          default-column-display =
+            if cfg.enableTablet
+            then "tabbed"
+            else "normal";
 
           tab-indicator = {
             position = "bottom";
@@ -161,8 +171,8 @@ in
         switch-events = with config.lib.niri.actions; let
           sh = spawn "sh" "-c";
         in {
-          tablet-mode-on.action = sh "notify-send tablet-mode-on";
-          tablet-mode-off.action = sh "notify-send tablet-mode-off";
+          tablet-mode-on.action = sh "gsettings set org.gnome.desktop.a11y.applications screen-keyboard-enabled true";
+          tablet-mode-off.action = sh "gsettings set org.gnome.desktop.a11y.applications screen-keyboard-enabled false";
           lid-open.action = sh "notify-send lid-open";
           lid-close.action = sh "notify-send lid-close";
         };
@@ -344,7 +354,6 @@ in
                 "xdg-desktop-portal-gnome"
                 "waybar"
                 "pipewire"
-                "qs"
               ];
               commands = builtins.concatStringsSep ";" (map (unit: "systemctl --user status ${unit}") units);
             in [
@@ -472,7 +481,10 @@ in
             };
             open-floating = true;
             default-column-width = {
-              proportion = 0.4;
+              proportion =
+                if cfg.enableTablet
+                then 0.8
+                else 0.4;
             };
             default-floating-position = {
               relative-to = "top-left";
@@ -533,7 +545,7 @@ in
 
         layer-rules = [
           {
-            matches = [{namespace = "waybar";}];
+            matches = [{namespace = "waybar";} {namespace = "quickshell";}];
 
             opacity = 0.8;
           }

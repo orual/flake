@@ -1,11 +1,10 @@
-{ pkgs, ... }:
-
-{
+{pkgs, ...}: {
   profiles = {
     desktop = {
       enable = true;
       gnome3.enable = true;
       niri.enable = true;
+      niri.enableTablet = true;
     };
     devtools = {
       enable = true;

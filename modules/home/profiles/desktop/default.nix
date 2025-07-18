@@ -4,11 +4,9 @@
   lib,
   pkgs,
   ...
-}:
-let
+}: let
   cfg = config.profiles.desktop;
-in
-{
+in {
   imports = [
     ./gnome3.nix
     ./kde.nix
@@ -20,43 +18,42 @@ in
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages =
-      with pkgs;
-      let
-        unfreePkgs = [
-          slack
-          (vesktop.override { withSystemVencord = false; })
-          signal-desktop-bin
-          zoom-us
-          spotify
-          (obsidian.override { })
-          beeper-beta
-        ];
-      in
-      (
-        [
-          ### images, media, etc ###
-          kdePackages.ark
-          darktable
-          inkscape
-          obs-studio
-          # broken due to https://github.com/NixOS/nixpkgs/issues/188525
-          # llpp # fast & lightweight PDF pager
-          krita # like the GNU Image Manipulation Photoshop, but more good
-          gimp
-          syncplay
-          vlc
-          #plex-desktop
-          ghostscriptX
-          losslesscut-bin
+    home.packages = with pkgs; let
+      unfreePkgs = [
+        slack
+        (vesktop.override {withSystemVencord = false;})
+        signal-desktop-bin
+        zoom-us
+        spotify
+        (obsidian.override {})
+        beeper-beta
+        davinci-resolve
+      ];
+    in (
+      [
+        ### images, media, etc ###
+        kdePackages.ark
+        darktable
+        inkscape
+        obs-studio
+        # broken due to https://github.com/NixOS/nixpkgs/issues/188525
+        # llpp # fast & lightweight PDF pager
+        krita # like the GNU Image Manipulation Photoshop, but more good
+        gimp
+        syncplay
+        vlc
+        #plex-desktop
+        ghostscriptX
+        losslesscut-bin
 
-          ### stuff ###
-          chromium
-          torrential
-          zulip
-        ]
-        ++ unfreePkgs
-      );
+        ### stuff ###
+        chromium
+        torrential
+        zulip
+        libreoffice-fresh
+      ]
+      ++ unfreePkgs
+    );
     #############################################################################
     ## Programs                                                                 #
     #############################################################################
@@ -67,7 +64,7 @@ in
       keychain = {
         enable = true;
         enableXsessionIntegration = true;
-        keys = [ "id_ed25519" ];
+        keys = ["id_ed25519"];
       };
     };
 
