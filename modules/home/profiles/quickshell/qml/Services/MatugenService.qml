@@ -18,7 +18,7 @@ Item {
     // File watcher for the matugen quickshell-colors.qml
     FileView {
         id: matugenFile
-        path: "/home/orual/flake/modules/home/profiles/quickshell/qml/Data/quickshell-colors.qml"
+        path: "~/.config/quickshell/qml/Data/quickshell-colors.qml"
         blockWrites: true
 
         onLoaded: {

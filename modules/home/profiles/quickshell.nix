@@ -8,7 +8,7 @@ let
   cfg = config.profiles.quickshell;
   homeDir = config.home.homeDirectory;
   quickshellDir = "${homeDir}/flake/modules/home/profiles/quickshell/qml";
-  quickshellTarget = "${homeDir}/.config/quickshell";
+  quickshellTarget = "${homeDir}/.config/quickshellx";
   faceIconSource = "${homeDir}/flake/modules/home/profiles/Vin_Pride_pfp.png";
   faceIconTarget = "${homeDir}/.face.icon";
 in
@@ -20,7 +20,7 @@ in
   config = lib.mkIf cfg.enable {
     programs.quickshell = {
       enable = true;
-      activeConfig = null;
+      activeConfig = "shell";
       systemd.enable = true;
       #systemd.target = "graphical-session.target";
     };

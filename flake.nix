@@ -31,6 +31,7 @@
         (import ./pkgs/overlay.nix)
         rust-overlay.overlays.default
         # inputs.atuin.overlays.default
+
         (_: prev: {
           claude-desktop = inputs.claude-desktop.packages.${prev.system}.claude-desktop-with-fhs;
         })

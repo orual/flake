@@ -18,42 +18,42 @@ Singleton {
         watchChanges: false
 
         onLoaded: {
-            settings.isLoading = true  // Disable auto-save during loading
+            settings.isLoading = true;  // Disable auto-save during loading
             try {
-                var content = JSON.parse(text())
+                var content = JSON.parse(text());
                 if (content) {
                     // Load with fallback defaults
-                    settings.isDarkTheme = content.isDarkTheme ?? true
-                    settings.currentTheme = content.currentTheme ?? (content.isDarkTheme !== false ? "oxocarbon_dark" : "oxocarbon_light")
-                    settings.useCustomAccent = content.useCustomAccent ?? false
-                    settings.avatarSource = content.avatarSource ?? "/home/orual/.face.icon"
-                    settings.weatherLocation = content.weatherLocation ?? "Toronto"
-                    settings.useFahrenheit = content.useFahrenheit ?? false
-                    settings.displayTime = content.displayTime ?? 6000
-                    settings.videoPath = content.videoPath ?? "~/Videos/"
-                    settings.wallpaperDirectory = content.wallpaperDirectory ?? "/home/orual/Pictures/Wallpapers/"
-                    settings.lastWallpaperPath = content.lastWallpaperPath ?? ""
-                    settings.customDarkAccent = content.customDarkAccent ?? "#be95ff"
-                    settings.customLightAccent = content.customLightAccent ?? "#8a3ffc"
-                    settings.autoSwitchPlayer = content.autoSwitchPlayer ?? true
-                    settings.alwaysShowPlayerDropdown = content.alwaysShowPlayerDropdown ?? true
-                    settings.historyLimit = content.historyLimit ?? 25
-                    settings.nightLightEnabled = content.nightLightEnabled ?? false
-                    settings.nightLightWarmth = content.nightLightWarmth ?? 0.4
-                    settings.nightLightAuto = content.nightLightAuto ?? false
-                    settings.nightLightStartHour = content.nightLightStartHour ?? 20
-                    settings.nightLightEndHour = content.nightLightEndHour ?? 6
-                    settings.nightLightManualOverride = content.nightLightManualOverride ?? false
-                    settings.nightLightManuallyEnabled = content.nightLightManuallyEnabled ?? false
-                    settings.ignoredApps = content.ignoredApps ?? []
-                    settings.workspaceBurstEnabled = content.workspaceBurstEnabled ?? true
-                    settings.workspaceGlowEnabled = content.workspaceGlowEnabled ?? true
+                    settings.isDarkTheme = content.isDarkTheme ?? true;
+                    settings.currentTheme = content.currentTheme ?? (content.isDarkTheme !== false ? "oxocarbon_dark" : "oxocarbon_light");
+                    settings.useCustomAccent = content.useCustomAccent ?? false;
+                    settings.avatarSource = content.avatarSource ?? "/home/orual/.face.icon";
+                    settings.weatherLocation = content.weatherLocation ?? "Toronto";
+                    settings.useFahrenheit = content.useFahrenheit ?? false;
+                    settings.displayTime = content.displayTime ?? 6000;
+                    settings.videoPath = content.videoPath ?? "~/Videos/";
+                    settings.wallpaperDirectory = content.wallpaperDirectory ?? "/home/orual/Pictures/Wallpapers/";
+                    settings.lastWallpaperPath = content.lastWallpaperPath ?? "/home/orual/flake/modules/home/profiles/desktop/abstract-colorful-5k-wallpaper-5120x3200_577747-mm-90.jpg";
+                    settings.customDarkAccent = content.customDarkAccent ?? "#be95ff";
+                    settings.customLightAccent = content.customLightAccent ?? "#8a3ffc";
+                    settings.autoSwitchPlayer = content.autoSwitchPlayer ?? true;
+                    settings.alwaysShowPlayerDropdown = content.alwaysShowPlayerDropdown ?? true;
+                    settings.historyLimit = content.historyLimit ?? 25;
+                    settings.nightLightEnabled = content.nightLightEnabled ?? false;
+                    settings.nightLightWarmth = content.nightLightWarmth ?? 0.4;
+                    settings.nightLightAuto = content.nightLightAuto ?? false;
+                    settings.nightLightStartHour = content.nightLightStartHour ?? 20;
+                    settings.nightLightEndHour = content.nightLightEndHour ?? 6;
+                    settings.nightLightManualOverride = content.nightLightManualOverride ?? false;
+                    settings.nightLightManuallyEnabled = content.nightLightManuallyEnabled ?? false;
+                    settings.ignoredApps = content.ignoredApps ?? [];
+                    settings.workspaceBurstEnabled = content.workspaceBurstEnabled ?? true;
+                    settings.workspaceGlowEnabled = content.workspaceGlowEnabled ?? true;
                 }
             } catch (e) {
-                console.log("Error parsing user settings:", e)
+                console.log("Error parsing user settings:", e);
             }
             // Re-enable auto-save after loading is complete
-            settings.isLoading = false
+            settings.isLoading = false;
         }
     }
 
@@ -69,7 +69,7 @@ Singleton {
     property int historyLimit: 25  // Notification history limit
     property string videoPath: "~/Videos/"
     property string wallpaperDirectory: "/home/orual/Pictures/Wallpapers/"
-    property string lastWallpaperPath: ""
+    property string lastWallpaperPath: "/home/orual/flake/modules/home/profiles/desktop/abstract-colorful-5k-wallpaper-5120x3200_577747-mm-90.jpg"
     property string customDarkAccent: "#be95ff"
     property string customLightAccent: "#8a3ffc"
 
@@ -94,49 +94,49 @@ Singleton {
     readonly property real borderWidth: 9
     readonly property real cornerRadius: 20
 
-    signal settingsChanged()
+    signal settingsChanged
 
     // Helper functions for managing ignored apps
     function addIgnoredApp(appName) {
         if (appName && appName.trim() !== "") {
-            var trimmedName = appName.trim()
+            var trimmedName = appName.trim();
             // Case-insensitive check for existing apps
-            var exists = false
+            var exists = false;
             for (var i = 0; i < ignoredApps.length; i++) {
                 if (ignoredApps[i].toLowerCase() === trimmedName.toLowerCase()) {
-                    exists = true
-                    break
+                    exists = true;
+                    break;
                 }
             }
             if (!exists) {
-                var newApps = ignoredApps.slice() // Create a copy
-                newApps.push(trimmedName)
-                ignoredApps = newApps
-                console.log("Added ignored app:", trimmedName, "Current list:", ignoredApps)
+                var newApps = ignoredApps.slice(); // Create a copy
+                newApps.push(trimmedName);
+                ignoredApps = newApps;
+                console.log("Added ignored app:", trimmedName, "Current list:", ignoredApps);
                 // Force save immediately (only if not loading)
                 if (!isLoading) {
-                    saveSettings()
+                    saveSettings();
                 }
-                return true
+                return true;
             }
         }
-        return false
+        return false;
     }
 
     function removeIgnoredApp(appName) {
-        var index = ignoredApps.indexOf(appName)
+        var index = ignoredApps.indexOf(appName);
         if (index > -1) {
-            var newApps = ignoredApps.slice() // Create a copy
-            newApps.splice(index, 1)
-            ignoredApps = newApps
-            console.log("Removed ignored app:", appName, "Current list:", ignoredApps)
+            var newApps = ignoredApps.slice(); // Create a copy
+            newApps.splice(index, 1);
+            ignoredApps = newApps;
+            console.log("Removed ignored app:", appName, "Current list:", ignoredApps);
             // Force save immediately (only if not loading)
             if (!isLoading) {
-                saveSettings()
+                saveSettings();
             }
-            return true
+            return true;
         }
-        return false
+        return false;
     }
 
     function saveSettings() {
@@ -167,167 +167,167 @@ Singleton {
                 ignoredApps: settings.ignoredApps,
                 workspaceBurstEnabled: settings.workspaceBurstEnabled,
                 workspaceGlowEnabled: settings.workspaceGlowEnabled
-            }
-            var jsonContent = JSON.stringify(content, null, 4)
-            settingsFile.setText(jsonContent)
+            };
+            var jsonContent = JSON.stringify(content, null, 4);
+            settingsFile.setText(jsonContent);
         } catch (e) {
-            console.log("Error saving user settings:", e)
+            console.log("Error saving user settings:", e);
         }
     }
 
     // Auto-save watchers (only save when not loading)
     onIsDarkThemeChanged: {
         if (!isLoading) {
-        settingsChanged()
-        saveSettings()
+            settingsChanged();
+            saveSettings();
         }
     }
     onCurrentThemeChanged: {
         if (!isLoading) {
-            settingsChanged()
-            saveSettings()
+            settingsChanged();
+            saveSettings();
         }
     }
     onUseCustomAccentChanged: {
         if (!isLoading) {
-            settingsChanged()
-            saveSettings()
+            settingsChanged();
+            saveSettings();
         }
     }
     onAvatarSourceChanged: {
         if (!isLoading) {
-        settingsChanged()
-        saveSettings()
+            settingsChanged();
+            saveSettings();
         }
     }
     onWeatherLocationChanged: {
         if (!isLoading) {
-            settingsChanged()
-            saveSettings()
+            settingsChanged();
+            saveSettings();
         }
     }
     onUseFahrenheitChanged: {
         if (!isLoading) {
-        settingsChanged()
-        saveSettings()
+            settingsChanged();
+            saveSettings();
         }
     }
     onDisplayTimeChanged: {
         if (!isLoading) {
-            settingsChanged()
-            saveSettings()
+            settingsChanged();
+            saveSettings();
         }
     }
     onHistoryLimitChanged: {
         if (!isLoading) {
-        settingsChanged()
-        saveSettings()
+            settingsChanged();
+            saveSettings();
         }
     }
     onVideoPathChanged: {
         if (!isLoading) {
-        settingsChanged()
-        saveSettings()
+            settingsChanged();
+            saveSettings();
         }
     }
     onWallpaperDirectoryChanged: {
         if (!isLoading) {
-        settingsChanged()
-        saveSettings()
+            settingsChanged();
+            saveSettings();
         }
     }
     onLastWallpaperPathChanged: {
         if (!isLoading) {
-            settingsChanged()
-            saveSettings()
+            settingsChanged();
+            saveSettings();
         }
     }
     onCustomDarkAccentChanged: {
         if (!isLoading) {
-            settingsChanged()
-            saveSettings()
+            settingsChanged();
+            saveSettings();
         }
     }
     onCustomLightAccentChanged: {
         if (!isLoading) {
-            settingsChanged()
-            saveSettings()
+            settingsChanged();
+            saveSettings();
         }
     }
     onAutoSwitchPlayerChanged: {
         if (!isLoading) {
-            settingsChanged()
-            saveSettings()
+            settingsChanged();
+            saveSettings();
         }
     }
     onAlwaysShowPlayerDropdownChanged: {
         if (!isLoading) {
-            settingsChanged()
-            saveSettings()
+            settingsChanged();
+            saveSettings();
         }
     }
     onNightLightEnabledChanged: {
         if (!isLoading) {
-            settingsChanged()
-            saveSettings()
+            settingsChanged();
+            saveSettings();
         }
     }
     onNightLightWarmthChanged: {
         if (!isLoading) {
-            settingsChanged()
-            saveSettings()
+            settingsChanged();
+            saveSettings();
         }
     }
     onNightLightAutoChanged: {
         if (!isLoading) {
-            settingsChanged()
-            saveSettings()
+            settingsChanged();
+            saveSettings();
         }
     }
     onNightLightStartHourChanged: {
         if (!isLoading) {
-            settingsChanged()
-            saveSettings()
+            settingsChanged();
+            saveSettings();
         }
     }
     onNightLightEndHourChanged: {
         if (!isLoading) {
-            settingsChanged()
-            saveSettings()
+            settingsChanged();
+            saveSettings();
         }
     }
     onNightLightManualOverrideChanged: {
         if (!isLoading) {
-            settingsChanged()
-            saveSettings()
+            settingsChanged();
+            saveSettings();
         }
     }
     onNightLightManuallyEnabledChanged: {
         if (!isLoading) {
-            settingsChanged()
-            saveSettings()
+            settingsChanged();
+            saveSettings();
         }
     }
     onIgnoredAppsChanged: {
         if (!isLoading) {
-        settingsChanged()
-        saveSettings()
+            settingsChanged();
+            saveSettings();
         }
     }
     onWorkspaceBurstEnabledChanged: {
         if (!isLoading) {
-            settingsChanged()
-            saveSettings()
+            settingsChanged();
+            saveSettings();
         }
     }
     onWorkspaceGlowEnabledChanged: {
         if (!isLoading) {
-            settingsChanged()
-            saveSettings()
+            settingsChanged();
+            saveSettings();
         }
     }
 
     Component.onCompleted: {
-        settingsFile.reload()
+        settingsFile.reload();
     }
 }

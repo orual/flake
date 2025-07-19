@@ -7,7 +7,7 @@ import "root:/Data/" as Data
 Rectangle {
     id: root
     required property var shell
-    property url avatarSource: Data.Settings.avatarSource
+    property string avatarSource: Data.Settings.avatarSource
     property string userName: ""        // will be set by process output
     property string userInfo: ""        // will hold uptime string
 
@@ -20,13 +20,9 @@ Rectangle {
 
     color: {
         if (isActive) {
-            return isHovered ?
-                   Qt.lighter(Data.ThemeManager.accentColor, 1.1) :
-                   Qt.rgba(Data.ThemeManager.accentColor.r, Data.ThemeManager.accentColor.g, Data.ThemeManager.accentColor.b, 0.3)
+            return isHovered ? Qt.lighter(Data.ThemeManager.accentColor, 1.1) : Qt.rgba(Data.ThemeManager.accentColor.r, Data.ThemeManager.accentColor.g, Data.ThemeManager.accentColor.b, 0.3);
         } else {
-            return isHovered ?
-                   Qt.lighter(Data.ThemeManager.accentColor, 1.2) :
-                   Qt.lighter(Data.ThemeManager.bgColor, 1.15)
+            return isHovered ? Qt.lighter(Data.ThemeManager.accentColor, 1.2) : Qt.lighter(Data.ThemeManager.bgColor, 1.15);
         }
     }
 
@@ -131,8 +127,6 @@ Rectangle {
                     visible: false
                 }
             }
-            
-
         }
     }
 
@@ -152,7 +146,7 @@ Rectangle {
 
         stdout: SplitParser {
             splitMarker: "\n"
-            onRead: (data) => {
+            onRead: data => {
                 const line = data.trim();
                 if (line.length > 0) {
                     root.userName = line.charAt(0).toUpperCase() + line.slice(1);
@@ -168,7 +162,7 @@ Rectangle {
 
         stdout: SplitParser {
             splitMarker: "\n"
-            onRead: (data) => {
+            onRead: data => {
                 const line = data.trim();
                 if (line.length > 0) {
                     // Parse traditional uptime output: " 10:30:00 up  1:23,  2 users,  load average: 0.08, 0.02, 0.01"
@@ -198,7 +192,7 @@ Rectangle {
 
         stderr: SplitParser {
             splitMarker: "\n"
-            onRead: (data) => {
+            onRead: data => {
                 console.log("Uptime error:", data);
                 root.userInfo = "Uptime error";
             }
@@ -211,24 +205,24 @@ Rectangle {
         running: true      // Always run the uptime timer
         repeat: true
         onTriggered: {
-            uptimeProcess.running = false
-            uptimeProcess.running = true
+            uptimeProcess.running = false;
+            uptimeProcess.running = true;
         }
     }
 
     Component.onCompleted: {
-        uptimeProcess.running = true  // Start uptime process on component load
+        uptimeProcess.running = true;  // Start uptime process on component load
     }
 
     Component.onDestruction: {
         if (usernameProcess.running) {
-            usernameProcess.running = false
+            usernameProcess.running = false;
         }
         if (uptimeProcess.running) {
-            uptimeProcess.running = false
+            uptimeProcess.running = false;
         }
         if (uptimeTimer.running) {
-            uptimeTimer.running = false
+            uptimeTimer.running = false;
         }
     }
 }
