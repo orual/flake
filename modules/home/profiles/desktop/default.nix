@@ -29,7 +29,7 @@ in
           signal-desktop-bin
           zoom-us
           spotify
-          obsidian
+          obsidian-x11
           beeper-beta
           davinci-resolve
         ];

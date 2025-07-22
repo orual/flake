@@ -51,7 +51,7 @@ let
     desktopName = "Obsidian";
     comment = "Knowledge base";
     icon = "obsidian";
-    exec = "obsidian %u";
+    exec = "xwlsat-run obsidian %u";
     categories = [ "Office" ];
     mimeTypes = [ "x-scheme-handler/obsidian" ];
   };
@@ -79,7 +79,7 @@ let
       mkdir -p $out/bin
       makeWrapper ${electron}/bin/electron $out/bin/obsidian \
         --add-flags $out/share/obsidian/app.asar \
-        --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform=wayland --enable-wayland-ime=true}}" \
+        --add-flags "\''${NIXOS_OZONE_WL:+\''${WAYLAND_DISPLAY:+--ozone-platform=x11 --enable-wayland-ime=false}}" \
         --add-flags ${lib.escapeShellArg commandLineArgs}
       install -m 444 -D resources/app.asar $out/share/obsidian/app.asar
       install -m 444 -D resources/obsidian.asar $out/share/obsidian/obsidian.asar

@@ -398,7 +398,7 @@ with lib;
 
       outputs = {
         "eDP-1" = {
-          scale = 1.25;
+          scale = 1.0;
           backdrop-color = "#191724";
         };
         "DP-1" = {
