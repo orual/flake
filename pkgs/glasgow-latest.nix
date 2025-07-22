@@ -1,107 +1,110 @@
 {
   lib,
-  python3,
+  python311,
+  python311Packages,
   fetchFromGitHub,
   sdcc,
   yosys,
   icestorm,
   nextpnr,
   unstableGitUpdater,
-}:
-
-python3.pkgs.buildPythonApplication rec {
-  pname = "glasgow";
-  version = "0-unstable-2025-05-28";
-  # from `pdm show`
-  realVersion =
-    let
+  pdm,
+}: let
+  python = python311;
+  stdenv = python311Packages.stdenv;
+in
+  python311Packages.buildPythonApplication rec {
+    pname = "glasgow";
+    version = "0-unstable-2025-07-18";
+    # from `pdm show`
+    realVersion = let
       tag = builtins.elemAt (lib.splitString "-" version) 0;
       rev = lib.substring 0 7 src.rev;
-    in
-    "${tag}.1.dev2373+g${rev}";
+    in "${tag}.1.dev2373+g${rev}";
 
-  pyproject = true;
+    pyproject = true;
 
-  src = fetchFromGitHub {
-    owner = "GlasgowEmbedded";
-    repo = "glasgow";
-    rev = "b044794921880866cddb290e99e99d276d4862fb";
-    sha256 = "sha256-WNgfqJCwC37gUrScPsynXcsvanRMpAtmXe0OjGJoTSI=";
-  };
+    src = fetchFromGitHub {
+      owner = "GlasgowEmbedded";
+      repo = "glasgow";
+      rev = "1d757d3996a1a0906bd7fac14a7a056afb057092";
+      sha256 = "sha256-4IRgdPikfTgM1mmIK6pG+dJfcpVEWDx5zFkKliuVs3k=";
+    };
 
-  nativeBuildInputs = [
-    python3.pkgs.pdm-backend
-    sdcc
-  ];
+    nativeBuildInputs = [
+      python311Packages.pdm-backend
+      sdcc
+    ];
 
-  propagatedBuildInputs = with python3.pkgs; [
-    typing-extensions
-    amaranth
-    packaging
-    platformdirs
-    fx2
-    libusb1
-    pyvcd
-    aiohttp
-    cobs
-  ];
+    propagatedBuildInputs = with python311Packages; [
+      typing-extensions
+      amaranth
+      packaging
+      platformdirs
+      fx2
+      libusb1
+      pyvcd
+      aiohttp
+      cobs
+      importlib-resources
+    ];
 
-  nativeCheckInputs = [
-    python3.pkgs.unittestCheckHook
-    yosys
-    icestorm
-    nextpnr
-  ];
+    nativeCheckInputs = [
+      python311Packages.unittestCheckHook
+      yosys
+      icestorm
+      nextpnr
+    ];
 
-  enableParallelBuilding = true;
+    enableParallelBuilding = true;
 
-  __darwinAllowLocalNetworking = true;
+    __darwinAllowLocalNetworking = true;
 
-  preBuild = ''
-    make -C firmware LIBFX2=${python3.pkgs.fx2}/share/libfx2
-    cp firmware/glasgow.ihex software/glasgow
-    cd software
-    export PDM_BUILD_SCM_VERSION="${realVersion}"
-  '';
+    preBuild = ''
+      make -C firmware LIBFX2=${python311Packages.fx2}/share/libfx2
+      cp firmware/glasgow.ihex software/glasgow
+      cd software
+      export PDM_BUILD_SCM_VERSION="${realVersion}"
+    '';
 
-  # installCheck tries to build_ext again
-  doInstallCheck = false;
+    # installCheck tries to build_ext again
+    doInstallCheck = false;
 
-  postInstall = ''
-    mkdir -p $out/etc/udev/rules.d
-    cp $src/config/*.rules $out/etc/udev/rules.d
-  '';
+    postInstall = ''
+      mkdir -p $out/etc/udev/rules.d
+      cp $src/config/*.rules $out/etc/udev/rules.d
+    '';
 
-  preCheck = ''
-    export PYTHONWARNINGS="ignore::DeprecationWarning"
-    # tests attempt to cache bitstreams
-    # for linux:
-    export XDG_CACHE_HOME=$TMPDIR
-    # for darwin:
-    export HOME=$TMPDIR
-  '';
+    preCheck = ''
+      export PYTHONWARNINGS="ignore::DeprecationWarning"
+      # tests attempt to cache bitstreams
+      # for linux:
+      export XDG_CACHE_HOME=$TMPDIR
+      # for darwin:
+      export HOME=$TMPDIR
+    '';
 
-  makeWrapperArgs = [
-    "--set"
-    "YOSYS"
-    "${yosys}/bin/yosys"
-    "--set"
-    "ICEPACK"
-    "${icestorm}/bin/icepack"
-    "--set"
-    "NEXTPNR_ICE40"
-    "${nextpnr}/bin/nextpnr-ice40"
-  ];
+    makeWrapperArgs = [
+      "--set"
+      "YOSYS"
+      "${yosys}/bin/yosys"
+      "--set"
+      "ICEPACK"
+      "${icestorm}/bin/icepack"
+      "--set"
+      "NEXTPNR_ICE40"
+      "${nextpnr}/bin/nextpnr-ice40"
+    ];
 
-  passthru.updateScript = unstableGitUpdater {
-    hardcodeZeroVersion = true;
-  };
+    passthru.updateScript = unstableGitUpdater {
+      hardcodeZeroVersion = true;
+    };
 
-  meta = with lib; {
-    description = "Software for Glasgow, a digital interface multitool";
-    homepage = "https://github.com/GlasgowEmbedded/Glasgow";
-    license = licenses.bsd0;
-    maintainers = with maintainers; [ thoughtpolice ];
-    mainProgram = "glasgow";
-  };
-}
+    meta = with lib; {
+      description = "Software for Glasgow, a digital interface multitool";
+      homepage = "https://github.com/GlasgowEmbedded/Glasgow";
+      license = licenses.bsd0;
+      maintainers = with maintainers; [thoughtpolice];
+      mainProgram = "glasgow";
+    };
+  }
