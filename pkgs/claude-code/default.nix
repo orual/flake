@@ -6,16 +6,16 @@
 }:
 buildNpmPackage rec {
   pname = "claude-code";
-  version = "1.0.38";
+  version = "1.0.60";
 
   nodejs = nodejs_20; # required for sandboxed Nix builds on Darwin
 
   src = fetchzip {
     url = "https://registry.npmjs.org/@anthropic-ai/claude-code/-/claude-code-${version}.tgz";
-    hash = "sha256-flG9VlnQfMfGFBbs6RdQKSbceD/Tke19Euo8znR5OG0=";
+    hash = "sha256-ygeitenu4z9ACbezO53I2Xnk6NtE1fWVzCi3mZS7wF8=";
   };
 
-  npmDepsHash = "sha256-+lnLOD3Hq794tJKXvBZdAbHGYv5/Tbr79qEThP1MG6w=";
+  npmDepsHash = "sha256-JdUBzN70FUTa1TMdDBlLUscfNSGf38ifm55vklJACf0=";
 
   postPatch = ''
     cp ${./package-lock.json} package-lock.json
@@ -39,7 +39,7 @@ buildNpmPackage rec {
     homepage = "https://github.com/anthropics/claude-code";
     downloadPage = "https://www.npmjs.com/package/@anthropic-ai/claude-code";
     license = lib.licenses.unfree;
-    maintainers = [ lib.maintainers.malo ];
+    maintainers = [lib.maintainers.malo];
     mainProgram = "claude";
   };
 }

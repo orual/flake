@@ -5,7 +5,7 @@
 }:
 buildGoModule (finalAttrs: {
   pname = "opencode";
-  version = "0.1.171";
+  version = "0.3.61";
 
   src = fetchFromGitHub {
     owner = "sst";
