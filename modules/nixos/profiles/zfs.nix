@@ -43,7 +43,7 @@ in
         };
 
         # ZFS configuration
-        pcscd.enable = true;
+        services.pcscd.enable = true;
         services.zfs = {
           # Enable TRIM
           trim.enable = mkDefault true;
