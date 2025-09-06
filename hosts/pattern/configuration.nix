@@ -206,6 +206,7 @@
     '';
     pcscd.enable = true;
     udev.packages = [pkgs.yubikey-personalization];
+    udisks2.enable = true;
   };
 
   security.pam.services = {

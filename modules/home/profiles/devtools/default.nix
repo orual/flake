@@ -67,7 +67,7 @@ in {
           cargo-embassy
 
           #-- latest glasgow
-          glasgow-latest
+          #glasgow-latest
 
           #-- embedded rust debugging
           probe-rs

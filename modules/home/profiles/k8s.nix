@@ -1,7 +1,12 @@
 # kubernetes`
-{ config, pkgs, lib, home, ... }:
-
-let cfg = config.profiles.k8s;
+{
+  config,
+  pkgs,
+  lib,
+  home,
+  ...
+}: let
+  cfg = config.profiles.k8s;
 in {
   options.profiles.k8s = with lib; {
     enable = mkEnableOption "kubernetes profile";
@@ -15,7 +20,7 @@ in {
       k3d
       kubectx
       kubelogin
-      azure-cli
+      #azure-cli
       k9s
       stern
       kubernetes-helm
@@ -23,7 +28,7 @@ in {
     ];
 
     programs.zsh = {
-      shellAliases = { k = "kubectl"; };
+      shellAliases = {k = "kubectl";};
       initExtra = ''
         # Import all docker images matching a glob into k3d.
         function k3d-import-all() {

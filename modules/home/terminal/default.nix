@@ -9,11 +9,9 @@
   lib,
   ...
 }:
-with lib;
-let
+with lib; let
   cfg = config.profiles.terminal;
-in
-{
+in {
   options.profiles.terminal = with types; {
     font = {
       family = mkOption {
@@ -63,80 +61,80 @@ in
           fi
         '';
       in
-      mkMerge [
-        {
-          programs.alacritty = {
-            settings = {
-              # Configuration for Alacritty, the GPU enhanced terminal emulator
-              # Live config reload (changes require restart)
-              #live_config_reload = true;
-              window = {
-                dynamic_title = true;
-                # Window dimensions in character columns and lines
-                # (changes require restart)
-                dimensions = {
-                  columns = 120;
-                  lines = 80;
+        mkMerge [
+          {
+            programs.alacritty = {
+              settings = {
+                # Configuration for Alacritty, the GPU enhanced terminal emulator
+                # Live config reload (changes require restart)
+                #live_config_reload = true;
+                window = {
+                  dynamic_title = true;
+                  # Window dimensions in character columns and lines
+                  # (changes require restart)
+                  dimensions = {
+                    columns = 120;
+                    lines = 80;
+                  };
+
+                  # Adds this many blank pixels of padding around the window
+                  # This is DPI-aware.
+                  # (change requires restart)
+                  padding = {
+                    x = cfg.padding.x;
+                    y = cfg.padding.y;
+                  };
+
+                  # Window decorations
+                  # Setting this to false will result in window without borders and title bar.
+                  # decorations: false
+                  decorations_theme_variant = "Dark";
+                  class = {
+                    instance = "Alacritty";
+                    general = "Alacritty";
+                  };
                 };
 
-                # Adds this many blank pixels of padding around the window
-                # This is DPI-aware.
-                # (change requires restart)
-                padding = {
-                  x = cfg.padding.x;
-                  y = cfg.padding.y;
+                cursor = {
+                  style = {
+                    blinking = "On";
+                    shape = "Block";
+                  };
                 };
 
-                # Window decorations
-                # Setting this to false will result in window without borders and title bar.
-                # decorations: false
-                decorations_theme_variant = "Dark";
-                class = {
-                  instance = "Alacritty";
-                  general = "Alacritty";
-                };
-              };
+                # When true, bold text is drawn using the bright variant of colors.
+                colors.draw_bold_text_with_bright_colors = true;
 
-              cursor = {
-                style = {
-                  blinking = "On";
-                  shape = "Block";
-                };
-              };
+                # Font configuration for alacritty (changes require restart)
+                font = {
+                  # Point size of the font
+                  size = mkDefault cfg.font.sizePt;
+                  # The normal (roman) font face to use.
+                  normal = {
+                    family = mkDefault cfg.font.family;
+                    style = "Regular";
+                  };
 
-              # When true, bold text is drawn using the bright variant of colors.
-              colors.draw_bold_text_with_bright_colors = true;
+                  bold = {
+                    family = mkDefault cfg.font.family;
+                    style = "Bold";
+                  };
 
-              # Font configuration for alacritty (changes require restart)
-              font = {
-                # Point size of the font
-                size = mkDefault cfg.font.sizePt;
-                # The normal (roman) font face to use.
-                normal = {
-                  family = mkDefault cfg.font.family;
-                  style = "Regular";
-                };
-
-                bold = {
-                  family = mkDefault cfg.font.family;
-                  style = "Bold";
-                };
-
-                italic = {
-                  family = mkDefault cfg.font.family;
-                  style = "Italic";
+                  italic = {
+                    family = mkDefault cfg.font.family;
+                    style = "Italic";
+                  };
                 };
               };
             };
-          };
-        }
-        (mkIf config.programs.zsh.enable {
-          programs.zsh.initExtra = fixTermEnvVar;
-        })
-        (mkIf config.programs.bash.enable {
-          programs.bash.initExtra = fixTermEnvVar;
-        })
-      ]
+          }
+          (mkIf config.programs.zsh.enable {
+            programs.zsh.initExtra = fixTermEnvVar;
+          })
+          (mkIf config.programs.bash.enable {
+            programs.bash.initExtra = fixTermEnvVar;
+          })
+        ]
     ))
     #
     # WezTerm
@@ -145,8 +143,7 @@ in
       let
         waylandGnomeScript = "wayland_gnome";
         bgColor = "#242424";
-      in
-      {
+      in {
         programs.wezterm = {
           enableZshIntegration = true;
           enableBashIntegration = true;

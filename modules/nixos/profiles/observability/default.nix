@@ -120,6 +120,7 @@ in {
             port = mkDefault 9002;
             openFirewall = mkDefault true;
           };
+
           # there are permissions issues with the smartctl exporter that i
           # haven't figured out yet...
           # smartctl = {
@@ -204,6 +205,29 @@ in {
                     {
                       source_labels = ["__address__"];
                       target_label = "address";
+                    }
+                  ];
+                }
+                {
+                  job_name = "hass";
+                  scrape_interval = "60s";
+                  metrics_path = "/api/prometheus";
+                  scheme = "https";
+                  authorization = {
+                    credentials_file = "/etc/secrets/homeassistant.key";
+                  };
+                  static_configs = [
+                    {
+                      targets = ["homeassistant:8123"];
+                    }
+                  ];
+                }
+                {
+                  job_name = "jetstream";
+                  scrape_interval = "60s";
+                  static_configs = [
+                    {
+                      targets = ["jetstream.hose:6009"];
                     }
                   ];
                 }
@@ -342,9 +366,9 @@ in {
                           #   url = "https://${grafanaDomain}/eclss";
                           # }
                           {
-                            title = "orualOps";
-                            icon = "mdi-heart-pulse";
-                            url = "https://${grafanaDomain}/orual-ops";
+                            title = "Home Assistant";
+                            icon = "si-homeassistant";
+                            url = "http://homeassistant:8123";
                           }
                         ];
                       }
@@ -357,7 +381,9 @@ in {
                               title = "Unifi";
                               icon = "si-ubiquiti";
                               url = "https://unifi";
+                              statusCheck = false;
                             }
+
                             # {
                             #   title = "pattern BMC";
                             #   icon = "mdi-console-network-outline";
@@ -447,6 +473,7 @@ in {
                   enable = true;
                   port = mkDefault 9001;
                   inherit scrapeConfigs;
+                  checkConfig = "syntax-only";
                 };
                 services.nginx.virtualHosts.${promDomain} = {
                   forceSSL = true;

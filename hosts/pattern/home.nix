@@ -20,7 +20,6 @@
     # global pkgconfig too
     pkg-config
     lm_sensors
-    conky
 
     hyperbeam-watch-party
     wechat-uos
@@ -32,6 +31,7 @@
     vmware-workstation
     remmina
     atuin-desktop
+    claude-code-acp
     #claude-desktop
   ];
 
@@ -39,6 +39,17 @@
     gpg-agent = {
       enable = true;
       # pinentryFlavor = "gnome3";
+    };
+    udiskie = {
+      enable = true;
+      settings = {
+        # workaround for
+        # https://github.com/nix-community/home-manager/issues/632
+        program_options = {
+          # replace with your favorite file manager
+          file_manager = "${pkgs.nemo-with-extensions}/bin/nemo";
+        };
+      };
     };
   };
 }

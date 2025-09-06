@@ -41,7 +41,7 @@ in
               [[ "$TERM" == 'screen'* ]] && { print -Pn -- '\e_\005{g}%n\005{-}@\005{m}%m\005{-} \005{B}%~\005{-} %# ' && print -n -- "''${(q)1}\e\\"; }
             }
 
-            if [[ "$TERM" == (Eterm*|alacritty*|aterm*|gnome*|konsole*|kterm*|putty*|rxvt*|screen*|tmux*|xterm*) ]]; then
+            if [[ "$TERM" == (Eterm*|alacritty*|aterm*|gnome*|ghostty*|konsole*|kterm*|putty*|rxvt*|screen*|tmux*|xterm*) ]]; then
               add-zsh-hook -Uz precmd xterm_title_precmd
               add-zsh-hook -Uz preexec xterm_title_preexec
             fi
@@ -49,9 +49,10 @@ in
             # test if SSH connection
             if [ -n "''${SSH_CLIENT}" ] || [ -n "''${SSH_TTY}" ]; then
               SESSION_TYPE=remote/ssh
+              TERM=xterm-256color
             else
               case $(ps -o comm= -p "''${PPID}") in
-                sshd|*/sshd) SESSION_TYPE=remote/ssh;;
+                sshd|*/sshd) SESSION_TYPE=remote/ssh;TERM=xterm-256color;;
               esac
             fi
 

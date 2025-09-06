@@ -22,7 +22,7 @@ in
               != null
               && (builtins.tryEval kernelPackages).success
               && (
-                (!isUnstable && !kernelPackages.zfs.meta.broken)
+                (!isUnstable && !kernelPackages.${pkgs.zfs.kernelModuleAttribute}.meta.broken)
                 || (isUnstable && !kernelPackages.zfs_unstable.meta.broken)
               )
           )
@@ -43,6 +43,7 @@ in
         };
 
         # ZFS configuration
+        pcscd.enable = true;
         services.zfs = {
           # Enable TRIM
           trim.enable = mkDefault true;
