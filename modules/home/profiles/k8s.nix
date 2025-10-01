@@ -20,7 +20,7 @@ in {
       k3d
       kubectx
       kubelogin
-      #azure-cli
+      azure-cli
       k9s
       stern
       kubernetes-helm

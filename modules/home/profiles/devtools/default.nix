@@ -36,6 +36,7 @@ in {
           just
           # V I B E C O D I N G
           claude-code-latest
+          codex
           #opencode-latest
           # TURNS OUT THIS HAS TO BE IN SYSTEMPACKAGES LOL
           # # xfel --- FEL tools for Allwinner SoCs
@@ -85,6 +86,7 @@ in {
           # stm32cubemx
           #
           kicad
+          lazyjj
         ];
 
         home.sessionPath = [

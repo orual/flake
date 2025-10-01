@@ -50,6 +50,9 @@
       # (_: prev: {zed-editor = prev.zed-prerelease;})
       # add astal package
       #inputs.astal-shell.overlays.default
+      #
+      # Fix this when unstable gets updated with this patch
+      (_: prev: {azure-cli = inputs.nixpkgs-stable.legacyPackages.${prev.system}.azure-cli;})
     ];
 
     lib = import ./lib;
@@ -253,6 +256,8 @@
     nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-unstable";
     # NOTE:change "nixpkgs" to "nixpkgs-stable" to use stable NixOS release
     #nixpkgs.follows = "nixos-cosmic/nixpkgs";
+
+    nixpkgs-azure.url = "github:NixOS/nixpkgs?ref=44272c87af0b641a28dd436b8d962453489bd718";
 
     nixos-cosmic.url = "github:lilyinstarlight/nixos-cosmic";
     flake-utils.url = "github:numtide/flake-utils";

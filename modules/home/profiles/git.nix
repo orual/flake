@@ -46,11 +46,17 @@ in
               user = {
                 email = cfg.user.email;
                 name = "Orual";
+              };
+              ui = {
                 default-command = "log";
+                editor = "hx";
               };
             };
           };
           lazygit = {
+            enable = true;
+          };
+          jjui = {
             enable = true;
           };
 
@@ -148,7 +154,7 @@ in
                 #   line comments (`//`) are out...
                 # - I can't think of any compelling reason to begin a line with `;`...
                 commentchar = ";";
-                editor = "zeditor --wait";
+                editor = "hx";
               };
               extensions = {
                 objectformat = "sha256";

@@ -224,7 +224,7 @@ in
         in
           lib.attrsets.mergeAttrsList [
             {
-              "${Mod}+T".action = spawn "ghostty";
+              "${Mod}+T".action = spawn "wezterm";
               "${Mod}+O".action = show-hotkey-overlay;
               "${Mod}+D".action = spawn "fuzzel";
               "${Mod}+Shift+W".action = sh (
@@ -380,7 +380,7 @@ in
               commands = builtins.concatStringsSep ";" (map (unit: "systemctl --user status ${unit}") units);
             in [
               "${only-on-session}"
-              "kitty"
+              "ghostty"
               "--"
               "sh"
               "-c"
@@ -390,7 +390,7 @@ in
           {
             command = [
               "${only-without-session}"
-              "kitty"
+              "ghostty"
               "--"
               "sh"
               "-c"
@@ -608,7 +608,7 @@ in
         enable = true;
         settings = {
           main = {
-            terminal = "ghostty";
+            terminal = "wezterm";
             font = lib.mkForce (
               if cfg.enableTablet
               then "IBM Plex Sans:12"
