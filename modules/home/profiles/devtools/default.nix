@@ -48,7 +48,7 @@ in {
           docker-credential-helpers
 
           # asciidoc
-          asciidoctor-with-extensions
+          #asciidoctor-with-extensions
 
           # stuff for decoding various things
           hwloc
