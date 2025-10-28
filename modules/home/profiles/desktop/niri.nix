@@ -193,8 +193,8 @@ in
         switch-events = with config.lib.niri.actions; let
           sh = spawn "sh" "-c";
         in {
-          tablet-mode-on.action = sh "gsettings set org.gnome.desktop.a11y.applications screen-keyboard-enabled true";
-          tablet-mode-off.action = sh "gsettings set org.gnome.desktop.a11y.applications screen-keyboard-enabled false";
+          tablet-mode-on.action = sh "${pkgs.glib}/bin/gsettings set org.gnome.desktop.a11y.applications screen-keyboard-enabled true";
+          tablet-mode-off.action = sh "${pkgs.glib}/bin/gsettings set org.gnome.desktop.a11y.applications screen-keyboard-enabled false";
           lid-open.action = sh "notify-send lid-open";
           lid-close.action = sh "notify-send lid-close";
         };
@@ -236,9 +236,9 @@ in
 
               "${Mod}+L".action = spawn "blurred-locker";
               "${Mod}+B".action = toggle-overview;
-              "${Mod}+Shift+S".action = screenshot;
+              "${Mod}+Shift+S".action.screenshot = [];
               "Print".action.screenshot-screen = [];
-              "${Mod}+Print".action = screenshot-window;
+              "${Mod}+Print".action.screenshot-window = [];
 
               "${Mod}+Menu".action = set-dynamic-cast-window;
               "${Mod}+Shift+Menu".action = set-dynamic-cast-monitor;
@@ -329,75 +329,6 @@ in
               "${Mod}+Shift+Ctrl+T".action = toggle-debug-tint;
             }
           ];
-        spawn-at-startup = let
-          get-wayland-display = "systemctl --user show-environment | awk -F 'WAYLAND_DISPLAY=' '{print $2}' | awk NF";
-          wrapper = name: op:
-            pkgs.writeScript "${name}" ''
-              if [ "$(${get-wayland-display})" ${op} "$WAYLAND_DISPLAY" ]; then
-                exec "$@"
-              fi
-            '';
-          only-on-session = wrapper "only-on-session" "=";
-          only-without-session = wrapper "only-without-session" "!=";
-          # modulated-wallpaper = pkgs.runCommand "modulated-wallpaper.png" {} ''
-          #   ${lib.getExe pkgs.imagemagick} ${config.stylix.image} -modulate 100,100,14 $out
-          # '';
-        in [
-          {
-            command = [
-              "${only-on-session}"
-              "${pkgs.gammastep}"
-              "-l"
-              "43:-79" # lol, doxxed
-            ];
-          }
-          {
-            command = [
-              "${only-without-session}"
-              "${pkgs.waybar}"
-            ];
-          }
-          # {
-          #   command = [
-          #     "${only-without-session}"
-          #     "${lib.getExe pkgs.swaybg}"
-          #     "-m"
-          #     "fill"
-          #     "-i"
-          #     "${config.stylix.image}"
-          #   ];
-          # }
-          {
-            command = let
-              units = [
-                "niri"
-                "graphical-session.target"
-                "xdg-desktop-portal"
-                "xdg-desktop-portal-gnome"
-                "waybar"
-                "pipewire"
-              ];
-              commands = builtins.concatStringsSep ";" (map (unit: "systemctl --user status ${unit}") units);
-            in [
-              "${only-on-session}"
-              "ghostty"
-              "--"
-              "sh"
-              "-c"
-              "env SYSTEMD_COLORS=1 watch -n 1 -d --color '${commands}'"
-            ];
-          }
-          {
-            command = [
-              "${only-without-session}"
-              "ghostty"
-              "--"
-              "sh"
-              "-c"
-              "${pkgs.wayvnc} -L=debug"
-            ];
-          }
-        ];
 
         animations.window-resize.custom-shader = builtins.readFile ./resize.glsl;
 
@@ -646,6 +577,15 @@ in
           "secrets"
           "ssh"
         ];
+      };
+
+      #### autostart services ####################################################
+      services.gammastep = {
+        enable = true;
+        latitude = 43.0;
+        longitude = -79.0;
+        provider = "manual";
+        tray = true;
       };
     };
   }

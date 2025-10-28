@@ -177,7 +177,6 @@ in {
 
             config.enable_tab_bar = true
             config.hide_tab_bar_if_only_one_tab = true
-            config.window_decorations ="INTEGRATED_BUTTONS|RESIZE"
             config.window_frame = {
               font = wezterm.font { family = '${cfg.font.family}', weight = 'Bold', },
               font_size = ${toString cfg.font.sizePt}.0,

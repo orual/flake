@@ -12,6 +12,17 @@ function mod.apply_to_config(config)
     -- skip if not running on linux
     return
   end
+
+  config.enable_wayland = true
+
+  -- Only apply GNOME-specific settings if actually running GNOME
+  local desktop = os.getenv("XDG_CURRENT_DESKTOP") or ""
+  if not desktop:match("GNOME") then
+    return
+  end
+
+  config.window_decorations = "INTEGRATED_BUTTONS|RESIZE"
+
   local success, stdout, stderr = gsettings("cursor-theme")
   if success then
     config.xcursor_theme = stdout:gsub("'(.+)'\n", "%1")
@@ -21,8 +32,6 @@ function mod.apply_to_config(config)
   if success then
     config.xcursor_size = tonumber(stdout)
   end
-
-  config.enable_wayland = true
 
   if config.enable_wayland and os.getenv("WAYLAND_DISPLAY") then
     local success, stdout, stderr = gsettings("text-scaling-factor")

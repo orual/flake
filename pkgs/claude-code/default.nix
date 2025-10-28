@@ -12,10 +12,10 @@ buildNpmPackage rec {
 
   src = fetchzip {
     url = "https://registry.npmjs.org/@anthropic-ai/claude-code/-/claude-code-${version}.tgz";
-    hash = lib.fakeHash;
+    hash = "sha256-ZxwEnUWCtgrGhgtUjcWcMgLqzaajwE3pG7iSIfaS3ic=";
   };
 
-  npmDepsHash = "";
+  npmDepsHash = "sha256-5dW5+HPMoGsrouviKmblihVoUusN5ulSrIbEvU77P/8=";
 
   postPatch = ''
     cp ${./package-lock.json} package-lock.json

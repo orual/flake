@@ -75,6 +75,20 @@ in {
       gpg-agent.enable = true;
     };
 
+    # 1password autostart
+    systemd.user.services."1password" = {
+      Unit = {
+        Description = "1Password";
+        PartOf = ["graphical-session.target"];
+        After = ["graphical-session.target"];
+      };
+      Install.WantedBy = ["graphical-session.target"];
+      Service = {
+        ExecStart = "${pkgs._1password-gui}/bin/1password --silent";
+        Restart = "on-failure";
+      };
+    };
+
     stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/rose-pine.yaml";
     stylix.enable = true;
     stylix.polarity = "dark";

@@ -18,6 +18,7 @@ in
       programs.ssh = mkMerge [
         {
           enable = true;
+          enableDefaultConfig = false;
           matchBlocks = let
             pattern = "pattern";
             pattern-tailscale = "${pattern}-tailscale";
@@ -33,12 +34,16 @@ in
           };
         }
         (mkIf _1passwordAgent.enable {
-          forwardAgent = _1passwordAgent.enable;
-          addKeysToAgent = "yes";
-          matchBlocks."notSsh" = {
-            match = ''Host * exec "test -z $SSH_CONNECTION"'';
-            extraOptions = {
-              IdentityAgent = _1passwordAgent.path;
+          matchBlocks = {
+            "*" = {
+              forwardAgent = _1passwordAgent.enable;
+              addKeysToAgent = "yes";
+            };
+            "notSsh" = {
+              match = ''Host * exec "test -z $SSH_CONNECTION"'';
+              extraOptions = {
+                IdentityAgent = _1passwordAgent.path;
+              };
             };
           };
         })

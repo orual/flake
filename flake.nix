@@ -404,7 +404,6 @@
     nix-vscode-extensions = {
       url = "github:nix-community/nix-vscode-extensions";
       inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-utils.follows = "flake-utils";
     };
 
     claude-desktop.url = "github:k3d3/claude-desktop-linux-flake";

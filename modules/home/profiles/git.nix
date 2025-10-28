@@ -51,6 +51,15 @@ in
                 default-command = "log";
                 editor = "hx";
               };
+              signing = {
+                behavior = "drop";
+                backend = "ssh";
+                key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGrSMrSEnlsG04W6FxsvSmBST8h5+8ZFA8XBecx7FYLn";
+              };
+              git = {
+                auto-local-bookmark = true;
+                sign-on-push = true;
+              };
             };
           };
           lazygit = {
@@ -62,71 +71,7 @@ in
 
           git = {
             enable = true;
-            userName = cfg.user.name;
-            userEmail = cfg.user.email;
             lfs.enable = true;
-
-            # aliases
-            aliases = {
-              # list all aliases
-              aliases = "config --get-regexp '^alias.'";
-
-              ### short aliases for common commands ###
-              co = "checkout";
-              ci = "commit";
-              rb = "rebase";
-              rbct = "rebase --continue";
-              please = "push --force-with-lease";
-              commend = "commit --amend --no-edit";
-
-              ### nicer commit and branch verbs ###
-              squash = "merge --squash";
-              # Get the current branch name (not so useful in itself, but used in
-              # other aliases)
-              branch-name = "!git rev-parse --abbrev-ref HEAD";
-              # Push the current branch to the remote "origin", and set it to track
-              # the upstream branch
-              publish = "!git push -u origin $(git branch-name)";
-              # Delete the remote version of the current branch
-              unpublish = "!git push origin :$(git branch-name)";
-              # sign the last commit
-              sign = "commit --amend --reuse-message=HEAD -sS";
-              uncommit = "reset --hard HEAD";
-              # XXX(orual) AGH THIS DOESNT WORK
-              # # Gets the parent of the current branch.
-              # parent = ''
-              #   show-branch -a \
-              #     | grep '\*' \
-              #     | grep -v `git rev-parse --abbrev-ref HEAD` \
-              #     | head -n1 \
-              #     | sed 's/.*\[\(.*\)\].*/\1/' \
-              #     | sed 's/[\^~].*//'
-              # '';
-
-              ### various git log aliases ###
-              # `ls` and `ll` are broken under the latest git for reasons i don't
-              # really understand...fortunately i don'tactually use them.
-              # ls =
-              # "log --pretty=format:'%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]' --decorate";
-              # ll =
-              # "log --pretty=format:'%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]' --decorate --numstat";
-              lt = "log --graph --oneline --decorate --all";
-              summarize-branch = ''
-                log --pretty=format:'* %h %s%n%n%w(72,2,2)%bz' --decorate
-              '';
-              lol = "log --graph --decorate --pretty=oneline --abbrev-commit";
-              lola = "log --graph --decorate --pretty=oneline --abbrev-commit --all";
-
-              lg = "log --color --graph --pretty=format:'%Cred%h %Cgreen%>(9,trunc)%ar %C(bold blue)%<(12,trunc)%an%Creset - %s%C(auto)%+d' --abbrev-commit --";
-              lgf = "log --color --graph --pretty=format:'%Cred%h %Cgreen%>(9,trunc)%ar %C(bold blue)%<(12,trunc)%an%Creset - %C(cyan)%s%C(auto)%+d%+b' --abbrev-commit --";
-              lgm = "log --color --graph --pretty=format:'%Cred%h%Creset %<|(50,trunc)%s%C(auto)%+d' --abbrev-commit --";
-
-              ### status ###
-              st = "status --short --branch";
-              stu = "status -uno";
-
-              pr = "!pr() { git fetch origin pull/$1/head:pr-$1; git checkout pr-$1; }; pr";
-            };
 
             # default gitignores for all repos
             ignores = [
@@ -134,8 +79,75 @@ in
               ".direnv/"
             ];
 
-            # extra git config
-            extraConfig = {
+            settings = {
+              user = {
+                name = cfg.user.name;
+                email = cfg.user.email;
+                signingkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGrSMrSEnlsG04W6FxsvSmBST8h5+8ZFA8XBecx7FYLn";
+              };
+
+              # aliases
+              alias = {
+                # list all aliases
+                aliases = "config --get-regexp '^alias.'";
+
+                ### short aliases for common commands ###
+                co = "checkout";
+                ci = "commit";
+                rb = "rebase";
+                rbct = "rebase --continue";
+                please = "push --force-with-lease";
+                commend = "commit --amend --no-edit";
+
+                ### nicer commit and branch verbs ###
+                squash = "merge --squash";
+                # Get the current branch name (not so useful in itself, but used in
+                # other aliases)
+                branch-name = "!git rev-parse --abbrev-ref HEAD";
+                # Push the current branch to the remote "origin", and set it to track
+                # the upstream branch
+                publish = "!git push -u origin $(git branch-name)";
+                # Delete the remote version of the current branch
+                unpublish = "!git push origin :$(git branch-name)";
+                # sign the last commit
+                sign = "commit --amend --reuse-message=HEAD -sS";
+                uncommit = "reset --hard HEAD";
+                # XXX(orual) AGH THIS DOESNT WORK
+                # # Gets the parent of the current branch.
+                # parent = ''
+                #   show-branch -a \
+                #     | grep '\*' \
+                #     | grep -v `git rev-parse --abbrev-ref HEAD` \
+                #     | head -n1 \
+                #     | sed 's/.*\[\(.*\)\].*/\1/' \
+                #     | sed 's/[\^~].*//'
+                # '';
+
+                ### various git log aliases ###
+                # `ls` and `ll` are broken under the latest git for reasons i don't
+                # really understand...fortunately i don'tactually use them.
+                # ls =
+                # "log --pretty=format:'%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]' --decorate";
+                # ll =
+                # "log --pretty=format:'%C(yellow)%h%Cred%d\\ %Creset%s%Cblue\\ [%cn]' --decorate --numstat";
+                lt = "log --graph --oneline --decorate --all";
+                summarize-branch = ''
+                  log --pretty=format:'* %h %s%n%n%w(72,2,2)%bz' --decorate
+                '';
+                lol = "log --graph --decorate --pretty=oneline --abbrev-commit";
+                lola = "log --graph --decorate --pretty=oneline --abbrev-commit --all";
+
+                lg = "log --color --graph --pretty=format:'%Cred%h %Cgreen%>(9,trunc)%ar %C(bold blue)%<(12,trunc)%an%Creset - %s%C(auto)%+d' --abbrev-commit --";
+                lgf = "log --color --graph --pretty=format:'%Cred%h %Cgreen%>(9,trunc)%ar %C(bold blue)%<(12,trunc)%an%Creset - %C(cyan)%s%C(auto)%+d%+b' --abbrev-commit --";
+                lgm = "log --color --graph --pretty=format:'%Cred%h%Creset %<|(50,trunc)%s%C(auto)%+d' --abbrev-commit --";
+
+                ### status ###
+                st = "status --short --branch";
+                stu = "status -uno";
+
+                pr = "!pr() { git fetch origin pull/$1/head:pr-$1; git checkout pr-$1; }; pr";
+              };
+
               # use rebase in `git pull` to avoid gross merge commits.
               pull.rebase = true;
               push.autoSetupRemote = true;
@@ -168,7 +180,6 @@ in
                 #   "${pkgs._1password-gui}/bin/op-ssh-sign";
               };
               commit.gpgsign = true;
-              user.signingkey = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGrSMrSEnlsG04W6FxsvSmBST8h5+8ZFA8XBecx7FYLn";
             };
           };
         };
@@ -192,7 +203,7 @@ in
             };
         in {
           home.packages = [signingScript];
-          programs.git.extraConfig.gpg."ssh".program = "ssh-sign";
+          programs.git.settings.gpg."ssh".program = "ssh-sign";
         }
       ))
     ]);
