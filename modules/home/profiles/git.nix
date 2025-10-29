@@ -54,11 +54,12 @@ in
               signing = {
                 behavior = "drop";
                 backend = "ssh";
+                backends.ssh.program = "ssh-sign";
                 key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGrSMrSEnlsG04W6FxsvSmBST8h5+8ZFA8XBecx7FYLn";
               };
               git = {
                 auto-local-bookmark = true;
-                sign-on-push = true;
+                sign-on-push = false;
               };
             };
           };
