@@ -59,7 +59,7 @@ in
               };
               git = {
                 auto-local-bookmark = true;
-                sign-on-push = false;
+                sign-on-push = true;
               };
             };
           };
