@@ -125,7 +125,7 @@
             inputs.niri.nixosModules.niri
             inputs.vscode-server.nixosModules.default
 
-            # inputs.nixos-cosmic.nixosModules.default
+            inputs.nixos-cosmic.nixosModules.default
           ];
         };
 
@@ -253,9 +253,9 @@
   inputs = {
     nixpkgs-stable.url = "github:NixOS/nixpkgs?ref=nixos-25.05";
     # nixpkgs-stable.follows = "nixos-cosmic/nixpkgs-stable";
-    nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-unstable";
+    #nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-unstable";
     # NOTE:change "nixpkgs" to "nixpkgs-stable" to use stable NixOS release
-    #nixpkgs.follows = "nixos-cosmic/nixpkgs";
+    nixpkgs.follows = "nixos-cosmic/nixpkgs";
 
     nixpkgs-azure.url = "github:NixOS/nixpkgs?ref=44272c87af0b641a28dd436b8d962453489bd718";
 
