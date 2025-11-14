@@ -220,8 +220,8 @@ in
       (iosevka-bin.override {variant = "Etoile";})
       (iosevka-bin.override {variant = "SS15";}) # ibm plex mono style
       iosevkaOrual
-      iosevkaOrualTerm
-      iosevkaOrualEtoile
+      # iosevkaOrualTerm
+      # iosevkaOrualEtoile
 
       # nice monospace and bitmap fonts
       cozette
@@ -250,7 +250,6 @@ in
       nerd-fonts.hack
       nerd-fonts.noto
       nerd-fonts.ubuntu
-      nerd-fonts.ubunutu-mono
       nerd-fonts.zed-mono
       nerd-fonts.monaspace
       nerd-fonts.iosevka
