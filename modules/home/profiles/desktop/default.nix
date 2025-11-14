@@ -36,6 +36,7 @@ in {
         darktable
         inkscape
         obs-studio
+        deskflow
         # broken due to https://github.com/NixOS/nixpkgs/issues/188525
         # llpp # fast & lightweight PDF pager
         krita # like the GNU Image Manipulation Photoshop, but more good
@@ -59,7 +60,7 @@ in {
     #############################################################################
     programs = {
       firefox.enable = true;
-      ghostty.enable = true;
+      #ghostty.enable = true;
       _1password-gui.enableSshAgent = lib.mkDefault true;
       keychain = {
         enable = true;
@@ -111,7 +112,7 @@ in {
       };
 
       emoji = {
-        package = pkgs.noto-fonts-emoji;
+        package = pkgs.noto-fonts-color-emoji;
         name = "Noto Color Emoji";
       };
     };

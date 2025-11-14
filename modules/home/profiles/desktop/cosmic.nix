@@ -58,8 +58,6 @@ in
         ++ gnome_extensions
         ++ themes;
 
-      programs.firefox = {package = mkDefault pkgs.firefox-wayland;};
-
       #### gnome-keyring ########################################################
       services.gnome-keyring = {
         enable = true;

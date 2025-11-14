@@ -41,11 +41,6 @@ in
       programs = {
         # gpaste, a clipboard manager for Gnome
         gpaste.enable = true;
-
-        firefox = {
-          package = mkDefault pkgs.firefox-wayland;
-          # nativeMessagingHosts.packages = with pkgs; [ gnome-browser-connector ];
-        };
       };
 
       ### gnome-keyring #########################################################

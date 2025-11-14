@@ -19,6 +19,6 @@ final: prev: {
   glasgow-latest = prev.callPackage ./glasgow-latest.nix {};
   #minipro-git = prev.callPackage ./minipro-git { };
   stm32cubeprog = prev.callPackage ./stm32cubeprogrammer.nix {};
-  atuin-desktop = prev.callPackage ./atuin-desktop.nix {};
   obsidian-x11 = prev.callPackage ./obsidian-x11.nix {};
+  conversation-search = prev.callPackage ./conversation-search {};
 }

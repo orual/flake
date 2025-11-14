@@ -1,6 +1,9 @@
-{ config, pkgs, lib, ... }:
-
-let
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}: let
   cfg = config.profiles.desktop.gnome3;
 
   # configure installed Gnome 3 extensions
@@ -35,31 +38,30 @@ let
     matcha-gtk-theme
   ];
 in
-with lib; {
-
-  options.profiles.desktop.gnome3 = {
-    enable = mkEnableOption "gnome3 profile";
-  };
-
-  config = mkIf cfg.enable {
-    home.packages = with pkgs;
-      [
-        # useful for testing webcams, etc
-        cheese
-        # A tool to customize advanced GNOME 3 options
-        gnome-tweaks
-        # A nice way to view information about use of system resources, like memory
-        # and disk space
-        gnome-usage
-        ocs-url
-      ] ++ gnome_extensions ++ themes;
-
-    programs.firefox = { package = mkDefault pkgs.firefox-wayland; };
-
-    #### gnome-keyring ########################################################
-    services.gnome-keyring = {
-      enable = true;
-      components = [ "pkcs11" "secrets" "ssh" ];
+  with lib; {
+    options.profiles.desktop.gnome3 = {
+      enable = mkEnableOption "gnome3 profile";
     };
-  };
-}
+
+    config = mkIf cfg.enable {
+      home.packages = with pkgs;
+        [
+          # useful for testing webcams, etc
+          cheese
+          # A tool to customize advanced GNOME 3 options
+          gnome-tweaks
+          # A nice way to view information about use of system resources, like memory
+          # and disk space
+          gnome-usage
+          ocs-url
+        ]
+        ++ gnome_extensions
+        ++ themes;
+
+      #### gnome-keyring ########################################################
+      services.gnome-keyring = {
+        enable = true;
+        components = ["pkcs11" "secrets" "ssh"];
+      };
+    };
+  }

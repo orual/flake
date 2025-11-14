@@ -36,6 +36,7 @@ in {
           just
           # V I B E C O D I N G
           claude-code-latest
+          #conversation-search
           codex
           #opencode-latest
           # TURNS OUT THIS HAS TO BE IN SYSTEMPACKAGES LOL
@@ -71,7 +72,7 @@ in {
           #glasgow-latest
 
           #-- embedded rust debugging
-          probe-rs
+          probe-rs-tools
 
           #-- espressif rust tools
           espup # not properly sandboxed/pure, will need manual install
