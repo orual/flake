@@ -3,7 +3,7 @@
     games.enable = true;
     desktop = {
       enable = true;
-      gnome3.enable = true;
+      #gnome3.enable = true;
       niri.enable = true;
     };
     k8s.enable = true;
@@ -11,7 +11,7 @@
       enable = true;
       enablePython = true;
     };
-    waybar.enable = true;
+    #waybar.enable = true;
   };
 
   home.packages = with pkgs; [
@@ -21,7 +21,7 @@
     pkg-config
     lm_sensors
 
-    hyperbeam-watch-party
+    #hyperbeam-watch-party
     wechat-uos
     yubioath-flutter
     protonup-qt

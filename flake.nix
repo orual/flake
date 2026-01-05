@@ -33,6 +33,9 @@
       (_: prev: {
         claude-desktop = inputs.claude-desktop.packages.${prev.system}.claude-desktop-with-fhs;
       })
+      (_: prev: {
+        vesktop = inputs.nixpkgs-stable.legacyPackages.${prev.system}.vesktop;
+      })
       # add alejandra package
       (_: prev: {alejandra = inputs.alejandra.defaultPackage.${prev.system};})
       # add ghostty package
@@ -210,6 +213,7 @@
             inputs.niri.homeModules.niri
             inputs.stylix.homeModules.stylix
             inputs.ags.homeManagerModules.default
+            inputs.noctalia.homeModules.default
           ];
         };
 
@@ -252,9 +256,10 @@
   ############################################################################
   #### INPUTS ################################################################
   inputs = {
-    nixpkgs-stable.url = "github:NixOS/nixpkgs?ref=nixos-25.05";
-    # nixpkgs-stable.follows = "nixos-cosmic/nixpkgs-stable";
     nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-unstable";
+    nixpkgs-stable.url = "github:NixOS/nixpkgs?ref=nixos-25.11";
+    # nixpkgs-stable.follows = "nixos-cosmic/nixpkgs-stable";
+    nixpkgs-unstable.url = "github:NixOS/nixpkgs?ref=nixos-unstable";
     # NOTE:change "nixpkgs" to "nixpkgs-stable" to use stable NixOS release
     #nixpkgs.follows = "nixos-cosmic/nixpkgs";
 
@@ -295,6 +300,11 @@
     home = {
       url = "github:nix-community/home-manager";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    noctalia = {
+      url = "github:noctalia-dev/noctalia-shell";
+      inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
     nixos-hardware.url = "github:nixos/nixos-hardware/master";

@@ -131,13 +131,13 @@ in
         })
       ];
       programs = {
-        # firefox = {
-        #   package = mkForce pkgs.firefox-wayland;
-        #   nativeMessagingHosts.packages = with pkgs; [
-        #     tridactyl-native
-        #     firefoxpwa
-        #   ];
-        # };
+        firefox = {
+          #package = mkForce pkgs.firefox-wayland;
+          nativeMessagingHosts.packages = with pkgs; [
+            tridactyl-native
+            firefoxpwa
+          ];
+        };
         niri.enable = true;
 
         niri.package = pkgs.niri-unstable;

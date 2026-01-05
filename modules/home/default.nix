@@ -24,10 +24,11 @@ in
     manual.manpages.enable = false;
 
     home = {
+      enableNixpkgsReleaseCheck = false;
       sessionVariables = {
-        EDITOR = lib.mkDefault "vim";
+        EDITOR = lib.mkDefault "hx";
         BROWSER = "firefox";
-        TERMINAL = "ghostty";
+        TERMINAL = "wezterm";
         CARGO_TERM_COLOR = "auto";
         RUST_BACKTRACE = "1";
       };
@@ -35,6 +36,8 @@ in
       sessionPath = [
         "$HOME/.cargo/bin"
         "$HOME/.linkerd2/bin"
+        "$HOME/.local/bin"
+        "$HOME/go/bin"
       ];
 
       packages = with pkgs; [

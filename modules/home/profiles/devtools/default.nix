@@ -38,7 +38,7 @@ in {
           claude-code-latest
           #conversation-search
           codex
-          opencode
+          #opencode
           # TURNS OUT THIS HAS TO BE IN SYSTEMPACKAGES LOL
           # # xfel --- FEL tools for Allwinner SoCs
           # xfel
@@ -63,7 +63,7 @@ in {
 
           #-- cargo tools
           cargo-generate
-          cargo-sync-readme
+          #cargo-sync-readme
           cargo-release
           cargo-udeps
           cargo-embassy
@@ -83,7 +83,7 @@ in {
           # serial terminal
           minicom
           # rom programmer
-          minipro
+          #minipro
           # stm32cubemx
           #
           kicad

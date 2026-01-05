@@ -59,7 +59,13 @@ in {
     ## Programs                                                                 #
     #############################################################################
     programs = {
-      firefox.enable = true;
+      firefox = {
+        enable = true;
+        nativeMessagingHosts = [
+          pkgs.tridactyl-native
+          pkgs.firefoxpwa
+        ];
+      };
       #ghostty.enable = true;
       _1password-gui.enableSshAgent = lib.mkDefault true;
       keychain = {

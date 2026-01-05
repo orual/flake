@@ -109,7 +109,10 @@ in
           configuration = {
             # TODO(orual): auth?
             auth_enabled = false;
-            server.http_listen_port = cfg.loki.port;
+            server = {
+              http_listen_port = cfg.loki.port;
+              http_listen_address = "0.0.0.0";
+            };
 
             common = {
               ring = {
@@ -161,10 +164,14 @@ in
               };
             };
 
-            # limits_config = {
-            #   reject_old_samples = true;
-            #   reject_old_samples_max_age = "168h";
-            # };
+            limits_config = {
+              reject_old_samples = true;
+              reject_old_samples_max_age = "168h";
+              ingestion_rate_mb = 16;
+              ingestion_burst_size_mb = 32;
+              per_stream_rate_limit = "10MB";
+              per_stream_rate_limit_burst = "20MB";
+            };
 
             # chunk_store_config = {
             #   max_look_back_period = "0s";

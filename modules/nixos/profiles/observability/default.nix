@@ -212,6 +212,70 @@ in {
                     }
                   ];
                 }
+                # weaver.sh services on booskie-box
+                {
+                  job_name = "weaver";
+                  scrape_interval = "15s";
+                  metrics_path = "/metrics";
+                  static_configs = [
+                    {
+                      targets = ["booskie-box.coin-aldebaran.ts.net:3000"];
+                      labels = {
+                        service = "weaver-index";
+                        instance = "booskie-box";
+                      };
+                    }
+                    {
+                      targets = ["booskie-box.coin-aldebaran.ts.net:8080"];
+                      labels = {
+                        service = "weaver-app";
+                        instance = "booskie-box";
+                      };
+                    }
+                  ];
+                }
+                {
+                  job_name = "weaver-infra";
+                  scrape_interval = "30s";
+                  metrics_path = "/metrics";
+                  static_configs = [
+                    {
+                      targets = ["booskie-box.coin-aldebaran.ts.net:9100"];
+                      labels = {
+                        service = "weaver-node";
+                        instance = "booskie-box";
+                      };
+                    }
+                    {
+                      targets = ["booskie-box.coin-aldebaran.ts.net:9080"];
+                      labels = {
+                        service = "weaver-cadvisor";
+                        instance = "booskie-box";
+                      };
+                    }
+                    {
+                      targets = ["booskie-box.coin-aldebaran.ts.net:9363"];
+                      labels = {
+                        service = "weaver-clickhouse";
+                        instance = "booskie-box";
+                      };
+                    }
+                    {
+                      targets = ["booskie-box.coin-aldebaran.ts.net:2019"];
+                      labels = {
+                        service = "weaver-caddy";
+                        instance = "booskie-box";
+                      };
+                    }
+                    {
+                      targets = ["booskie-box.coin-aldebaran.ts.net:2481"];
+                      labels = {
+                        service = "weaver-tap";
+                        instance = "booskie-box";
+                      };
+                    }
+                  ];
+                }
                 {
                   job_name = "hass";
                   scrape_interval = "60s";
@@ -340,6 +404,7 @@ in {
                   declarativePlugins = with pkgs.grafanaPlugins; [
                     victoriametrics-metrics-datasource
                     victoriametrics-logs-datasource
+                    grafana-clickhouse-datasource
                   ];
                 };
 

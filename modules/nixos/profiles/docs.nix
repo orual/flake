@@ -1,5 +1,10 @@
-{ config, lib, pkgs, ... }:
-let cfg = config.profiles.docs;
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}: let
+  cfg = config.profiles.docs;
 in {
   options.profiles.docs = with lib; {
     enable = mkEnableOption "documentation profile";
@@ -33,7 +38,7 @@ in {
       man-pages
       man-pages-posix
       # manpage-style rustdoc viewer
-      rusty-man
+      #rusty-man
       # a fast documentation viewer for nix
       manix
       # Parse formatted man pages and man page source from most flavors of UNIX and converts them to HTML, ASCII, TkMan, DocBook, and other formats
