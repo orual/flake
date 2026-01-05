@@ -38,7 +38,7 @@ in {
           claude-code-latest
           #conversation-search
           codex
-          #opencode-latest
+          opencode
           # TURNS OUT THIS HAS TO BE IN SYSTEMPACKAGES LOL
           # # xfel --- FEL tools for Allwinner SoCs
           # xfel

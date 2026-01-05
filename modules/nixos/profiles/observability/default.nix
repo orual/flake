@@ -193,35 +193,6 @@ in {
 
             scrapeConfigs = mkMerge [
               [
-                # tailscale service discovery
-                {
-                  job_name = "tailscale";
-                  scrape_interval = "10s";
-                  scrape_timeout = "8s";
-                  metrics_path = "/metrics";
-                  scheme = "http";
-                  static_configs = tailscaleScrapeTargets;
-                  relabel_configs = [
-                    {
-                      source_labels = ["__address__"];
-                      target_label = "address";
-                    }
-                  ];
-                }
-                {
-                  job_name = "hass";
-                  scrape_interval = "60s";
-                  metrics_path = "/api/prometheus";
-                  scheme = "https";
-                  authorization = {
-                    credentials_file = "/etc/secrets/homeassistant.key";
-                  };
-                  static_configs = [
-                    {
-                      targets = ["homeassistant:8123"];
-                    }
-                  ];
-                }
                 {
                   job_name = "jetstream";
                   scrape_interval = "60s";
@@ -231,6 +202,65 @@ in {
                     }
                   ];
                 }
+                {
+                  job_name = "constellation";
+                  scrape_interval = "60s";
+                  metrics_path = "/metrics";
+                  static_configs = [
+                    {
+                      targets = ["constellation.boosky:8765"];
+                    }
+                  ];
+                }
+                {
+                  job_name = "hass";
+                  scrape_interval = "60s";
+                  metrics_path = "/api/prometheus";
+                  scheme = "http";
+                  authorization = {
+                    credentials_file = "/etc/secrets/homeassistant.key";
+                  };
+                  static_configs = [
+                    {
+                      targets = ["homeassistant:8123"];
+                    }
+                  ];
+                }
+                # tailscale service discovery
+                {
+                  job_name = "tailscale";
+                  scrape_interval = "10s";
+                  scrape_timeout = "8s";
+                  metrics_path = "/metrics";
+                  scheme = "http";
+                  static_configs =
+                    tailscaleScrapeTargets
+                    ++ [
+                      {
+                        targets = ["sylpherena:9002"];
+                      }
+                    ];
+                  relabel_configs = [
+                    {
+                      source_labels = ["__address__"];
+                      target_label = "address";
+                    }
+                  ];
+                }
+                {
+                  job_name = "proxmox";
+                  scrape_interval = "60s";
+                  metrics_path = "/pve";
+                  params = {
+                    "target" = ["10.1.2.3" "10.35.8.13" "10.35.8.32"];
+                  };
+                  static_configs = [
+                    {
+                      targets = ["archive.host:9221"];
+                    }
+                  ];
+                }
+
                 # eclss
                 # {
                 #   job_name = "eclss";
@@ -307,6 +337,10 @@ in {
                       admin_password = "admin";
                     };
                   };
+                  declarativePlugins = with pkgs.grafanaPlugins; [
+                    victoriametrics-metrics-datasource
+                    victoriametrics-logs-datasource
+                  ];
                 };
 
                 # prometheus

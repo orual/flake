@@ -186,8 +186,7 @@
   services = {
     ollama = {
       enable = true;
-      acceleration = "rocm";
-      rocmOverrideGfx = "10.3.6";
+      package = pkgs.ollama-vulkan;
     };
     displayManager.gdm.autoSuspend = false;
     openrgb.enable = true;

@@ -53,6 +53,7 @@
       #
       # Fix this when unstable gets updated with this patch
       (_: prev: {azure-cli = inputs.nixpkgs-stable.legacyPackages.${prev.system}.azure-cli;})
+      (_: prev: {opencode = inputs.opencode.packages.${prev.system}.default;})
     ];
 
     lib = import ./lib;
@@ -125,7 +126,7 @@
             inputs.niri.nixosModules.niri
             inputs.vscode-server.nixosModules.default
 
-            inputs.nixos-cosmic.nixosModules.default
+            #inputs.nixos-cosmic.nixosModules.default
           ];
         };
 
@@ -266,6 +267,12 @@
     # for building Rust packages
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
+    opencode = {
+      url = "github:sst/opencode";
       inputs = {
         nixpkgs.follows = "nixpkgs";
       };

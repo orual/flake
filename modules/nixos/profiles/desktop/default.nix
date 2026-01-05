@@ -74,6 +74,13 @@ in {
       keyboard.qmk.enable = lib.mkDefault true;
     };
 
+    # i18n.inputMethod = {
+    #   type = "fcitx5";
+    #   fcitx5.waylandFrontend = true;
+
+    #   fcitx5.addons = with pkgs; [kdePackages.fcitx5-chinese-addons]; # or fcitx5-anthy for japanese
+    # };
+
     ### programs ###
     programs = {
       # Enable 1password and 1password-gui

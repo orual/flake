@@ -30,7 +30,7 @@
     systemctl-tui
     vmware-workstation
     remmina
-    atuin-desktop
+    #atuin-desktop
     claude-code-acp
     #claude-desktop
   ];

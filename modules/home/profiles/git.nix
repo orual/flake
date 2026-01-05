@@ -58,7 +58,14 @@ in
                 key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGrSMrSEnlsG04W6FxsvSmBST8h5+8ZFA8XBecx7FYLn";
               };
               git = {
-                auto-local-bookmark = true;
+                remotes = {
+                  origin = {
+                    auto-track-bookmarks = "glob:*";
+                  };
+                  upstream = {
+                    auto-track-bookmarks = "main";
+                  };
+                };
                 sign-on-push = true;
               };
             };

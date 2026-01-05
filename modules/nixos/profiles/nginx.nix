@@ -53,7 +53,7 @@ in {
         security.acme = {
           acceptTerms = true;
           defaults = {
-            email = lib.mkDefault "acme@nonbinary.computer";
+            email = lib.mkDefault "orual@nonbinary.computer";
           };
           certs.${acmeDomain} = {
             domain = "${acmeDomain}";

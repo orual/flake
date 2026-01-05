@@ -115,6 +115,9 @@
     extraOptions = ''
       --experimental
     '';
+    daemon.settings = {
+      insecure-registries = [ "booskie-box.coin-aldebaran.ts.net:5000" ];
+    };
     # workaround for https://github.com/moby/moby/issues/45935, see
     # https://github.com/armbian/build/issues/5586#issuecomment-1677708996
     # or i could try podman...
