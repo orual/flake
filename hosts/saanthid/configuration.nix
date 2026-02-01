@@ -7,7 +7,8 @@
 
   profiles.k3s-node = {
     enable = true;
-    role = "init";
+    role = "server";
+    serverAddr = "https://chasmfiend:6443";
     # tokenFile = "/etc/secrets/k3s-token";  # TODO: set up with 1password
 
     # Additional TLS SANs for cluster access
@@ -16,7 +17,7 @@
       "saanthid.local"
     ];
 
-    # VM image generation for Proxmox
+    # VM image generation for Proxmox (on booskie-laptop)
     vm = {
       enable = true;
       format = "proxmox";

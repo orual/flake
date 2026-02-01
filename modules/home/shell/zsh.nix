@@ -55,12 +55,6 @@ in
                 sshd|*/sshd) SESSION_TYPE=remote/ssh;TERM=xterm-256color;;
               esac
             fi
-
-            # # Import colorscheme from 'wal' asynchronously, if the terminal is
-            # # alacritty, and the current session is not a SSH session.
-            # if [[ -z ''${SESSION_TYPE+x} ]]; then
-            #   (cat "''${HOME}/.cache/wal/sequences" &)
-            # fi
           '';
 
           ### nicer autocomplete ###
