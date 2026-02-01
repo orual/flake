@@ -134,6 +134,9 @@ in {
           (mkIf config.programs.bash.enable {
             programs.bash.initExtra = fixTermEnvVar;
           })
+          (mkIf config.programs.fish.enable {
+            # Fish TERM fix is handled in fish.nix interactiveShellInit
+          })
         ]
     ))
     #

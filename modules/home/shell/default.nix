@@ -1,9 +1,8 @@
 #
 # Shell configuration.
 #
-# This module contains configuration for command-line shells, primarily zsh.
-# This includes the shell config scripts (i.e. `.zshrc` and friends), and
-# prompt configuration for Starship.
+# This module contains configuration for command-line shells (fish, zsh).
+# This includes the shell config scripts and prompt configuration for Starship.
 #
 {
   config,
@@ -12,6 +11,7 @@
 }:
 with lib; {
   imports = [
+    ./fish.nix
     ./zsh.nix
     ./starship.nix
   ];

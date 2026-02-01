@@ -26,7 +26,7 @@
         victoriametrics.enable = false;
         inherit rootDomain;
       };
-      snmp.enable = true;
+      snmp.enable = false;
     };
     ### Turn this back on when I get the DNS stuff set up right
     nginx = {

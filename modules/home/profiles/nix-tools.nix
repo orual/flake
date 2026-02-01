@@ -220,5 +220,8 @@ in
         (mkIf config.programs.zsh.enable {
           programs.nix-index.enableZshIntegration = true;
         })
+        (mkIf config.programs.fish.enable {
+          programs.nix-index.enableFishIntegration = true;
+        })
       ]);
   }

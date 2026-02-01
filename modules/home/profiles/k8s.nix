@@ -36,5 +36,10 @@ in {
         }
       '';
     };
+
+    programs.fish = {
+      shellAliases = {k = "kubectl";};
+      # k3d-import-all function is defined in fish.nix
+    };
   };
 }

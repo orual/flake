@@ -12,7 +12,7 @@ in
 
     config = mkIf cfg.enable {
       boot.initrd.kernelModules = ["amdgpu"];
-      hardware.graphics.extraPackages = [pkgs.mesa.drivers];
+      hardware.graphics.extraPackages = [pkgs.mesa];
 
       hardware.graphics.enable = true;
       hardware.graphics.enable32Bit = true;

@@ -97,7 +97,8 @@ in
       };
 
       nushell.enable = lib.mkDefault true;
-      zsh.enable = lib.mkDefault true;
+      fish.enable = lib.mkDefault true;
+      zsh.enable = lib.mkDefault false;
       # zellij.enable = lib.mkDefault false;
       starship.enable = lib.mkDefault true;
 

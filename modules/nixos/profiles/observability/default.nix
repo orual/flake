@@ -717,6 +717,15 @@ in {
                         version = 2;
                       };
                     };
+                    modules = {
+                      # Basic system info module - works with most SNMP devices
+                      if_mib = {
+                        walk = [
+                          "1.3.6.1.2.1.1"    # system
+                          "1.3.6.1.2.1.2"    # interfaces
+                        ];
+                      };
+                    };
                   };
                 };
               })

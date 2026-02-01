@@ -149,7 +149,7 @@
       "wireshark" # of course i want to be in the wireshark group!
       "dialout" # allows writing to serial ports
     ];
-    shell = pkgs.zsh;
+    shell = pkgs.fish;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICNWunZTkQnvkKi6gbeRfOXaIg4NL0OiE0SIXosxRP6s"
     ];
