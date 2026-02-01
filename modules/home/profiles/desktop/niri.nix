@@ -224,12 +224,12 @@ in
         in
           lib.attrsets.mergeAttrsList [
             {
-              "${Mod}+T".action = spawn "wezterm";
+              "${Mod}+T".action = spawn "ghostty";
               "${Mod}+O".action = show-hotkey-overlay;
               "${Mod}+D".action = spawn "fuzzel";
               "${Mod}+Shift+W".action = sh (
                 builtins.concatStringsSep "; " [
-                  "systemctl --user restart waybar.service"
+                  #"systemctl --user restart waybar.service"
                   "systemctl --user restart swaybg.service"
                 ]
               );
@@ -244,12 +244,12 @@ in
               "${Mod}+Shift+Menu".action = set-dynamic-cast-monitor;
               "${Mod}+Delete".action = clear-dynamic-cast-target;
 
-              "XF86AudioRaiseVolume".action = sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1+";
-              "XF86AudioLowerVolume".action = sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.1-";
+              "XF86AudioRaiseVolume".action = sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+";
+              "XF86AudioLowerVolume".action = sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05-";
               "XF86AudioMute".action = sh "wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle";
 
-              "XF86MonBrightnessUp".action = sh "brightnessctl set 10%+";
-              "XF86MonBrightnessDown".action = sh "brightnessctl set 10%-";
+              "XF86MonBrightnessUp".action = sh "brightnessctl set 5%+";
+              "XF86MonBrightnessDown".action = sh "brightnessctl set 5%-";
 
               "${Mod}+Q".action = close-window;
 
@@ -505,11 +505,11 @@ in
 
             opacity = 0.8;
           }
-          # {
-          #   matches = [ { namespace = "quickshell"; } ];
+          {
+            matches = [{namespace = "^noctalia-overview";}];
 
-          #   opacity = 0.9;
-          # }
+            place-within-backdrop = true;
+          }
           # {
           #   matches = [{namespace = "wallpaper$";}];
           #   place-within-backdrop = true;
@@ -539,11 +539,11 @@ in
         enable = true;
         settings = {
           main = {
-            terminal = "wezterm";
+            terminal = "ghostty";
             font = lib.mkForce (
               if cfg.enableTablet
-              then "IBM Plex Sans:12"
-              else "IBM Plex Sans:10"
+              then "Ioskeley Mono:12"
+              else "Ioskeley Mono:10"
             );
           };
         };

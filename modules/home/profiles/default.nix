@@ -11,5 +11,6 @@
     ./waybar.nix
     ./astal.nix
     ./quickshell.nix
+    ./noctalia.nix
   ];
 }

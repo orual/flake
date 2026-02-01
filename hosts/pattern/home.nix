@@ -11,6 +11,7 @@
       enable = true;
       enablePython = true;
     };
+    noctalia.enable = true;
     #waybar.enable = true;
   };
 
@@ -30,9 +31,9 @@
     systemctl-tui
     vmware-workstation
     remmina
-    #atuin-desktop
+    atuin-desktop
     claude-code-acp
-    #claude-desktop
+    claude-desktop
   ];
 
   services = {

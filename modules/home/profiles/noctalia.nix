@@ -6,7 +6,7 @@
 }: let
   cfg = config.profiles.noctalia;
 in {
-  options.profiles.quickshell = with lib; {
+  options.profiles.noctalia = with lib; {
     enable = mkEnableOption "noctalia profile";
   };
 
@@ -17,41 +17,66 @@ in {
       enable = true;
       settings = {
         bar = {
-          density = "compact";
-          position = "right";
-          showCapsule = false;
+          density = "default";
+          position = "top";
+          # floating = true;
+          # showCapsule = true;
+          # useSeparateOpacity = true;
+          # capsuleOpacity = lib.mkForce 1;
+          # backgroundOpacity = lib.mkForce 0.01;
           widgets = {
             left = [
               {
-                id = "ControlCenter";
-                useDistroLogo = true;
+                id = "Launcher";
               }
               {
-                id = "WiFi";
+                id = "SystemMonitor";
               }
               {
-                id = "Bluetooth";
+                id = "MediaMini";
+                useFixedWidth = false;
+                maxWidth = 400;
               }
             ];
             center = [
               {
+                formatHorizontal = "ddd yyyy-MM-dd HH:mm";
+                formatVertical = "HH mm - MMM dd";
+                id = "Clock";
+                useMonospacedFont = true;
+                usePrimaryColor = true;
+              }
+              {
                 hideUnoccupied = false;
                 id = "Workspace";
-                labelMode = "none";
+              }
+              {
+                id = "ActiveWindow";
+                useFixedWidth = false;
+                maxWidth = 400;
               }
             ];
             right = [
+              {
+                id = "Tray";
+              }
+              {
+                id = "NotificationHistory";
+              }
               {
                 alwaysShowPercentage = false;
                 id = "Battery";
                 warningThreshold = 30;
               }
               {
-                formatHorizontal = "HH:mm";
-                formatVertical = "HH mm";
-                id = "Clock";
-                useMonospacedFont = true;
-                usePrimaryColor = true;
+                id = "Volume";
+              }
+              {
+                id = "Brightness";
+              }
+              {
+                id = "ControlCenter";
+                useDistroLogo = true;
               }
             ];
           };
@@ -64,6 +89,10 @@ in {
         location = {
           monthBeforeDay = true;
           name = "Toronto, Canada";
+        };
+        wallpaper = {
+          enabled = true;
+          overviewEnabled = true;
         };
         colors = {
           mPrimary = "#ea9a97";

@@ -14,7 +14,7 @@ final: prev: {
   discord-presence-lsp = prev.callPackage ./discord-presence-lsp {};
   cargotom = prev.callPackage ./cargotom {};
   claude-code-latest = prev.callPackage ./claude-code {};
-  claude-code-acp = prev.callPackage ./claude-code-acp {};
+  claude-code-acp-latest = prev.callPackage ./claude-code-acp {};
   opencode-latest = prev.callPackage ./opencode.nix {};
   glasgow-latest = prev.callPackage ./glasgow-latest.nix {};
   #minipro-git = prev.callPackage ./minipro-git { };

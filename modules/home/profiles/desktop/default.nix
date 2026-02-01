@@ -26,7 +26,8 @@ in {
         zoom-us
         spotify
         obsidian-x11
-        beeper-beta
+        beeper
+        beeper-bridge-manager
         davinci-resolve
       ];
     in (
@@ -66,7 +67,7 @@ in {
           pkgs.firefoxpwa
         ];
       };
-      #ghostty.enable = true;
+      ghostty.enable = true;
       _1password-gui.enableSshAgent = lib.mkDefault true;
       keychain = {
         enable = true;
