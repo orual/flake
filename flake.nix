@@ -187,15 +187,6 @@
           #               };
 
           pattern = mkNode {hostname = "pattern";};
-
-          archive = {
-            hostname = "archive.sys.home.nonbinary.computer";
-            profiles.system = {
-              sshUser = "orual";
-              path = deploy-rs.lib.x86_64-linux.activate.nixos self.nixosConfigurations.archive;
-              user = "root";
-            };
-          };
         };
 
         ##################

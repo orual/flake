@@ -168,8 +168,6 @@ in
         enable = true;
         role = if cfg.role == "init" then "server" else cfg.role;
         clusterInit = cfg.role == "init";
-        serverAddr = cfg.serverAddr;
-        tokenFile = cfg.tokenFile;
         extraFlags = let
           baseFlags = [
             "--cluster-dns=${cfg.clusterDns}"
@@ -185,6 +183,10 @@ in
             ++ map (san: "--tls-san=${san}") cfg.tlsSans
           );
         in baseFlags ++ traefikFlags ++ serviceLBFlags ++ tlsFlags ++ cfg.extraFlags;
+      } // optionalAttrs (cfg.serverAddr != null) {
+        serverAddr = cfg.serverAddr;
+      } // optionalAttrs (cfg.tokenFile != null) {
+        tokenFile = cfg.tokenFile;
       };
     }
 
@@ -227,33 +229,9 @@ in
       services.qemuGuest.enable = mkDefault true;
     }
 
-    # Proxmox image configuration
-    (mkIf (cfg.vm.enable && cfg.vm.format == "proxmox") {
-      proxmox = {
-        qemuConf = {
-          cores = cfg.vm.cores;
-          memory = cfg.vm.memory;
-          bios = cfg.vm.proxmox.bios;
-          net0 = cfg.vm.proxmox.net0;
-          agent = cfg.vm.proxmox.agent;
-          scsihw = cfg.vm.proxmox.scsihw;
-          additionalSpace = cfg.vm.proxmox.additionalSpace;
-          bootSize = cfg.vm.proxmox.bootSize;
-          virtio0 = "${cfg.vm.proxmox.diskStorage}:vm-9999-disk-0";
-        } // optionalAttrs (cfg.vm.proxmox.partitionTableType != null) {
-          partitionTableType = cfg.vm.proxmox.partitionTableType;
-        };
-        cloudInit = {
-          enable = true;
-          defaultStorage = cfg.vm.proxmox.cloudInitStorage;
-        };
-      };
-    })
-
-    # Generic QCOW2 image (for non-Proxmox hypervisors)
-    (mkIf (cfg.vm.enable && cfg.vm.format == "qcow2") {
-      # Uses system.build.qcow2 from nixpkgs
-      virtualisation.diskSize = cfg.vm.diskSize;
-    })
+    # NOTE: Proxmox/QCOW2 image configuration must be set in the host's config
+    # because the proxmox-image.nix module conflicts with non-VM hosts.
+    # Import (modulesPath + "/virtualisation/proxmox-image.nix") in your host
+    # and use the vm.* options from this profile to configure it.
   ]);
 }

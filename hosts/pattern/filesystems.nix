@@ -1,13 +1,10 @@
-{ ... }:
-
-{
-
-  boot.supportedFilesystems = [ "zfs" "xfs" "ext4" "btrfs" ];
+{...}: {
+  boot.supportedFilesystems = ["zfs" "xfs" "ext4" "btrfs"];
 
   fileSystems."/" = {
     device = "ssd-pool/system/root";
     fsType = "zfs";
-    options = [ "zfsutil" ];
+    options = ["zfsutil"];
   };
 
   fileSystems."/boot" = {
@@ -18,19 +15,19 @@
   fileSystems."/nix" = {
     device = "ssd-pool/local/nix";
     fsType = "zfs";
-    options = [ "zfsutil" ];
+    options = ["zfsutil"];
   };
 
   fileSystems."/home/orual" = {
     device = "ssd-pool/home/orual";
     fsType = "zfs";
-    options = [ "zfsutil" ];
+    options = ["zfsutil"];
   };
 
   fileSystems."/root" = {
     device = "ssd-pool/home/root";
     fsType = "zfs";
-    options = [ "zfsutil" ];
+    options = ["zfsutil"];
   };
 
   # zvols formatted with other filesystems to run software that doesn't like
@@ -43,11 +40,10 @@
     fsType = "xfs";
   };
   # 2. ext4 zvol for atuin; see: https://github.com/atuinsh/atuin/issues/952
-  fileSystems."/home/orual/.local/share/atuin" =
-    {
-      device = "/dev/zvol/ssd-pool/home/atuin";
-      fsType = "ext4";
-    };
+  fileSystems."/home/orual/.local/share/atuin" = {
+    device = "/dev/zvol/ssd-pool/home/atuin";
+    fsType = "ext4";
+  };
 
   swapDevices = [
     {

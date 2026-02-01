@@ -31,7 +31,6 @@ in
     };
   };
 
-  # Boot configuration for UEFI VM
   boot = {
     loader = {
       systemd-boot.enable = true;
@@ -39,30 +38,17 @@ in
     };
 
     initrd.availableKernelModules = [
-      "ahci"
-      "xhci_pci"
-      "virtio_pci"
-      "virtio_scsi"
-      "sd_mod"
-      "sr_mod"
+      "ahci" "xhci_pci" "virtio_pci" "virtio_scsi" "sd_mod" "sr_mod"
     ];
 
     kernelModules = [ "kvm-amd" "kvm-intel" ];
 
-    # Virtio drivers for Proxmox
     initrd.kernelModules = [
-      "virtio_balloon"
-      "virtio_console"
-      "virtio_rng"
-      "virtio_gpu"
+      "virtio_balloon" "virtio_console" "virtio_rng" "virtio_gpu"
     ];
   };
 
-  # No swap for k3s nodes (kubernetes prefers no swap)
   swapDevices = [ ];
-
-  # Use DHCP for networking (cloud-init will configure)
   networking.useDHCP = lib.mkDefault true;
-
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
 }
