@@ -1,8 +1,14 @@
 {
-  "enableAllProjectMcpServers": false,
   "permissions": {
     "allow": [
-      "WebFetch(domain:github.com)"
+      "WebFetch(domain:github.com)",
+      "Skill(ed3d-research-agents:researching-on-the-internet)",
+      "Skill(ed3d-research-agents:investigating-a-codebase)",
+      "WebSearch",
+      "WebFetch(domain:developer.1password.com)",
+      "WebFetch(domain:michael.stapelberg.ch)",
+      "WebFetch(domain:wiki.nixos.org)"
     ]
-  }
+  },
+  "enableAllProjectMcpServers": false
 }

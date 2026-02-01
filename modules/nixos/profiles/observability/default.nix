@@ -282,7 +282,10 @@ in {
                   metrics_path = "/api/prometheus";
                   scheme = "http";
                   authorization = {
-                    credentials_file = "/etc/secrets/homeassistant.key";
+                    credentials_file =
+                      if config.profiles.secrets.enable
+                      then config.opnix.secrets.homeassistant-api-key.path
+                      else "/etc/secrets/homeassistant.key";
                   };
                   static_configs = [
                     {
@@ -824,7 +827,10 @@ in {
                   controllers = [
                     {
                       user = "unifipoller";
-                      pass = "/etc/secrets/unifi-api-key.key";
+                      pass =
+                        if config.profiles.secrets.enable
+                        then config.opnix.secrets.unifi-api-key.path
+                        else "/etc/secrets/unifi-api-key.key";
                       # Per the Unpoller docs:
                       # > When configuring make sure that you do not include :8443
                       # > on the url of the controller if you are using unifios.

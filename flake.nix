@@ -128,6 +128,7 @@
             inputs.nix-monitored.nixosModules.default
             inputs.niri.nixosModules.niri
             inputs.vscode-server.nixosModules.default
+            inputs.opnix.nixosModules.default
 
             #inputs.nixos-cosmic.nixosModules.default
           ];
@@ -417,5 +418,11 @@
     claude-desktop.url = "github:k3d3/claude-desktop-linux-flake";
     # claude-desktop.inputs.nixpkgs.follows = "nixpkgs";
     # claude-desktop.inputs.flake-utils.follows = "flake-utils";
+
+    # 1Password secrets management
+    opnix = {
+      url = "github:mrjones2014/opnix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 }

@@ -58,7 +58,11 @@ in {
           certs.${acmeDomain} = {
             domain = "${acmeDomain}";
             dnsProvider = "cloudflare";
-            credentialsFile = "/etc/secrets/cloudflare-api-key.key";
+            # Use opnix secret path when secrets profile is enabled
+            credentialsFile =
+              if config.profiles.secrets.enable
+              then config.opnix.secrets.cloudflare-api-key.path
+              else "/etc/secrets/cloudflare-api-key.key";
             group = config.services.nginx.group;
             extraDomainNames = trivial.pipe config.services.nginx.virtualHosts [
               # include any configured NGINX virtual host that's configured to
