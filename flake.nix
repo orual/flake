@@ -421,7 +421,7 @@
 
     # 1Password secrets management
     opnix = {
-      url = "github:mrjones2014/opnix";
+      url = "github:brizzbuzz/opnix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };

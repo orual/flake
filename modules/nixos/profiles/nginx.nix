@@ -61,7 +61,7 @@ in {
             # Use opnix secret path when secrets profile is enabled
             credentialsFile =
               if config.profiles.secrets.enable
-              then config.opnix.secrets.cloudflare-api-key.path
+              then config.services.onepassword-secrets.secretPaths.cloudflareApiKey
               else "/etc/secrets/cloudflare-api-key.key";
             group = config.services.nginx.group;
             extraDomainNames = trivial.pipe config.services.nginx.virtualHosts [

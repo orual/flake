@@ -30,7 +30,10 @@ in
     tokenFile = mkOption {
       type = types.nullOr types.path;
       default = null;
-      description = "Path to file containing cluster token";
+      description = ''
+        Path to file containing cluster token.
+        When profiles.secrets is enabled, defaults to opnix k3s-token.
+      '';
     };
 
     clusterDns = mkOption {
@@ -185,8 +188,11 @@ in
         in baseFlags ++ traefikFlags ++ serviceLBFlags ++ tlsFlags ++ cfg.extraFlags;
       } // optionalAttrs (cfg.serverAddr != null) {
         serverAddr = cfg.serverAddr;
-      } // optionalAttrs (cfg.tokenFile != null) {
-        tokenFile = cfg.tokenFile;
+      } // optionalAttrs (cfg.tokenFile != null || config.profiles.secrets.enable) {
+        tokenFile =
+          if cfg.tokenFile != null
+          then cfg.tokenFile
+          else config.services.onepassword-secrets.secretPaths.k3sToken;
       };
     }
 

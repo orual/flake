@@ -284,7 +284,7 @@ in {
                   authorization = {
                     credentials_file =
                       if config.profiles.secrets.enable
-                      then config.opnix.secrets.homeassistant-api-key.path
+                      then config.services.onepassword-secrets.secretPaths.homeassistantApiKey
                       else "/etc/secrets/homeassistant.key";
                   };
                   static_configs = [
@@ -829,7 +829,7 @@ in {
                       user = "unifipoller";
                       pass =
                         if config.profiles.secrets.enable
-                        then config.opnix.secrets.unifi-api-key.path
+                        then config.services.onepassword-secrets.secretPaths.unifiApiKey
                         else "/etc/secrets/unifi-api-key.key";
                       # Per the Unpoller docs:
                       # > When configuring make sure that you do not include :8443

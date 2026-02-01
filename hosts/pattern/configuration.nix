@@ -11,6 +11,9 @@
   profiles = let
     rootDomain = "nonbinary.computer";
   in {
+    # 1Password secrets management
+    secrets.enable = true;
+
     docs.enable = true;
     games.enable = true;
     desktop = {

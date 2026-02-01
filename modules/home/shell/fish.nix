@@ -42,6 +42,7 @@ in
           '';
 
           interactiveShellInit = ''
+            set fish_greeting # Disable greeting
             # Terminal title setting
             function fish_title
               # Show user@host in title for SSH sessions

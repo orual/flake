@@ -5,10 +5,13 @@
 
   networking.hostName = "chasmfiend";
 
+  # 1Password secrets management
+  profiles.secrets.enable = true;
+
   profiles.k3s-node = {
     enable = true;
     role = "init";
-    # tokenFile = "/etc/secrets/k3s-token";  # TODO: set up with 1password
+    # Token automatically provided by opnix via profiles.secrets
 
     # Additional TLS SANs for cluster access
     tlsSans = [
