@@ -19,6 +19,7 @@
     desktop = {
       #gnome3.enable = true;
       niri.enable = true;
+      cosmic.enable = true;
     };
     #observability.enable = false;
     observability = {

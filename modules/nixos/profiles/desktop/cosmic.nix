@@ -11,18 +11,14 @@ in
       enable = mkEnableOption "cosmic profile";
     };
 
-    config = mkIf cfg.gnome3.enable {
+    config = mkIf cfg.cosmic.enable {
       profiles.desktop.enable = mkDefault true;
 
       services = {
         displayManager = {
           defaultSession = mkDefault "cosmic";
-          gdm = {
-            enable = mkDefault true;
-            wayland = mkDefault true;
-          };
+          cosmic-greeter.enable = mkDefault true;
         };
-        # Enable the GNOME Desktop Environment.
         desktopManager.cosmic.enable = true;
 
         dbus.packages = with pkgs; [dconf];

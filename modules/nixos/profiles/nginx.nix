@@ -59,11 +59,14 @@ in {
             domain = "${acmeDomain}";
             dnsProvider = "cloudflare";
             # Use opnix secret path when secrets profile is enabled
-            credentialsFile =
+            environmentFile =
               if config.profiles.secrets.enable
               then config.services.onepassword-secrets.secretPaths.cloudflareApiKey
               else "/etc/secrets/cloudflare-api-key.key";
             group = config.services.nginx.group;
+            # Check Cloudflare DNS directly for propagation instead of local resolver
+            # Local resolver is too slow to see transient ACME challenge records
+            extraLegoFlags = ["--dns.resolvers=1.1.1.1:53"];
             extraDomainNames = trivial.pipe config.services.nginx.virtualHosts [
               # include any configured NGINX virtual host that's configured to
               # use the root domain ACME host.

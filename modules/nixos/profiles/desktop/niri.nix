@@ -17,10 +17,7 @@ in
       services = {
         displayManager = {
           defaultSession = mkForce "niri";
-          gdm = {
-            enable = mkDefault true;
-            wayland = mkDefault true;
-          };
+          cosmic-greeter.enable = mkDefault true;
         };
       };
       xdg = {

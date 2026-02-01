@@ -7,7 +7,7 @@
 }: let
   cfg = config.profiles.desktop;
 in {
-  imports = [./gnome3.nix ./kde.nix ./niri.nix];
+  imports = [./gnome3.nix ./kde.nix ./niri.nix ./cosmic.nix];
 
   options.profiles.desktop = with lib; {
     enable = mkEnableOption "Profile for desktop machines (i.e. not servers)";

@@ -485,6 +485,12 @@ in {
                               url = "https://unifi";
                               statusCheck = false;
                             }
+                            {
+                              title = "Proxmox";
+                              icon = "si-proxmox";
+                              url = "https://10.1.2.3:8006";
+                              statusCheck = false;
+                            }
 
                             # {
                             #   title = "pattern BMC";
@@ -724,8 +730,8 @@ in {
                       # Basic system info module - works with most SNMP devices
                       if_mib = {
                         walk = [
-                          "1.3.6.1.2.1.1"    # system
-                          "1.3.6.1.2.1.2"    # interfaces
+                          "1.3.6.1.2.1.1" # system
+                          "1.3.6.1.2.1.2" # interfaces
                         ];
                       };
                     };

@@ -31,32 +31,32 @@
       # inputs.atuin.overlays.default
 
       (_: prev: {
-        claude-desktop = inputs.claude-desktop.packages.${prev.system}.claude-desktop-with-fhs;
+        claude-desktop = inputs.claude-desktop.packages.${prev.stdenv.hostPlatform.system}.claude-desktop-with-fhs;
       })
       (_: prev: {
-        vesktop = inputs.nixpkgs-stable.legacyPackages.${prev.system}.vesktop;
+        vesktop = inputs.nixpkgs-stable.legacyPackages.${prev.stdenv.hostPlatform.system}.vesktop;
       })
       # add alejandra package
-      (_: prev: {alejandra = inputs.alejandra.defaultPackage.${prev.system};})
+      (_: prev: {alejandra = inputs.alejandra.defaultPackage.${prev.stdenv.hostPlatform.system};})
       # add ghostty package
-      (_: prev: {ghostty = inputs.ghostty.packages.${prev.system}.ghostty;})
+      (_: prev: {ghostty = inputs.ghostty.packages.${prev.stdenv.hostPlatform.system}.ghostty;})
       # add ECLSSD
-      (_: prev: {eclssd = inputs.eclssd.packages.${prev.system}.eclssd;})
+      (_: prev: {eclssd = inputs.eclssd.packages.${prev.stdenv.hostPlatform.system}.eclssd;})
       # add fw-ectool package
       # TODO(orual): it would be nice if this was only added for the framework
       # system config...
-      (_: prev: {fw-ectool = inputs.fw-ectool.packages.${prev.system}.ectool;})
+      (_: prev: {fw-ectool = inputs.fw-ectool.packages.${prev.stdenv.hostPlatform.system}.ectool;})
       # add niri overlay
       # TODO(orual): similar to the above, would be good to add only for desktop configs
       inputs.niri.overlays.niri
-      (_: prev: {quickshell = inputs.quickshell.packages.${prev.system}.default;})
+      (_: prev: {quickshell = inputs.quickshell.packages.${prev.stdenv.hostPlatform.system}.default;})
       # (_: prev: {zed-editor = prev.zed-prerelease;})
       # add astal package
       #inputs.astal-shell.overlays.default
       #
       # Fix this when unstable gets updated with this patch
-      (_: prev: {azure-cli = inputs.nixpkgs-stable.legacyPackages.${prev.system}.azure-cli;})
-      (_: prev: {opencode = inputs.opencode.packages.${prev.system}.default;})
+      (_: prev: {azure-cli = inputs.nixpkgs-stable.legacyPackages.${prev.stdenv.hostPlatform.system}.azure-cli;})
+      (_: prev: {opencode = inputs.opencode.packages.${prev.stdenv.hostPlatform.system}.default;})
     ];
 
     lib = import ./lib;
@@ -72,6 +72,7 @@
           devShells.default = mkShell {
             buildInputs = [
               deploy-rs.packages.${system}.default
+              inputs.opnix.packages.${system}.default
               alejandra
               nix-update
               nodejs
@@ -129,8 +130,6 @@
             inputs.niri.nixosModules.niri
             inputs.vscode-server.nixosModules.default
             inputs.opnix.nixosModules.default
-
-            #inputs.nixos-cosmic.nixosModules.default
           ];
         };
 
@@ -232,7 +231,6 @@
       "https://nix-community.cachix.org"
       "https://cache.garnix.io"
       "https://niri.cachix.org"
-      "https://cosmic.cachix.org/"
     ];
     extra-trusted-public-keys = [
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
@@ -241,7 +239,6 @@
       "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
       "niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSl7Z6oezYhGhR+3W2964="
       "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
-      "cosmic.cachix.org-1:Dya9IyXD4xdBehWjrkPv6rtxpmMdRel02smYzA85dPE="
     ];
   };
 
@@ -250,14 +247,10 @@
   inputs = {
     nixpkgs.url = "github:NixOS/nixpkgs?ref=nixos-unstable";
     nixpkgs-stable.url = "github:NixOS/nixpkgs?ref=nixos-25.11";
-    # nixpkgs-stable.follows = "nixos-cosmic/nixpkgs-stable";
     nixpkgs-unstable.url = "github:NixOS/nixpkgs?ref=nixos-unstable";
-    # NOTE:change "nixpkgs" to "nixpkgs-stable" to use stable NixOS release
-    #nixpkgs.follows = "nixos-cosmic/nixpkgs";
 
     nixpkgs-azure.url = "github:NixOS/nixpkgs?ref=44272c87af0b641a28dd436b8d962453489bd718";
 
-    nixos-cosmic.url = "github:lilyinstarlight/nixos-cosmic";
     flake-utils.url = "github:numtide/flake-utils";
     flake-parts.url = "github:hercules-ci/flake-parts";
 
