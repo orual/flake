@@ -21,4 +21,5 @@ final: prev: {
   stm32cubeprog = prev.callPackage ./stm32cubeprogrammer.nix {};
   obsidian-x11 = prev.callPackage ./obsidian-x11.nix {};
   conversation-search = prev.callPackage ./conversation-search {};
+  cosmic-ext-alternative-startup = prev.callPackage ./cosmic-ext-alternative-startup {};
 }
