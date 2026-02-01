@@ -19,9 +19,9 @@
     desktop = {
       #gnome3.enable = true;
       niri.enable = true;
+      #niri.cosmicOnNiri = true;
       cosmic.enable = true;
     };
-    #observability.enable = false;
     observability = {
       enable = true;
       observer = {
@@ -32,7 +32,6 @@
       };
       snmp.enable = false;
     };
-    ### Turn this back on when I get the DNS stuff set up right
     nginx = {
       enable = true;
       domain = rootDomain;

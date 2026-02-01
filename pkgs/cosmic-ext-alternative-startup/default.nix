@@ -10,11 +10,11 @@ rustPlatform.buildRustPackage rec {
   src = fetchFromGitHub {
     owner = "drakulix";
     repo = "cosmic-ext-alternative-startup";
-    rev = "main";
-    hash = lib.fakeHash;
+    rev = "8ceda00197c7ec0905cf1dccdc2d67d738e45417";
+    hash = "sha256-0kqn3hZ58uQMl39XXF94yQS1EWmGIK45/JFTAigg/3M=";
   };
 
-  cargoHash = lib.fakeHash;
+  cargoHash = "sha256-DeMkAG2iINGden0Up013M9mWDN4QHrF+FXoNqpGB+mg=";
 
   meta = with lib; {
     description = "Alternative entry point for cosmic-session's compositor IPC interface";

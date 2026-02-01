@@ -5,6 +5,7 @@
       enable = true;
       #gnome3.enable = true;
       niri.enable = true;
+      #niri.cosmicOnNiri = true;
     };
     k8s.enable = true;
     devtools = {
@@ -12,7 +13,6 @@
       enablePython = true;
     };
     noctalia.enable = true;
-    #waybar.enable = true;
   };
 
   home.packages = with pkgs; [

@@ -68,6 +68,7 @@ in
     options.profiles.desktop.niri = {
       enable = mkEnableOption "niri profile";
       enableTablet = mkEnableOption "tablet-specific ux stuff";
+      cosmicOnNiri = mkEnableOption "COSMIC using niri for compositor";
     };
 
     config = mkIf cfg.enable {
@@ -88,6 +89,12 @@ in
         workspaces."main" = {};
         # workspaces."work" = {};
         # workspaces."gaming" = {};
+
+        # Spawn COSMIC startup helper when using cosmic keybindings
+        spawn-at-startup = lib.optionals cfg.cosmicOnNiri [
+          {command = ["cosmic-ext-alternative-startup"];}
+        ];
+
         layout = {
           gaps = 12;
           struts.left = 64;
@@ -226,7 +233,11 @@ in
             {
               "${Mod}+T".action = spawn "ghostty";
               "${Mod}+O".action = show-hotkey-overlay;
-              "${Mod}+D".action = spawn "fuzzel";
+              "${Mod}+D".action = spawn (
+                if cfg.cosmicOnNiri
+                then "cosmic-launcher"
+                else "fuzzel"
+              );
               "${Mod}+Shift+W".action = sh (
                 builtins.concatStringsSep "; " [
                   #"systemctl --user restart waybar.service"
@@ -328,6 +339,11 @@ in
 
               "${Mod}+Shift+Ctrl+T".action = toggle-debug-tint;
             }
+            # COSMIC-specific keybindings
+            (lib.optionalAttrs cfg.cosmicOnNiri {
+              "${Mod}+Shift+D".action = spawn "cosmic-app-library";
+              "${Mod}+Alt+L".action = spawn "cosmic-greeter";
+            })
           ];
 
         animations.window-resize.custom-shader = builtins.readFile ./resize.glsl;
