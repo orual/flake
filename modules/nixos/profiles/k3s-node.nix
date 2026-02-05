@@ -1,16 +1,18 @@
 # Configuration for k3s cluster nodes
-{ config, lib, pkgs, ... }:
-
-with lib;
-let
-  cfg = config.profiles.k3s-node;
-in
 {
+  config,
+  lib,
+  pkgs,
+  ...
+}:
+with lib; let
+  cfg = config.profiles.k3s-node;
+in {
   options.profiles.k3s-node = {
     enable = mkEnableOption "k3s cluster node";
 
     role = mkOption {
-      type = types.enum [ "init" "server" "agent" ];
+      type = types.enum ["init" "server" "agent"];
       default = "server";
       description = ''
         Node role:
@@ -24,7 +26,7 @@ in
       type = types.nullOr types.str;
       default = null;
       description = "Address of existing server to join (required for server/agent roles)";
-      example = "https://saanthid:6443";
+      example = "https://saanthid.local:6443";
     };
 
     tokenFile = mkOption {
@@ -46,7 +48,7 @@ in
       type = types.listOf types.str;
       default = [];
       description = "Additional SANs for the k3s TLS certificate";
-      example = [ "k3s.example.com" "10.0.0.100" ];
+      example = ["k3s.example.com" "10.0.0.100"];
     };
 
     extraFlags = mkOption {
@@ -72,7 +74,7 @@ in
       enable = mkEnableOption "VM image generation for this host";
 
       format = mkOption {
-        type = types.enum [ "proxmox" "qcow2" "raw" "vmware" ];
+        type = types.enum ["proxmox" "qcow2" "raw" "vmware"];
         default = "proxmox";
         description = "VM image format to generate";
       };
@@ -98,13 +100,13 @@ in
       # Proxmox-specific options
       proxmox = {
         bios = mkOption {
-          type = types.enum [ "seabios" "ovmf" ];
+          type = types.enum ["seabios" "ovmf"];
           default = "ovmf";
           description = "BIOS type (seabios or ovmf/UEFI)";
         };
 
         partitionTableType = mkOption {
-          type = types.nullOr (types.enum [ "efi" "hybrid" "legacy" "legacy+gpt" ]);
+          type = types.nullOr (types.enum ["efi" "hybrid" "legacy" "legacy+gpt"]);
           default = null;
           description = "Partition table type (defaults based on bios selection)";
         };
@@ -167,52 +169,61 @@ in
 
     # k3s service configuration
     {
-      services.k3s = {
-        enable = true;
-        role = if cfg.role == "init" then "server" else cfg.role;
-        clusterInit = cfg.role == "init";
-        extraFlags = let
-          baseFlags = [
-            "--cluster-dns=${cfg.clusterDns}"
-          ];
-          traefikFlags = optionals cfg.disableTraefik [
-            "--disable=traefik"
-          ];
-          serviceLBFlags = optionals cfg.disableServiceLB [
-            "--disable=servicelb"
-          ];
-          tlsFlags = optionals (cfg.role != "agent") (
-            [ "--tls-san=${config.networking.hostName}" ]
-            ++ map (san: "--tls-san=${san}") cfg.tlsSans
-          );
-        in baseFlags ++ traefikFlags ++ serviceLBFlags ++ tlsFlags ++ cfg.extraFlags;
-      } // optionalAttrs (cfg.serverAddr != null) {
-        serverAddr = cfg.serverAddr;
-      } // optionalAttrs (cfg.tokenFile != null || config.profiles.secrets.enable) {
-        tokenFile =
-          if cfg.tokenFile != null
-          then cfg.tokenFile
-          else config.services.onepassword-secrets.secretPaths.k3sToken;
-      };
+      services.k3s =
+        {
+          enable = true;
+          role =
+            if cfg.role == "init"
+            then "server"
+            else cfg.role;
+          clusterInit = cfg.role == "init";
+          extraFlags = let
+            baseFlags = [
+              "--cluster-dns=${cfg.clusterDns}"
+            ];
+            traefikFlags = optionals cfg.disableTraefik [
+              "--disable=traefik"
+            ];
+            serviceLBFlags = optionals cfg.disableServiceLB [
+              "--disable=servicelb"
+            ];
+            tlsFlags = optionals (cfg.role != "agent") (
+              ["--tls-san=${config.networking.hostName}"]
+              ++ map (san: "--tls-san=${san}") cfg.tlsSans
+            );
+          in
+            baseFlags ++ traefikFlags ++ serviceLBFlags ++ tlsFlags ++ cfg.extraFlags;
+        }
+        // optionalAttrs (cfg.serverAddr != null) {
+          serverAddr = cfg.serverAddr;
+        }
+        // optionalAttrs (cfg.tokenFile != null || config.profiles.secrets.enable) {
+          tokenFile =
+            if cfg.tokenFile != null
+            then cfg.tokenFile
+            else config.services.onepassword-secrets.secretPaths.k3sToken;
+        };
     }
 
     # Firewall
     {
       networking.firewall = {
-        allowedTCPPorts = [
-          6443  # Kubernetes API
-          10250 # Kubelet metrics
-        ] ++ optionals (cfg.role != "agent") [
-          2379  # etcd client
-          2380  # etcd peer
-        ];
+        allowedTCPPorts =
+          [
+            6443 # Kubernetes API
+            10250 # Kubelet metrics
+          ]
+          ++ optionals (cfg.role != "agent") [
+            2379 # etcd client
+            2380 # etcd peer
+          ];
 
         allowedUDPPorts = [
-          8472  # Flannel VXLAN
+          8472 # Flannel VXLAN
         ];
 
         # Trust CNI interfaces
-        trustedInterfaces = [ "cni0" "flannel.1" ];
+        trustedInterfaces = ["cni0" "flannel.1"];
       };
     }
 

@@ -59,6 +59,7 @@
 
   #### Boot configuration ####
   boot = {
+    binfmt.emulatedSystems = ["armv6l-linux" "armv7l-linux" "aarch64-linux"];
     supportedFilesystems = ["nfs"];
     loader = {
       # Use the systemd-boot EFI boot loader.

@@ -138,9 +138,17 @@
         ####################
         nixosModules.default = import ./modules/nixos;
 
-        #           ####################
-        #           ## NixOS (images) ##
-        #           ####################
+        ####################
+        ## NixOS (images) ##
+        ####################
+
+        # Proxmox VM images for k3s cluster nodes
+        proxmoxImages = {
+          chasmfiend = self.nixosConfigurations.chasmfiend.config.system.build.VMA;
+          tai-na = self.nixosConfigurations.tai-na.config.system.build.VMA;
+          saanthid = self.nixosConfigurations.saanthid.config.system.build.VMA;
+        };
+
         #           images =
         #             let
         #               mkPiImage = { hostname, imageKind ? "sd-image-rpi3" }:
@@ -174,6 +182,18 @@
               // extraOpts;
           };
         in {
+          chasmfiend = mkNode {
+            hostname = "chasmfiend";
+          };
+
+          tai-na = mkNode {
+            hostname = "tai-na";
+          };
+
+          saanthid = mkNode {
+            hostname = "saanthid";
+          };
+
           #               clavius = mkNode {
           #                 hostname = "clavius";
           #                 system = "aarch64-linux";

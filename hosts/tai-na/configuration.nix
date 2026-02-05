@@ -1,5 +1,5 @@
-{ ... }: {
-  imports = [ ./hardware-configuration.nix ];
+{...}: {
+  imports = [./hardware-configuration.nix];
 
   system.stateVersion = "24.11";
 
@@ -11,7 +11,7 @@
   profiles.k3s-node = {
     enable = true;
     role = "server";
-    serverAddr = "https://chasmfiend:6443";
+    serverAddr = "https://chasmfiend.local:6443";
     # Token automatically provided by opnix via profiles.secrets
 
     # Additional TLS SANs for cluster access

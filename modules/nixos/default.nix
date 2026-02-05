@@ -118,7 +118,7 @@
       --experimental
     '';
     daemon.settings = {
-      insecure-registries = [ "booskie-box.coin-aldebaran.ts.net:5000" ];
+      insecure-registries = ["booskie-box.coin-aldebaran.ts.net:5000"];
     };
     # workaround for https://github.com/moby/moby/issues/45935, see
     # https://github.com/armbian/build/issues/5586#issuecomment-1677708996
@@ -153,6 +153,7 @@
     shell = pkgs.fish;
     openssh.authorizedKeys.keys = [
       "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAICNWunZTkQnvkKi6gbeRfOXaIg4NL0OiE0SIXosxRP6s"
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIAAn1x+h26i11eSrcHJRL1nqeDlvfNnnQ0QLtyAPTcn8"
     ];
   };
 

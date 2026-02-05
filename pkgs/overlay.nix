@@ -13,7 +13,7 @@ final: prev: {
   zed-prerelease = prev.callPackage ./zed-editor {};
   discord-presence-lsp = prev.callPackage ./discord-presence-lsp {};
   cargotom = prev.callPackage ./cargotom {};
-  claude-code-latest = prev.callPackage ./claude-code {};
+  claude-code-latest = prev.callPackage ./claude-code-bin {};
   claude-code-acp-latest = prev.callPackage ./claude-code-acp {};
   opencode-latest = prev.callPackage ./opencode.nix {};
   glasgow-latest = prev.callPackage ./glasgow-latest.nix {};
