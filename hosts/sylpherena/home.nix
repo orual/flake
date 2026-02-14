@@ -2,7 +2,6 @@
   profiles = {
     desktop = {
       enable = true;
-      gnome3.enable = true;
       niri.enable = true;
       niri.enableTablet = true;
     };
@@ -10,8 +9,7 @@
       enable = true;
       enablePython = true;
     };
-    #waybar.enable = true;
-    quickshell.enable = true;
+    noctalia.enable = true;
     #terminal.font.family = "TX-02";
   };
 
