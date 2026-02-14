@@ -3,17 +3,20 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.profiles.devtools;
-in {
-  imports = [./gdb-dashboard.nix];
+in
+{
+  imports = [ ./gdb-dashboard.nix ];
 
   options.profiles.devtools = with lib; {
     enable = mkEnableOption "Profile for development tools";
     enablePython = mkEnableOption "Enable Python";
   };
 
-  config = with lib;
+  config =
+    with lib;
     mkMerge [
       (mkIf cfg.enable {
         home.packages = with pkgs; [
@@ -146,7 +149,6 @@ in {
             alejandra
             rust-analyzer
             rustfmt
-            helix-gpt
           ];
           settings = {
             theme = lib.mkDefault "rose-pine";

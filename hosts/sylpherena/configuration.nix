@@ -19,7 +19,7 @@ with lib;
     laptop.enable = true;
     desktop = {
       enable = true;
-      gnome3.enable = true;
+      #gnome3.enable = true;
       niri.enable = true;
     };
     observability.enable = true;
@@ -96,7 +96,7 @@ with lib;
   };
 
   services = {
-    desktopManager.cosmic.enable = true;
+    #desktopManager.cosmic.enable = true;
     btrfs.autoScrub = {
       enable = true;
       interval = "monthly";

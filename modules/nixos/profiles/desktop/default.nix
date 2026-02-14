@@ -74,6 +74,9 @@ in {
       keyboard.qmk.enable = lib.mkDefault true;
     };
 
+    networking.wireless.iwd.enable = lib.mkDefault true;
+    networking.networkmanager.wifi.backend = lib.mkDefault "iwd";
+
     # i18n.inputMethod = {
     #   type = "fcitx5";
     #   fcitx5.waylandFrontend = true;
