@@ -167,6 +167,13 @@
     };
   };
 
+  environment.systemPackages = with pkgs; [
+    vllm
+    openai-whisper
+    whisper-cpp-vulkan
+    ffmpeg
+  ];
+
   # This is a deskop machine. Use the high-performance frequency profile rather
   # than the low-power one.
   powerManagement.cpuFreqGovernor = "performance";
@@ -188,9 +195,13 @@
 
   #### Services ####
   services = {
-    ollama = {
+    llama-cpp = {
       enable = true;
-      package = pkgs.ollama-vulkan;
+      package = pkgs.llama-cpp-vulkan;
+      openFirewall = true;
+    };
+    llama-swap = {
+      enable = true;
     };
     displayManager.gdm.autoSuspend = false;
     openrgb.enable = true;

@@ -37,6 +37,7 @@ in
         "$HOME/.cargo/bin"
         "$HOME/.linkerd2/bin"
         "$HOME/.local/bin"
+        "$HOME/.opencode/bin"
         "$HOME/go/bin"
       ];
 

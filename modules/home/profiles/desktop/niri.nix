@@ -143,6 +143,9 @@ in
           #   width = 10000;
           #   active.color = "#00000022";
           # };
+          focus-ring = {
+            active.color = "${colors.base0B}ff";
+          };
           shadow.enable = true;
 
           default-column-display =
@@ -168,7 +171,7 @@ in
               if cfg.enableTablet
               then 4
               else 2;
-            active.color = "${colors.base0D}ff";
+            active.color = "${colors.base0B}ff";
             inactive.color = "${colors.base03}AA";
 
             hide-when-single-tab = true;
