@@ -4,10 +4,17 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.profiles.desktop;
-in {
-  imports = [./gnome3.nix ./kde.nix ./niri.nix ./cosmic.nix];
+in
+{
+  imports = [
+    ./gnome3.nix
+    ./kde.nix
+    ./niri.nix
+    ./cosmic.nix
+  ];
 
   options.profiles.desktop = with lib; {
     enable = mkEnableOption "Profile for desktop machines (i.e. not servers)";
@@ -36,7 +43,12 @@ in {
           "10-clock-rate" = {
             "context.properties" = {
               "default.clock.rate" = 96000;
-              "default.clock.allowed-rates" = [44100 48000 88200 96000];
+              "default.clock.allowed-rates" = [
+                44100
+                48000
+                88200
+                96000
+              ];
             };
           };
         };
@@ -76,6 +88,14 @@ in {
 
     networking.wireless.iwd.enable = lib.mkDefault true;
     networking.networkmanager.wifi.backend = lib.mkDefault "iwd";
+    networking.wireless.iwd.settings = {
+      Network = {
+        EnableIPv6 = true;
+      };
+      Settings = {
+        AutoConnect = true;
+      };
+    };
 
     # i18n.inputMethod = {
     #   type = "fcitx5";
@@ -90,7 +110,7 @@ in {
       _1password.enable = true;
       _1password-gui = {
         enable = true;
-        polkitPolicyOwners = ["orual"];
+        polkitPolicyOwners = [ "orual" ];
       };
 
       firefox.enable = true;

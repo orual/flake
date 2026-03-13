@@ -3,9 +3,11 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.profiles.noctalia;
-in {
+in
+{
   options.profiles.noctalia = with lib; {
     enable = mkEnableOption "noctalia profile";
   };
@@ -59,12 +61,13 @@ in {
             right = [
               {
                 id = "Tray";
+                #drawerEnabled = false;
               }
               {
                 id = "NotificationHistory";
               }
               {
-                alwaysShowPercentage = false;
+                alwaysShowPercentage = true;
                 id = "Battery";
                 warningThreshold = 30;
               }
