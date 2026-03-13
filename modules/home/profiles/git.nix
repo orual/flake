@@ -214,7 +214,7 @@ in
             };
         in {
           home.packages = [signingScript];
-          programs.git.settings.gpg."ssh".program = "ssh-sign";
+          programs.git.settings."gpg \"ssh\"".program = "ssh-sign";
         }
       ))
     ]);
