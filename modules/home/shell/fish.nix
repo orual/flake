@@ -29,7 +29,7 @@ in
 
           shellInit = ''
             # Add opencode to PATH
-            fish_add_path -g /home/orual/.opencode/bin
+            fish_add_path -g $HOME/.opencode/bin
 
             # Cargo/Rust
             fish_add_path -g $HOME/.cargo/bin

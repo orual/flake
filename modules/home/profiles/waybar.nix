@@ -3,8 +3,7 @@
   lib,
   pkgs,
   ...
-}:
-let
+}: let
   cfg = config.profiles.waybar;
   icons = rec {
     calendar = "󰃭 ";
@@ -63,8 +62,7 @@ let
     notification.bell-outline = "󰂜";
     notification.bell-outline-badge = "󰅸";
   };
-in
-{
+in {
   options.profiles.waybar = with lib; {
     enable = mkEnableOption "waybar profile";
   };
@@ -232,98 +230,112 @@ in
       };
     };
     stylix.targets.waybar.enable = false;
-    programs.waybar.style =
-      let
-        colors = config.lib.stylix.colors;
-        modules = s: "${s ".modules-left"}, ${s ".modules-center"}, ${s ".modules-right"}";
-        module = s: modules (m: "${m} > ${s} > *");
-      in
-      ''
-        * {
-            border: none;
-            font-family: ${config.stylix.fonts.sansSerif.name};
-            font-size: 16px;
-            color: #${colors.base06};
-        }
 
-        window#waybar {
-            background: transparent;
-            font-size: 2em;
-        }
+    programs.waybar.style = let
+      colors = config.lib.stylix.colors;
+      modules = s: "${s ".modules-left"}, ${s ".modules-center"}, ${s ".modules-right"}";
+      module = s: modules (m: "${m} > ${s} > *");
+    in ''
+      * {
+          border: none;
+          font-family: ${config.stylix.fonts.sansSerif.name};
+          font-size: 16px;
+          color: #${colors.base06};
+      }
 
-        ${modules lib.id} {
-            background: transparent;
-            margin: 2px 7px;
-        }
+      window#waybar {
+          background: transparent;
+          font-size: 2em;
+      }
 
-        ${module "*"} {
-          margin: 3px 1px;
-          padding: 5px 7px;
-          background: #${colors.base00};
-        }
-        ${module ":first-child"} {
-            padding-left: 10px;
-            border-top-left-radius: 10px;
-            border-bottom-left-radius: 10px;
-        }
+      ${modules lib.id} {
+          background: transparent;
+          margin: 2px 7px;
+      }
 
-        ${module ":last-child"} {
-            padding-right: 10px;
-            border-top-right-radius: 10px;
-            border-bottom-right-radius: 10px;
-        }
+      ${module "*"} {
+        margin: 3px 1px;
+        padding: 5px 7px;
+        background: #${colors.base00};
+      }
+      ${module ":first-child"} {
+          padding-left: 10px;
+          border-top-left-radius: 10px;
+          border-bottom-left-radius: 10px;
+      }
 
-        ${module ":not(:first-child)"} {
-            border-top-left-radius: 3px;
-            border-bottom-left-radius: 3px;
-        }
+      ${module ":last-child"} {
+          padding-right: 10px;
+          border-top-right-radius: 10px;
+          border-bottom-right-radius: 10px;
+      }
 
-        ${module ":not(last-child)"} {
-            border-top-right-radius: 3px;
-            border-bottom-right-radius: 3px;
-        }
+      ${module ":not(:first-child)"} {
+          border-top-left-radius: 3px;
+          border-bottom-left-radius: 3px;
+      }
 
-        #workspaces button.focused {
-          background: #${colors.base07}
+      ${module ":not(last-child)"} {
+          border-top-right-radius: 3px;
+          border-bottom-right-radius: 3px;
+      }
 
-        }
-        #window {
-          padding-left: 15px;
-          padding-right: 15px;
-        }
+      #workspaces button.focused {
+        background: #${colors.base07}
 
-        #wireplumber:not(.source).muted {
-            color: #${colors.yellow};
-        }
+      }
+      #window {
+        padding-left: 15px;
+        padding-right: 15px;
+      }
 
-        #idle_inhibitor.activated {
+      #wireplumber:not(.source).muted {
           color: #${colors.yellow};
-        }
+      }
 
-        #battery.charging {
-            color: #${colors.green};
-        }
+      #idle_inhibitor.activated {
+        color: #${colors.yellow};
+      }
 
-        #battery.warning:not(.charging) {
-            color: #${colors.yellow};
-        }
+      #battery.charging {
+          color: #${colors.green};
+      }
 
-        #battery.critical:not(.charging) {
-            animation: critical-blink steps(8) 1s infinite alternate;
-        }
-        #tray {
+      #battery.warning:not(.charging) {
+          color: #${colors.yellow};
+      }
 
-          -gtk-icon-effect: dim;
-        }
+      #battery.critical:not(.charging) {
+          animation: critical-blink steps(8) 1s infinite alternate;
+      }
+      #tray {
+
+        -gtk-icon-effect: dim;
+      }
 
 
 
-        @keyframes critical-blink {
-            to {
-                color: #${colors.red};
-            }
-        }
+      @keyframes critical-blink {
+          to {
+              color: #${colors.red};
+          }
+      }
 
-      '';
+    '';
+    services.swaync = {
+      enable = true;
+    };
+    systemd.user.services."swaybg" = {
+      Unit = {
+        Description = "wallpapers! brought to you by stylix! :3";
+        PartOf = ["graphical-session.target"];
+        After = ["graphical-session.target"];
+      };
+      Install.WantedBy = ["graphical-session.target"];
+      Service = {
+        ExecStart = "${lib.getExe pkgs.swaybg} -m fill -i ${config.stylix.image}";
+        Restart = "on-failure";
+      };
+    };
   };
 }

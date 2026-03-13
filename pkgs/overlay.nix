@@ -22,4 +22,5 @@ final: prev: {
   obsidian-x11 = prev.callPackage ./obsidian-x11.nix {};
   conversation-search = prev.callPackage ./conversation-search {};
   cosmic-ext-alternative-startup = prev.callPackage ./cosmic-ext-alternative-startup {};
+  popup-mcp = prev.callPackage ./popup-mcp {};
 }

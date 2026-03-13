@@ -402,6 +402,7 @@ in {
                     security = {
                       admin_user = "admin";
                       admin_password = "admin";
+                      secret_key = "SW2YcwTIb9zpOOhoPsMm";
                     };
                   };
                   declarativePlugins = with pkgs.grafanaPlugins; [

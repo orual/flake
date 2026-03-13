@@ -57,6 +57,9 @@ in
                 backends.ssh.program = "ssh-sign";
                 key = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIGrSMrSEnlsG04W6FxsvSmBST8h5+8ZFA8XBecx7FYLn";
               };
+              revsets = {
+                log = "@ | ancestors(trunk()..(visible_heads() & mine()), 2) | trunk()";
+              };
               git = {
                 remotes = {
                   origin = {

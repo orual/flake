@@ -149,6 +149,8 @@
       "podman" # Enable podman.
       "wireshark" # of course i want to be in the wireshark group!
       "dialout" # allows writing to serial ports
+      "video"
+      "render"
     ];
     shell = pkgs.fish;
     openssh.authorizedKeys.keys = [

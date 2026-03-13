@@ -28,7 +28,7 @@ in
       sessionVariables = {
         EDITOR = lib.mkDefault "hx";
         BROWSER = "firefox";
-        TERMINAL = "wezterm";
+        TERMINAL = "ghostty";
         CARGO_TERM_COLOR = "auto";
         RUST_BACKTRACE = "1";
       };
@@ -43,7 +43,6 @@ in
 
       packages = with pkgs; [
         ### stuff ###
-        neofetch
         pfetch
         fastfetch
         dtrx # Do The Right eXtraction --- extract any kind of archive file
@@ -133,6 +132,12 @@ in
         #   # be useable. :)
         #   right_meters = [ "AllCPUs2" "Blank" "Memory" "Swap" ];
         # };
+      };
+      zellij = {
+        enable = lib.mkDefault true;
+        # enableBashIntegration = true;
+        # enableFishIntegration = true;
+        # enableZshIntegration = true;
       };
 
       tmux = {

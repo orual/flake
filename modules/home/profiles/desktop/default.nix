@@ -22,7 +22,7 @@ in {
       unfreePkgs = [
         slack
         (vesktop.override {withSystemVencord = false;})
-        signal-desktop-bin
+        signal-desktop
         zoom-us
         spotify
         obsidian-x11
@@ -36,8 +36,6 @@ in {
         kdePackages.ark
         darktable
         inkscape
-        obs-studio
-        deskflow
         # broken due to https://github.com/NixOS/nixpkgs/issues/188525
         # llpp # fast & lightweight PDF pager
         krita # like the GNU Image Manipulation Photoshop, but more good
@@ -73,6 +71,19 @@ in {
         enable = true;
         enableXsessionIntegration = true;
         keys = ["id_ed25519"];
+      };
+      obs-studio = {
+        enable = true;
+        plugins = with pkgs.obs-studio-plugins; [
+          droidcam-obs
+          obs-markdown
+          obs-pipewire-audio-capture
+          obs-multi-rtmp
+          obs-vaapi
+          obs-vkcapture
+          obs-backgroundremoval
+          obs-aitum-multistream
+        ];
       };
     };
 

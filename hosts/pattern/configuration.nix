@@ -47,7 +47,7 @@
 
   hardware = {
     amdgpu.enable = true;
-    graphics.extraPackages = [pkgs.mesa];
+    graphics.extraPackages = [ pkgs.mesa ];
     probes = {
       cmsis-dap.enable = true;
       espressif.enable = true;
@@ -195,14 +195,14 @@
 
   #### Services ####
   services = {
-    llama-cpp = {
-      enable = true;
-      package = pkgs.llama-cpp-vulkan;
-      openFirewall = true;
-    };
-    llama-swap = {
-      enable = true;
-    };
+    # llama-cpp = {
+    #   enable = true;
+    #   package = pkgs.llama-cpp-vulkan;
+    #   openFirewall = true;
+    # };
+    # llama-swap = {
+    #   enable = true;
+    # };
     displayManager.gdm.autoSuspend = false;
     openrgb.enable = true;
     # FOR CVE REASONS

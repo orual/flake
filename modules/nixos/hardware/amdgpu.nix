@@ -12,15 +12,15 @@ in
 
     config = mkIf cfg.enable {
       boot.initrd.kernelModules = ["amdgpu"];
-      hardware.graphics.extraPackages = [pkgs.mesa];
+      hardware.graphics.extraPackages = [pkgs.rocmPackages.clr.icd];
 
       hardware.graphics.enable = true;
       hardware.graphics.enable32Bit = true;
       hardware.amdgpu.overdrive.enable = true;
 
       #hardware.amdgpu.opencl.enable = true;
-      programs.tuxclocker = {
-        enable = true;
-      };
+      # programs.tuxclocker = {
+      #   enable = true;
+      # };
     };
   }

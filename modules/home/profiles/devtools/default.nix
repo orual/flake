@@ -39,9 +39,9 @@ in
           just
           # V I B E C O D I N G
           claude-code-latest
-          #conversation-search
+          popup-mcp
           codex
-          #opencode
+
           # TURNS OUT THIS HAS TO BE IN SYSTEMPACKAGES LOL
           # # xfel --- FEL tools for Allwinner SoCs
           # xfel
@@ -89,8 +89,12 @@ in
           #minipro
           # stm32cubemx
           #
-          kicad
           lazyjj
+
+          kicad
+          kicadAddons.kikit
+          easyeda2kicad
+          interactive-html-bom
         ];
 
         home.sessionPath = [

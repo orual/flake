@@ -14,7 +14,7 @@
         spacing = spacing;
         serifs = "sans";
         noCvSs = false;
-        exportGlyphNames = false;
+        exportGlyphNames = true;
         variants = {
           inherits = "ss15";
           design = {
@@ -163,7 +163,10 @@
             };
           };
           ligations = {
-            inherits = "dlig";
+            inherits = "default-calt";
+            enables = [
+              "trig"
+            ];
           };
           metricOverride = {
             xHeight = 520;
