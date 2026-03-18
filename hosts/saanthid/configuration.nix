@@ -1,6 +1,4 @@
 {...}: {
-  imports = [./hardware-configuration.nix];
-
   system.stateVersion = "24.11";
 
   networking.hostName = "saanthid";
@@ -19,19 +17,16 @@
       "k3s.home.nonbinary.computer"
       "saanthid.local"
     ];
+  };
 
-    # VM image generation for Proxmox (on booskie-laptop)
-    vm = {
-      enable = true;
-      format = "proxmox";
-      cores = 2;
-      memory = 4096;
-
-      proxmox = {
-        additionalSpace = "15G";
-        cloudInitStorage = "local-zfs";
-        diskStorage = "local-zfs";
-      };
+  # VM image generation for Proxmox (on booskie-laptop)
+  profiles.proxmox-vm = {
+    cores = 2;
+    memory = 4096;
+    proxmox = {
+      additionalSpace = "15G";
+      cloudInitStorage = "local-zfs";
+      diskStorage = "local-zfs";
     };
   };
 }

@@ -23,7 +23,9 @@
     ./profiles/raspberry-pi
     ./profiles/server.nix
     ./profiles/k3s-node.nix
+    ./profiles/proxmox-vm.nix
     ./profiles/secrets.nix
+    ./profiles/tranquil-pds.nix
     ./profiles/zfs.nix
     ./programs/openrgb.nix
     ./programs/xfel.nix

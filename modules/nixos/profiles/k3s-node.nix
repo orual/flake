@@ -68,92 +68,6 @@ in {
       default = false;
       description = "Disable built-in ServiceLB (Klipper)";
     };
-
-    # VM image generation
-    vm = {
-      enable = mkEnableOption "VM image generation for this host";
-
-      format = mkOption {
-        type = types.enum ["proxmox" "qcow2" "raw" "vmware"];
-        default = "proxmox";
-        description = "VM image format to generate";
-      };
-
-      cores = mkOption {
-        type = types.int;
-        default = 2;
-        description = "Number of CPU cores";
-      };
-
-      memory = mkOption {
-        type = types.int;
-        default = 2048;
-        description = "Memory in MB";
-      };
-
-      diskSize = mkOption {
-        type = types.str;
-        default = "20G";
-        description = "Root disk size";
-      };
-
-      # Proxmox-specific options
-      proxmox = {
-        bios = mkOption {
-          type = types.enum ["seabios" "ovmf"];
-          default = "ovmf";
-          description = "BIOS type (seabios or ovmf/UEFI)";
-        };
-
-        partitionTableType = mkOption {
-          type = types.nullOr (types.enum ["efi" "hybrid" "legacy" "legacy+gpt"]);
-          default = null;
-          description = "Partition table type (defaults based on bios selection)";
-        };
-
-        net0 = mkOption {
-          type = types.str;
-          default = "virtio=00:00:00:00:00:00,bridge=vmbr0,firewall=1";
-          description = "Network interface configuration";
-        };
-
-        agent = mkOption {
-          type = types.bool;
-          default = true;
-          description = "Enable QEMU guest agent";
-        };
-
-        scsihw = mkOption {
-          type = types.str;
-          default = "virtio-scsi-single";
-          description = "SCSI controller type";
-        };
-
-        additionalSpace = mkOption {
-          type = types.str;
-          default = "10G";
-          description = "Additional disk space beyond base image size";
-        };
-
-        bootSize = mkOption {
-          type = types.str;
-          default = "256M";
-          description = "Boot partition size";
-        };
-
-        cloudInitStorage = mkOption {
-          type = types.str;
-          default = "local-zfs";
-          description = "Storage backend for cloud-init drive";
-        };
-
-        diskStorage = mkOption {
-          type = types.str;
-          default = "local-zfs";
-          description = "Storage name for the VM disk in virtio0";
-        };
-      };
-    };
   };
 
   config = mkIf cfg.enable (mkMerge [
@@ -236,19 +150,9 @@ in {
       ];
     }
 
-    # Enable server profile defaults (no sleep/suspend)
+    # Enable Proxmox VM profile by default for k3s nodes
     {
-      profiles.server.enable = true;
+      profiles.proxmox-vm.enable = mkDefault true;
     }
-
-    # QEMU guest agent for VM environments
-    {
-      services.qemuGuest.enable = mkDefault true;
-    }
-
-    # NOTE: Proxmox/QCOW2 image configuration must be set in the host's config
-    # because the proxmox-image.nix module conflicts with non-VM hosts.
-    # Import (modulesPath + "/virtualisation/proxmox-image.nix") in your host
-    # and use the vm.* options from this profile to configure it.
   ]);
 }

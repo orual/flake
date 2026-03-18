@@ -331,10 +331,10 @@ in
               "${Mod}+Shift+F".action = fullscreen-window;
               "${Mod}+G".action = center-column;
 
-              "${Mod}+Minus".action = set-column-width "-10%";
-              "${Mod}+Plus".action = set-column-width "+10%";
-              "${Mod}+Shift+Minus".action = set-window-height "-10%";
-              "${Mod}+Shift+Plus".action = set-window-height "+10%";
+              "${Mod}+Minus".action.set-column-width = "-10%";
+              "${Mod}+Plus".action.set-column-width = "+10%";
+              "${Mod}+Shift+Minus".action.set-window-height = "-10%";
+              "${Mod}+Shift+Plus".action.set-window-height = "+10%";
 
               "${Mod}+Shift+Escape".action = toggle-keyboard-shortcuts-inhibit;
               "${Mod}+Shift+E".action = quit;

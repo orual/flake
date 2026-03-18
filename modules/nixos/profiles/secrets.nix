@@ -57,6 +57,18 @@ in {
         readOnly = true;
         description = "Path to the K3s cluster token secret";
       };
+      tranquilPdsEnv = mkOption {
+        type = types.str;
+        default = opnixCfg.secretPaths.tranquilPdsEnv or "/etc/secrets/tranquil-pds.env";
+        readOnly = true;
+        description = "Path to the Tranquil PDS environment file (JWT_SECRET, DPOP_SECRET, MASTER_KEY)";
+      };
+      resendApiKey = mkOption {
+        type = types.str;
+        default = opnixCfg.secretPaths.resendApiKey or "/etc/secrets/resend-api-key";
+        readOnly = true;
+        description = "Path to the Resend API key for SMTP relay";
+      };
     };
   };
 
@@ -93,6 +105,22 @@ in {
         # K3s cluster join token
         k3sToken = {
           reference = "op://${cfg.vault}/K3s Cluster Token/credential";
+          owner = "root";
+          group = "root";
+          mode = "0400";
+        };
+
+        # Tranquil PDS secrets (JWT_SECRET, DPOP_SECRET, MASTER_KEY as env file)
+        tranquilPdsEnv = {
+          reference = "op://${cfg.vault}/Tranquil PDS Secrets/credential";
+          owner = "tranquil-pds";
+          group = "tranquil-pds";
+          mode = "0400";
+        };
+
+        # Resend API key for SMTP relay
+        resendApiKey = {
+          reference = "op://${cfg.vault}/Resend API Key/credential";
           owner = "root";
           group = "root";
           mode = "0400";

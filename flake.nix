@@ -133,6 +133,7 @@
             inputs.niri.nixosModules.niri
             inputs.vscode-server.nixosModules.default
             inputs.opnix.nixosModules.default
+            inputs.tranquil-pds.nixosModules.default
           ];
         };
 
@@ -150,6 +151,7 @@
           chasmfiend = self.nixosConfigurations.chasmfiend.config.system.build.VMA;
           tai-na = self.nixosConfigurations.tai-na.config.system.build.VMA;
           saanthid = self.nixosConfigurations.saanthid.config.system.build.VMA;
+          sja-anat = self.nixosConfigurations.sja-anat.config.system.build.VMA;
         };
 
         #           images =
@@ -210,6 +212,7 @@
           #               };
 
           pattern = mkNode {hostname = "pattern";};
+          sja-anat = mkNode {hostname = "sja-anat";};
         };
 
         ##################
@@ -433,6 +436,12 @@
     # 1Password secrets management
     opnix = {
       url = "github:brizzbuzz/opnix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # Tranquil PDS (AT Protocol Personal Data Server)
+    tranquil-pds = {
+      url = "git+https://tangled.org/tranquil.farm/tranquil-pds";
       inputs.nixpkgs.follows = "nixpkgs";
     };
   };
