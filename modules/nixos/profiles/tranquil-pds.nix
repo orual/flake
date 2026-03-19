@@ -33,12 +33,12 @@ in {
         type = types.nullOr types.str;
         default = null;
         description = "Sender email address for PDS notifications. When null, email is disabled.";
-        example = "noreply@atproto.systems";
+        example = "admin@atproto.systems";
       };
 
       fromName = mkOption {
         type = types.str;
-        default = "Tranquil PDS";
+        default = "Relative State Form";
         description = "Display name in the From header";
       };
     };
@@ -74,8 +74,8 @@ in {
         auth = true;
         tls = true;
         host = "smtp.resend.com";
-        port = 465;
-        tls_starttls = false;
+        port = 2465;
+        tls_starttls = true;
         from = cfg.email.fromAddress;
         user = "resend";
         passwordeval = "cat ${

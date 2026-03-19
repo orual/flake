@@ -32,7 +32,6 @@
     vmware-workstation
     remmina
     atuin-desktop
-    claude-code-acp
     claude-desktop
   ];
 

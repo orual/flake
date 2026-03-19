@@ -146,12 +146,12 @@
         ## NixOS (images) ##
         ####################
 
-        # Proxmox VM images for k3s cluster nodes
+        # Proxmox VM images (via image.modules.proxmox / system.build.images.proxmox)
         proxmoxImages = {
-          chasmfiend = self.nixosConfigurations.chasmfiend.config.system.build.VMA;
-          tai-na = self.nixosConfigurations.tai-na.config.system.build.VMA;
-          saanthid = self.nixosConfigurations.saanthid.config.system.build.VMA;
-          sja-anat = self.nixosConfigurations.sja-anat.config.system.build.VMA;
+          chasmfiend = self.nixosConfigurations.chasmfiend.config.system.build.images.proxmox;
+          tai-na = self.nixosConfigurations.tai-na.config.system.build.images.proxmox;
+          saanthid = self.nixosConfigurations.saanthid.config.system.build.images.proxmox;
+          sja-anat = self.nixosConfigurations.sja-anat.config.system.build.images.proxmox;
         };
 
         #           images =

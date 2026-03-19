@@ -435,6 +435,29 @@ in
           {
             matches = [
               {
+                title = "^jacquard-talk$";
+              }
+            ];
+            opacity = 1.0;
+            default-window-height = {
+              proportion = 0.42;
+            };
+            open-floating = true;
+            default-column-width = {
+              proportion =
+                if cfg.enableTablet
+                then 0.8
+                else 0.4;
+            };
+            default-floating-position = {
+              relative-to = "top-right";
+              x = 0;
+              y = 0;
+            };
+          }
+          {
+            matches = [
+              {
                 app-id = "^firefox$";
                 title = "^Picture-in-Picture$";
               }

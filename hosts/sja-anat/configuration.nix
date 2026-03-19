@@ -22,6 +22,6 @@
   profiles.tranquil-pds = {
     enable = true;
     domain = "atproto.systems";
-    email.fromAddress = "noreply@atproto.systems";
+    email.fromAddress = "admin@atproto.systems";
   };
 }

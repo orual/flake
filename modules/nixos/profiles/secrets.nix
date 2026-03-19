@@ -112,7 +112,7 @@ in {
 
         # Tranquil PDS secrets (JWT_SECRET, DPOP_SECRET, MASTER_KEY as env file)
         tranquilPdsEnv = {
-          reference = "op://${cfg.vault}/Tranquil PDS Secrets/credential";
+          reference = "op://${cfg.vault}/atproto.systems secrets/.env";
           owner = "tranquil-pds";
           group = "tranquil-pds";
           mode = "0400";

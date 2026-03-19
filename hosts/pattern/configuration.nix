@@ -47,7 +47,7 @@
 
   hardware = {
     amdgpu.enable = true;
-    graphics.extraPackages = [ pkgs.mesa ];
+    graphics.extraPackages = [pkgs.mesa];
     probes = {
       cmsis-dap.enable = true;
       espressif.enable = true;
@@ -168,7 +168,7 @@
   };
 
   environment.systemPackages = with pkgs; [
-    vllm
+    #vllm
     openai-whisper
     whisper-cpp-vulkan
     ffmpeg

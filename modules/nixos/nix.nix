@@ -4,8 +4,7 @@
   lib,
   ...
 }:
-with lib;
-{
+with lib; {
   options.profiles.nix-ld = {
     enable = mkEnableOption "nix-ld profile";
   };
@@ -42,25 +41,23 @@ with lib;
         # daemonCPUSchedPolicy = "idle";
         # daemonIOSchedClass = "idle";
 
-        settings =
-          let
-            substituters = [
-              "https://nix-community.cachix.org"
-              #"https://cache.garnix.io"
-            ];
-          in
-          {
-            trusted-users = [
-              "root"
-              "orual"
-            ];
-            extra-substituters = substituters;
-            trusted-substituters = substituters;
-            extra-trusted-public-keys = [
-              "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-              #"cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
-            ];
-          };
+        settings = let
+          substituters = [
+            "https://nix-community.cachix.org"
+            #"https://cache.garnix.io"
+          ];
+        in {
+          trusted-users = [
+            "root"
+            "orual"
+          ];
+          extra-substituters = substituters;
+          trusted-substituters = substituters;
+          extra-trusted-public-keys = [
+            "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+            #"cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
+          ];
+        };
       };
     }
 
@@ -106,7 +103,7 @@ with lib;
           systemd
           vulkan-loader
           libx11
-          libxScrnSaver
+          libxscrnsaver
           libxcomposite
           libxcursor
           libxdamage
