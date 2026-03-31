@@ -4,7 +4,8 @@
   lib,
   ...
 }:
-with lib; {
+with lib;
+{
   options.profiles.nix-ld = {
     enable = mkEnableOption "nix-ld profile";
   };
@@ -41,20 +42,25 @@ with lib; {
         # daemonCPUSchedPolicy = "idle";
         # daemonIOSchedClass = "idle";
 
-        settings = let
-          substituters = [
-            "https://nix-community.cachix.org"
-            #"https://cache.garnix.io"
-          ];
-        in {
-          trusted-users = ["root" "orual"];
-          extra-substituters = substituters;
-          trusted-substituters = substituters;
-          extra-trusted-public-keys = [
-            "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-            #"cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
-          ];
-        };
+        settings =
+          let
+            substituters = [
+              "https://nix-community.cachix.org"
+              #"https://cache.garnix.io"
+            ];
+          in
+          {
+            trusted-users = [
+              "root"
+              "orual"
+            ];
+            extra-substituters = substituters;
+            trusted-substituters = substituters;
+            extra-trusted-public-keys = [
+              "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
+              #"cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
+            ];
+          };
       };
     }
 
@@ -99,20 +105,20 @@ with lib; {
           stdenv.cc.cc
           systemd
           vulkan-loader
-          xorg.libX11
-          xorg.libXScrnSaver
-          xorg.libXcomposite
-          xorg.libXcursor
-          xorg.libXdamage
-          xorg.libXext
-          xorg.libXfixes
-          xorg.libXi
-          xorg.libXrandr
-          xorg.libXrender
-          xorg.libXtst
-          xorg.libxcb
-          xorg.libxkbfile
-          xorg.libxshmfence
+          libx11
+          libxScrnSaver
+          libxcomposite
+          libxcursor
+          libxdamage
+          libxext
+          libxfixes
+          libxi
+          libxrandr
+          libxrender
+          libxtst
+          libxcb
+          libxkbfile
+          libxshmfence
           zlib
         ];
       };

@@ -1,20 +1,25 @@
-{ lib, config, pkgs, ... }:
-let cfg = config.profiles.laptop;
-in {
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
+let
+  cfg = config.profiles.laptop;
+in
+{
   options.profiles.laptop = with lib; {
     enable = mkEnableOption "laptop profile";
     suspendThenHibernate = {
       enable = mkOption {
         type = types.bool;
         default = true;
-        description =
-          "Whether to setup suspend then hibernate when closing the lid.";
+        description = "Whether to setup suspend then hibernate when closing the lid.";
       };
       delayHours = mkOption {
         type = types.int;
         default = 1;
-        description =
-          "Delay in hours before it should hibernate the laptop after suspending.";
+        description = "Delay in hours before it should hibernate the laptop after suspending.";
       };
     };
     # rebindKeyboard = {
@@ -35,8 +40,9 @@ in {
     # };
   };
 
-  config = with lib; mkIf cfg.enable
-    {
+  config =
+    with lib;
+    mkIf cfg.enable {
       # Enabling the laptop profile automatically enables the
       # desktop profile too.
       profiles.desktop.enable = mkDefault true;
@@ -50,7 +56,7 @@ in {
       };
 
       # Enable light to control backlight.
-      programs.light.enable = mkDefault true;
+      #programs.light.enable = mkDefault true;
 
       powerManagement.powertop.enable = mkDefault true;
 
@@ -58,15 +64,9 @@ in {
 
       # Setup suspend then hibernate.
       services.logind.lidSwitch =
-        if cfg.suspendThenHibernate.enable then
-          "suspend-then-hibernate"
-        else
-          "suspend";
-      systemd.sleep.extraConfig =
-        lib.optionalString cfg.suspendThenHibernate.enable ''
-          HibernateDelaySec=${
-            builtins.toString cfg.suspendThenHibernate.delayHours
-          }h
-        '';
+        if cfg.suspendThenHibernate.enable then "suspend-then-hibernate" else "suspend";
+      # systemd.sleep.settings.Sleep = lib.optionalString cfg.suspendThenHibernate.enable ''
+      #   HibernateDelaySec=${toString cfg.suspendThenHibernate.delayHours}h
+      # '';
     };
 }

@@ -105,6 +105,7 @@ with lib;
 
     pcscd.enable = true;
     udev.packages = [ pkgs.yubikey-personalization ];
+    automatic-timezoned.enable = mkForce true;
   };
 
   security.pam.services = {
@@ -125,6 +126,7 @@ with lib;
 
   # NO!! i DON'T WANT wpa_supplicant! stop making it be there!
   networking.wireless.enable = mkForce false;
+  time.timeZone = mkForce "Canada/Vancouver";
 
   users.motd = ''
     ┌┬────────────────┐
