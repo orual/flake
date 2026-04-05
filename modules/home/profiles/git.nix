@@ -84,6 +84,9 @@ in
             enable = true;
             lfs.enable = true;
 
+            # Silence stateVersion < 25.05 warning — we use ssh signing via gpg.format in settings
+            signing.format = "openpgp";
+
             # default gitignores for all repos
             ignores = [
               ".cargo/"

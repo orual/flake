@@ -79,6 +79,8 @@ in
           name = "Adwaita"; # or whatever you want
           package = pkgs.adwaita-icon-theme;
         };
+        # Silence stateVersion < 26.05 warning
+        gtk4.theme = null;
       };
       programs.niri.settings = {
         # environment."GTK_THEME" = "Adwaita:dark";
@@ -394,7 +396,7 @@ in
             matches = [
               {app-id = "^org.kde.polkit-kde-authentication-agent";}
               {app-id = "^1Password$";}
-              {app-id = "^.popup-wrapped$";}
+              {app-id = "^popup-mcp$";}
             ];
             open-floating = true;
           }

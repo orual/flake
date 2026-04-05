@@ -19,7 +19,7 @@
   libxkbcommon,
   wayland,
   libglvnd,
-  xorg,
+  libxcb,
   stdenv,
   makeFontsConf,
   vulkan-loader,
@@ -37,8 +37,8 @@
   makeDesktopItem,
   nodejs,
   libGL,
-  libX11,
-  libXext,
+  libx11,
+  libxext,
   livekit-libwebrtc,
   testers,
   writableTmpDirAsHomeHook,
@@ -180,7 +180,7 @@ in
         alsa-lib
         libxkbcommon
         wayland
-        xorg.libxcb
+        libxcb
       ]
       ++ lib.optionals stdenv.hostPlatform.isDarwin [
         apple-sdk_15
@@ -240,8 +240,8 @@ in
         --prefix PATH : ${lib.makeBinPath [nodejs]} \
         --suffix PATH : ${lib.makeBinPath [git]} \
         --prefix LD_LIBRARY_PATH : ${libGL}/lib \
-        --prefix LD_LIBRARY_PATH : ${libX11}/lib \
-        --prefix LD_LIBRARY_PATH : ${libXext}/lib
+        --prefix LD_LIBRARY_PATH : ${libx11}/lib \
+        --prefix LD_LIBRARY_PATH : ${libxext}/lib
     '';
 
     desktopItems = [

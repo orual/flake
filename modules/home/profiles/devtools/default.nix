@@ -89,7 +89,7 @@ in {
           lazyjj
 
           kicad
-          kicadAddons.kikit
+          #kicadAddons.kikit
           easyeda2kicad
           interactive-html-bom
 

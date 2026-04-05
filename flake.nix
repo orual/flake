@@ -60,6 +60,7 @@
         azure-cli = inputs.nixpkgs-stable.legacyPackages.${prev.stdenv.hostPlatform.system}.azure-cli;
       })
       (_: prev: {opencode = inputs.opencode.packages.${prev.stdenv.hostPlatform.system}.default;})
+      (_: prev: {popup-mcp = inputs.popup-mcp.packages.${prev.stdenv.hostPlatform.system}.default;})
     ];
 
     lib = import ./lib;
@@ -443,6 +444,16 @@
     tranquil-pds = {
       url = "git+https://tangled.org/tranquil.farm/tranquil-pds";
       inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # popup-mcp: Native GUI popups via MCP for AI assistants
+    popup-mcp = {
+      url = "github:orual/popup-mcp";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+        rust-overlay.follows = "rust-overlay";
+        flake-utils.follows = "flake-utils";
+      };
     };
   };
 }

@@ -1,5 +1,5 @@
-{ stdenv, lib, fetchurl, makeDesktopItem, jre, libX11, libXext, libXcursor
-, libXrandr, libXxf86vm, mesa, openal, pulseaudio }:
+{ stdenv, lib, fetchurl, makeDesktopItem, jre, libx11, libxext, libxcursor
+, libxrandr, libxxf86vm, mesa, openal, pulseaudio }:
 
 # let
 #   desktopItem = stdenv.makeDesktopItem {
@@ -26,15 +26,16 @@ stdenv.mkDerivation {
     cat > $out/bin/technic-launcher << EOF
     #!${stdenv.shell}
     # wrapper for minecraft
-    export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:${libX11}/lib/:${libXext}/lib/:${libXcursor}/lib/:${libXrandr}/lib/:${libXxf86vm}/lib/:${mesa}/lib/:${openal}/lib/
+    export LD_LIBRARY_PATH=\$LD_LIBRARY_PATH:${libx11}/lib/:${libxext}/lib/:${libxcursor}/lib/:${libxrandr}/lib/:${libxxf86vm}/lib/:${mesa}/lib/:${openal}/lib/
     ${pulseaudio}/bin/padsp ${jre}/bin/java -jar $out/TechnicLauncher.jar
     EOF
     chmod +x $out/bin/technic-launcher
   '';
 
   meta = {
-    description = "Modded minecraft launcher";
-    homepage = "http://www.feed-the-beast.com";
-    license = lib.licenses.unfreeRedistributable;
+    description = "Modded Minecraft launcher";
+    homepage = "https://www.technicpack.net/";
+    license = lib.licenses.unfree;
+    platforms = lib.platforms.linux;
   };
 }
