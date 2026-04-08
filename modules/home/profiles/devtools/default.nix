@@ -36,6 +36,7 @@ in {
           just
           # V I B E C O D I N G
           claude-code-latest
+          claude-code-modes
           popup-mcp
           codex
 
