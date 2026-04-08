@@ -8,13 +8,13 @@
 }:
 stdenv.mkDerivation (finalAttrs: {
   pname = "claude-code-modes";
-  version = "0.2.3";
+  version = "0.2.3-orual";
 
   src = fetchFromGitHub {
-    owner = "nklisch";
+    owner = "orual";
     repo = "claude-code-modes";
-    tag = "v${finalAttrs.version}";
-    hash = "sha256-AcGpil1BGg1nyzjLQvWfZss9jyyWBy+GubIZ2hSdn8g=";
+    rev = "0e69bf878ae92f1f6f1c3b7219bb574d6a4f8025";
+    hash = "sha256-niHSCtv2Ck5Hdo8tYh6vq/2COYP9nG6eKe2nTbf3d2g=";
   };
 
   nativeBuildInputs =
@@ -49,7 +49,7 @@ stdenv.mkDerivation (finalAttrs: {
 
   meta = {
     description = "Behaviorally-tuned system prompts for Claude Code";
-    homepage = "https://github.com/nklisch/claude-code-modes";
+    homepage = "https://github.com/orual/claude-code-modes";
     license = lib.licenses.mit;
     platforms = [
       "x86_64-linux"
