@@ -5,6 +5,7 @@
       enable = true;
       #gnome3.enable = true;
       niri.enable = true;
+      niri.noctaliaShell = true;
       #niri.cosmicOnNiri = true;
     };
     k8s.enable = true;

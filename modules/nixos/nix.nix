@@ -23,6 +23,43 @@ with lib; {
           };
         })
       ];
+      services.angrr = {
+        enable = true;
+        settings = {
+          temporary-root-policies = {
+            direnv = {
+              path-regex = "/\\.direnv/";
+              period = "14d";
+            };
+            result = {
+              path-regex = "/result[^/]*$";
+              period = "3d";
+            };
+          };
+          profile-policies = {
+            system = {
+              keep-booted-system = true;
+              keep-current-system = true;
+              keep-latest-n = 10;
+              keep-since = "14d";
+              profile-paths = [
+                "/nix/var/nix/profiles/system"
+              ];
+            };
+            user = {
+              enable = true;
+              keep-booted-system = true;
+              keep-current-system = true;
+              keep-latest-n = 2;
+              keep-since = "1d";
+              profile-paths = [
+                "~/.local/state/nix/profiles/profile"
+                "/nix/var/nix/profiles/per-user/root/profile"
+              ];
+            };
+          };
+        };
+      };
 
       nix = {
         package = pkgs.nix-monitored;

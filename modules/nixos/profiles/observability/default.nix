@@ -23,6 +23,7 @@ with lib; let
       # The option `tor' can no longer be used since it's been removed. The
       # Tor exporter has been removed, as it was broken and unmaintained.
       "tor"
+      "rspamd"
     ];
   in (conf:
     attrsets.filterAttrs
@@ -670,51 +671,52 @@ in {
                     };
                   };
                 };
-                systemd.services.promtail.serviceConfig = {
-                  # allow promtail to read nginx logs
-                  ReadOnlyPaths = ["/var/log/nginx"];
-                };
-                services.promtail.configuration.scrape_configs = [
-                  {
-                    job_name = "nginx";
-                    static_configs = [
-                      {
-                        targets = ["localhost"];
-                        labels = {
-                          __path__ = "/var/log/nginx/*log";
-                          host = config.networking.hostName;
-                          job = "nginx";
-                        };
-                      }
-                    ];
-                    pipeline_stages = [
-                      {
-                        match = {
-                          selector = ''{job="nginx"}'';
-                          stages = [
-                            {
-                              regex.expression = ''^(?P<remote_addr>[\w\.]+) - (?P<remote_user>[^ ]*) \[(?P<time_local>.*)\] "(?P<method>[^ ]*) (?P<request>[^ ]*) (?P<protocol>[^ ]*)" (?P<status>[\d]+) (?P<body_bytes_sent>[\d]+) "(?P<http_referer>[^\"]*)\" "(?P<http_user_agent>[^"]*)'';
-                            }
-                            {
-                              labels = {
-                                remote_addr = "remote_addr";
-                                remote_user = "remote_user";
-                                time_local = "time_local";
-                                method = "method";
-                                request = "request";
-                                protocol = "protocol";
-                                status = "status";
-                                body_bytes_sent = "body_bytes_sent";
-                                http_referer = "http_referer";
-                                http_user_agent = "http_user_agent";
-                              };
-                            }
-                          ];
-                        };
-                      }
-                    ];
-                  }
-                ];
+                # TODO: swap to non-deprecated scraper
+                #   systemd.services.promtail.serviceConfig = {
+                #     # allow promtail to read nginx logs
+                #     ReadOnlyPaths = ["/var/log/nginx"];
+                #   };
+                #   services.promtail.configuration.scrape_configs = [
+                #     {
+                #       job_name = "nginx";
+                #       static_configs = [
+                #         {
+                #           targets = ["localhost"];
+                #           labels = {
+                #             __path__ = "/var/log/nginx/*log";
+                #             host = config.networking.hostName;
+                #             job = "nginx";
+                #           };
+                #         }
+                #       ];
+                #       pipeline_stages = [
+                #         {
+                #           match = {
+                #             selector = ''{job="nginx"}'';
+                #             stages = [
+                #               {
+                #                 regex.expression = ''^(?P<remote_addr>[\w\.]+) - (?P<remote_user>[^ ]*) \[(?P<time_local>.*)\] "(?P<method>[^ ]*) (?P<request>[^ ]*) (?P<protocol>[^ ]*)" (?P<status>[\d]+) (?P<body_bytes_sent>[\d]+) "(?P<http_referer>[^\"]*)\" "(?P<http_user_agent>[^"]*)'';
+                #               }
+                #               {
+                #                 labels = {
+                #                   remote_addr = "remote_addr";
+                #                   remote_user = "remote_user";
+                #                   time_local = "time_local";
+                #                   method = "method";
+                #                   request = "request";
+                #                   protocol = "protocol";
+                #                   status = "status";
+                #                   body_bytes_sent = "body_bytes_sent";
+                #                   http_referer = "http_referer";
+                #                   http_user_agent = "http_user_agent";
+                #                 };
+                #               }
+                #             ];
+                #           };
+                #         }
+                #       ];
+                #     }
+                #   ];
               })
               ### OBSERVER: snmp ####
               (mkIf cfg.snmp.enable {

@@ -69,6 +69,7 @@ in
       enable = mkEnableOption "niri profile";
       enableTablet = mkEnableOption "tablet-specific ux stuff";
       cosmicOnNiri = mkEnableOption "COSMIC using niri for compositor";
+      noctaliaShell = mkEnableOption "Noctalia shell";
     };
 
     config = mkIf cfg.enable {
@@ -93,9 +94,18 @@ in
         # workspaces."gaming" = {};
 
         # Spawn COSMIC startup helper when using cosmic keybindings
-        spawn-at-startup = lib.optionals cfg.cosmicOnNiri [
-          {command = ["cosmic-ext-alternative-startup"];}
-        ];
+        spawn-at-startup =
+          []
+          ++ lib.optionals cfg.cosmicOnNiri [
+            {command = ["cosmic-ext-alternative-startup"];}
+          ]
+          ++ lib.optionals cfg.noctaliaShell [
+            {
+              command = [
+                "noctalia-shell"
+              ];
+            }
+          ];
 
         layout = {
           gaps = 12;
@@ -256,8 +266,8 @@ in
               "Print".action.screenshot-screen = [];
               "${Mod}+Print".action.screenshot-window = [];
 
-              "${Mod}+Menu".action = set-dynamic-cast-window;
-              "${Mod}+Shift+Menu".action = set-dynamic-cast-monitor;
+              "${Mod}+Ctrl+S".action = set-dynamic-cast-window;
+              "${Mod}+Ctrl+Shift+S".action = set-dynamic-cast-monitor;
               "${Mod}+Delete".action = clear-dynamic-cast-target;
 
               "XF86AudioRaiseVolume".action = sh "wpctl set-volume @DEFAULT_AUDIO_SINK@ 0.05+";

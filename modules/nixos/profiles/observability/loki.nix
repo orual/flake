@@ -1,10 +1,11 @@
-{ config, lib, ... }:
-
-with lib;
-let
-  cfg = config.profiles.observability;
-in
 {
+  config,
+  lib,
+  ...
+}:
+with lib; let
+  cfg = config.profiles.observability;
+in {
   options.profiles.observability.loki = with types; {
     enable = mkOption {
       type = bool;
@@ -27,67 +28,68 @@ in
   config = mkMerge [
     #### OBSERVEE: promtail loki exporter ####
     (mkIf cfg.loki.enable {
-      services.promtail = {
-        enable = true;
-        configuration = {
-          server = {
-            http_listen_port = cfg.loki.promtailPort;
-            grpc_listen_port = 0;
-          };
+      # TODO: swap to non-deprecated scraper
+      # services.promtail = {
+      #   enable = true;
+      #   configuration = {
+      #     server = {
+      #       http_listen_port = cfg.loki.promtailPort;
+      #       grpc_listen_port = 0;
+      #     };
 
-          clients = mkDefault [{
-            url = "http://pattern:${toString cfg.loki.port}/loki/api/v1/push";
-          }];
+      #     clients = mkDefault [{
+      #       url = "http://pattern:${toString cfg.loki.port}/loki/api/v1/push";
+      #     }];
 
-          scrape_configs = [
-            {
-              job_name = "journal";
-              journal = {
-                max_age = "12h";
-                json = true;
-                labels = {
-                  job = "systemd-journal";
-                  host = "${config.networking.hostName}";
-                };
-              };
+      #     scrape_configs = [
+      #       {
+      #         job_name = "journal";
+      #         journal = {
+      #           max_age = "12h";
+      #           json = true;
+      #           labels = {
+      #             job = "systemd-journal";
+      #             host = "${config.networking.hostName}";
+      #           };
+      #         };
 
-              relabel_configs = [
-                {
-                  source_labels = [ "__journal__systemd_unit" ];
-                  target_label = "unit";
-                }
-                {
-                  source_labels = [ "__journal_priority_keyword" ];
-                  target_label = "level";
-                }
-                {
-                  source_labels = [ "__journal_syslog_identifier" ];
-                  target_label = "syslog_identifier";
-                }
-              ];
+      #         relabel_configs = [
+      #           {
+      #             source_labels = [ "__journal__systemd_unit" ];
+      #             target_label = "unit";
+      #           }
+      #           {
+      #             source_labels = [ "__journal_priority_keyword" ];
+      #             target_label = "level";
+      #           }
+      #           {
+      #             source_labels = [ "__journal_syslog_identifier" ];
+      #             target_label = "syslog_identifier";
+      #           }
+      #         ];
 
-              pipeline_stages = [
-                # drop logs emitted by promtail itself.
-                {
-                  match = {
-                    selector = ''{unit="promtail.service"}'';
-                    action = "drop";
-                  };
-                }
-              ];
-            }
-          ];
-        };
-      };
+      #         pipeline_stages = [
+      #           # drop logs emitted by promtail itself.
+      #           {
+      #             match = {
+      #               selector = ''{unit="promtail.service"}'';
+      #               action = "drop";
+      #             };
+      #           }
+      #         ];
+      #       }
+      #     ];
+      #   };
+      # };
 
       # make an Avahi mDNS service for the Promtail metrics endpoint
       # networking.firewall.allowedTCPPorts = [ cfg.loki.promtailPort ];
     })
     (mkIf cfg.loki.enable (
-      let dataDir = config.services.loki.dataDir;
+      let
+        dataDir = config.services.loki.dataDir;
       in {
-
-        networking.firewall.allowedTCPPorts = [ cfg.loki.port ];
+        networking.firewall.allowedTCPPorts = [cfg.loki.port];
 
         services.grafana.provision.datasources.settings.datasources = [
           {
@@ -98,9 +100,12 @@ in
           }
         ];
 
-        services.promtail.configuration.clients = mkForce [{
-          url = "http://localhost:${toString cfg.loki.port}/loki/api/v1/push";
-        }];
+        # TODO: swap to non-deprecated scraping
+        # services.promtail.configuration.clients = mkForce [
+        #   {
+        #     url = "http://localhost:${toString cfg.loki.port}/loki/api/v1/push";
+        #   }
+        # ];
 
         #### OBSERVER: Loki ####
         services.loki = {

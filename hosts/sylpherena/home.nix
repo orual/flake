@@ -1,10 +1,10 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   profiles = {
     desktop = {
       enable = true;
       niri.enable = true;
       niri.enableTablet = true;
+      niri.noctaliaShell = true;
     };
     devtools = {
       enable = true;

@@ -42,13 +42,14 @@ in {
         gimp
         syncplay
         vlc
+        mpv
         #plex-desktop
         ghostscriptX
         losslesscut-bin
 
         ### stuff ###
         chromium
-        #torrential
+        deluge-gtk
         zulip
         libreoffice-fresh
       ]

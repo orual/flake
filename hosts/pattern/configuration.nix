@@ -172,6 +172,8 @@
     openai-whisper
     whisper-cpp-vulkan
     ffmpeg
+    cloudflared
+    llama-cpp-vulkan
   ];
 
   # This is a deskop machine. Use the high-performance frequency profile rather
@@ -197,8 +199,21 @@
   services = {
     # llama-cpp = {
     #   enable = true;
+    #   port = 8081;
     #   package = pkgs.llama-cpp-vulkan;
     #   openFirewall = true;
+    #   modelsDir = "/models";
+    #   modelsPreset = {
+    #     "gemma4" = {
+    #       hf-repo = "unsloth/gemma-4-26B-A4B-it-GGUF:UD-IQ4_XS";
+    #       hf-file = "gemma-4-26B-A4B-it-UD-IQ4_XS.gguf";
+    #       alias = "unsloth/gemma-4-26B-A4B-it-GGUF";
+    #       seed = "3407";
+    #       temp = "1.0";
+    #       top-p = "0.95";
+    #       top-k = "64";
+    #     };
+    #   };
     # };
     # llama-swap = {
     #   enable = true;
@@ -221,6 +236,10 @@
     pcscd.enable = true;
     udev.packages = [pkgs.yubikey-personalization];
     udisks2.enable = true;
+
+    cloudflared = {
+      enable = true;
+    };
   };
 
   security.pam.services = {
