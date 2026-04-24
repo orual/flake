@@ -34,6 +34,7 @@
     remmina
     atuin-desktop
     claude-desktop
+    social-cli
   ];
 
   services = {

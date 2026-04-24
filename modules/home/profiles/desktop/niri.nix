@@ -293,10 +293,10 @@ in
               "${Mod}+Shift+Ctrl+F".action = toggle-windowed-fullscreen;
             }
             (binds {
-              suffixes."Left" = "column-left";
-              suffixes."Down" = "window-down";
-              suffixes."Up" = "window-up";
-              suffixes."Right" = "column-right";
+              suffixes."J" = "column-left";
+              suffixes."H" = "window-down";
+              suffixes."L" = "window-up";
+              suffixes."K" = "column-right";
               prefixes."${Mod}" = "focus";
               prefixes."${Mod}+Ctrl" = "move";
               prefixes."${Mod}+Shift" = "focus-monitor";
@@ -368,15 +368,13 @@ in
             scale = 1.0;
             backdrop-color = "#191724";
           };
-          "DP-1" = {
-            scale = 1.0;
+          "Dell Inc. DELL S2725QC 5P1F464" = {
+            scale = 1.5;
             variable-refresh-rate = "on-demand";
             backdrop-color = "#191724";
           };
-          "DP-4" = {
-            scale = 1.0;
+          "GIGA-BYTE TECHNOLOGY CO., LTD. M27Q 21240B003280" = {
             variable-refresh-rate = "on-demand";
-            backdrop-color = "#191724";
           };
         };
         window-rules = let

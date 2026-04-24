@@ -195,7 +195,6 @@ in
             #package = mkForce pkgs.firefox-wayland;
             nativeMessagingHosts.packages = with pkgs; [
               tridactyl-native
-              firefoxpwa
             ];
           };
           niri.enable = true;

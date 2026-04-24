@@ -25,7 +25,7 @@ in {
         signal-desktop
         zoom-us
         spotify
-        obsidian-x11
+        obsidian
         beeper
         beeper-bridge-manager
         davinci-resolve
@@ -63,7 +63,6 @@ in {
         enable = true;
         nativeMessagingHosts = [
           pkgs.tridactyl-native
-          pkgs.firefoxpwa
         ];
       };
       ghostty.enable = true;

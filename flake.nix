@@ -23,7 +23,7 @@
       #
       # TODO: remove this once https://github.com/NixOS/nixpkgs/issues/263764
       # is resolved...
-      #permittedInsecurePackages = ["electron-26.3.0"];
+      permittedInsecurePackages = ["electron-39.8.10"];
     };
     overlays = [
       (import ./pkgs/overlay.nix)
@@ -134,7 +134,7 @@
             inputs.niri.nixosModules.niri
             inputs.vscode-server.nixosModules.default
             inputs.opnix.nixosModules.default
-            inputs.tranquil-pds.nixosModules.default
+            #inputs.tranquil-pds.nixosModules.default
           ];
         };
 
@@ -393,7 +393,7 @@
     nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
 
     stylix = {
-      url = "github:danth/stylix";
+      url = "github:nix-community/stylix/pull/2337/head";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
