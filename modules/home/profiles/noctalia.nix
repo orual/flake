@@ -2,15 +2,18 @@
   config,
   lib,
   ...
-}: let
+}:
+let
   cfg = config.profiles.noctalia;
-in {
+in
+{
   options.profiles.noctalia = with lib; {
     enable = mkEnableOption "noctalia profile";
   };
 
   config = lib.mkIf cfg.enable {
     #programs.noctalia-shell.systemd.enable = true;
+
     # configure options
     programs.noctalia-shell = {
       enable = true;

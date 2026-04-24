@@ -126,7 +126,7 @@ with lib;
 
   # NO!! i DON'T WANT wpa_supplicant! stop making it be there!
   networking.wireless.enable = mkForce false;
-  time.timeZone = mkForce "Canada/Vancouver";
+  time.timeZone = mkForce "Canada/Toronto";
 
   users.motd = ''
     ┌┬────────────────┐

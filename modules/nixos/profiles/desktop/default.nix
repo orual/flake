@@ -115,6 +115,8 @@ in
 
       firefox.enable = true;
       kdeconnect.enable = true;
+
+      gpu-screen-recorder.enable = true;
     };
 
     security.pam.services = {
