@@ -20,6 +20,13 @@ in {
       };
     };
 
+    services.sunshine = {
+      enable = true;
+      autoStart = true;
+      capSysAdmin = true;
+      openFirewall = true;
+    };
+
     # Steam controller
     hardware.steam-hardware.enable = true;
     # Steam

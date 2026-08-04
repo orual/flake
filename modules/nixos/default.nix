@@ -153,6 +153,7 @@
       "dialout" # allows writing to serial ports
       "video"
       "render"
+      "uinput"
     ];
     shell = pkgs.fish;
     openssh.authorizedKeys.keys = [

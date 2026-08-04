@@ -63,9 +63,6 @@ with lib; {
 
       nix = {
         package = pkgs.nix-monitored;
-        extraOptions = ''
-          experimental-features = nix-command flakes
-        '';
         generateNixPathFromInputs = true;
         generateRegistryFromInputs = true;
         linkInputs = true;
@@ -87,6 +84,10 @@ with lib; {
           trusted-users = [
             "root"
             "orual"
+          ];
+          experimental-features = [
+            "nix-command"
+            "flakes"
           ];
           extra-substituters = substituters;
           trusted-substituters = substituters;

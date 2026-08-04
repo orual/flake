@@ -28,6 +28,7 @@
     overlays = [
       (import ./pkgs/overlay.nix)
       rust-overlay.overlays.default
+      inputs.herdr.overlays.default
       # inputs.atuin.overlays.default
 
       (_: prev: {
@@ -38,7 +39,7 @@
         vesktop = inputs.nixpkgs-stable.legacyPackages.${prev.stdenv.hostPlatform.system}.vesktop;
       })
       # add alejandra package
-      (_: prev: {alejandra = inputs.alejandra.defaultPackage.${prev.stdenv.hostPlatform.system};})
+      (_: prev: {alejandra = inputs.alejandra.packages.${prev.stdenv.hostPlatform.system}.default;})
       # add ghostty package
       (_: prev: {ghostty = inputs.ghostty.packages.${prev.stdenv.hostPlatform.system}.ghostty;})
       # add ECLSSD
@@ -109,6 +110,7 @@
           apps.update-packages = {
             type = "app";
             program = "${self.packages.${system}.update-packages}/bin/update-packages";
+            meta.description = "Update custom packages";
           };
         };
       flake = {
@@ -231,6 +233,8 @@
             inputs.niri.homeModules.niri
             inputs.stylix.homeModules.stylix
             inputs.noctalia.homeModules.default
+            inputs.meridian.homeModules.default
+            inputs.codex-desktop.homeManagerModules.default
           ];
         };
 
@@ -255,14 +259,12 @@
       "https://cache.nixos.org"
       "https://cache.lix.systems"
       "https://nix-community.cachix.org"
-      "https://cache.garnix.io"
       "https://niri.cachix.org"
     ];
     extra-trusted-public-keys = [
       "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
       "cache.lix.systems:aBnZUw8zA7H35Cz2RyKFVs3H4PlGTLawyY5KRbvJR8o="
       "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-      "cache.garnix.io:CTFPyKSLcx5RMJKfLo5EEPUObbA78b0YQ2DTCJXqr9g="
       "niri.cachix.org-1:Wv0OmO7PsuocRKzfDoJ3mulSl7Z6oezYhGhR+3W2964="
       "nixpkgs-wayland.cachix.org-1:3lwxaILxMRkVhehr5StQprHdEo4IrE8sRho9R9HOLYA="
     ];
@@ -280,7 +282,10 @@
     flake-utils.url = "github:numtide/flake-utils";
     flake-parts.url = "github:hercules-ci/flake-parts";
 
-    # for building Rust packages
+    meridian.url = "github:rynfar/meridian";
+    herdr.url = "github:ogulcancelik/herdr";
+
+    # for building Rust package
     rust-overlay = {
       url = "github:oxalica/rust-overlay";
       inputs = {
@@ -314,7 +319,7 @@
     };
 
     noctalia = {
-      url = "github:noctalia-dev/noctalia-shell";
+      url = "github:noctalia-dev/noctalia-shell/legacy-v4";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
@@ -333,15 +338,21 @@
       inputs.flake-utils.follows = "flake-utils";
     };
 
+    codex-desktop = {
+      url = "github:ilysenko/codex-desktop-linux";
+      inputs = {
+        nixpkgs.follows = "nixpkgs";
+      };
+    };
+
     # for secureboot support on sylpherena
     lanzaboote = {
-      url = "github:nix-community/lanzaboote/v0.4.2";
+      url = "github:nix-community/lanzaboote";
 
       # Optional but recommended to limit the size of your system closure.
       inputs = {
         nixpkgs.follows = "nixpkgs";
         rust-overlay.follows = "rust-overlay";
-        flake-parts.follows = "flake-parts";
       };
     };
 
@@ -407,8 +418,7 @@
     };
     vscode-server = {
       url = "github:nix-community/nixos-vscode-server";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-utils.follows = "flake-utils";
+      inputs.flake-parts.follows = "flake-parts";
     };
 
     zen-browser = {

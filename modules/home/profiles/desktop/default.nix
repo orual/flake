@@ -29,6 +29,7 @@ in {
         beeper
         beeper-bridge-manager
         davinci-resolve
+        parsec-bin
       ];
     in (
       [
@@ -52,6 +53,7 @@ in {
         deluge-gtk
         zulip
         libreoffice-fresh
+        zmk-studio
       ]
       ++ unfreePkgs
     );
@@ -64,6 +66,7 @@ in {
         nativeMessagingHosts = [
           pkgs.tridactyl-native
         ];
+        configPath = "${config.xdg.configHome}/mozilla/firefox";
       };
       ghostty.enable = true;
       _1password-gui.enableSshAgent = lib.mkDefault true;
