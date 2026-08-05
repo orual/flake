@@ -86,16 +86,19 @@ in
       keyboard.qmk.enable = lib.mkDefault true;
     };
 
-    networking.wireless.iwd.enable = lib.mkDefault true;
-    networking.networkmanager.wifi.backend = lib.mkDefault "iwd";
-    networking.wireless.iwd.settings = {
-      Network = {
-        EnableIPv6 = true;
-      };
-      Settings = {
-        AutoConnect = true;
-      };
-    };
+    networking.wireless.enable = true;
+    networking.wireless.userControlled.enable = true;
+
+    #networking.wireless.iwd.enable = lib.mkDefault true;
+    #networking.networkmanager.wifi.backend = lib.mkDefault "iwd";
+    # networking.wireless.iwd.settings = {
+    #   Network = {
+    #     EnableIPv6 = true;
+    #   };
+    #   Settings = {
+    #     AutoConnect = true;
+    #   };
+    # };
 
     # i18n.inputMethod = {
     #   type = "fcitx5";

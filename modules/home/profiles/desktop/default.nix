@@ -4,9 +4,11 @@
   lib,
   pkgs,
   ...
-}: let
+}:
+let
   cfg = config.profiles.desktop;
-in {
+in
+{
   imports = [
     ./gnome3.nix
     ./kde.nix
@@ -18,43 +20,47 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
-    home.packages = with pkgs; let
-      unfreePkgs = [
-        slack
-        (vesktop.override {withSystemVencord = false;})
-        signal-desktop
-        zoom-us
-        spotify
-        obsidian-x11
-        beeper
-        beeper-bridge-manager
-        davinci-resolve
-      ];
-    in (
-      [
-        ### images, media, etc ###
-        kdePackages.ark
-        darktable
-        inkscape
-        # broken due to https://github.com/NixOS/nixpkgs/issues/188525
-        # llpp # fast & lightweight PDF pager
-        krita # like the GNU Image Manipulation Photoshop, but more good
-        gimp
-        syncplay
-        vlc
-        mpv
-        #plex-desktop
-        ghostscriptX
-        losslesscut-bin
+    home.packages =
+      with pkgs;
+      let
+        unfreePkgs = [
+          slack
+          (vesktop.override { withSystemVencord = false; })
+          signal-desktop
+          zoom-us
+          spotify
+          obsidian-x11
+          beeper
+          beeper-bridge-manager
+          davinci-resolve
+          parsec-bin
+        ];
+      in
+      (
+        [
+          ### images, media, etc ###
+          kdePackages.ark
+          darktable
+          inkscape
+          # broken due to https://github.com/NixOS/nixpkgs/issues/188525
+          # llpp # fast & lightweight PDF pager
+          krita # like the GNU Image Manipulation Photoshop, but more good
+          gimp
+          syncplay
+          vlc
+          mpv
+          #plex-desktop
+          ghostscriptX
+          losslesscut-bin
 
-        ### stuff ###
-        chromium
-        deluge-gtk
-        zulip
-        libreoffice-fresh
-      ]
-      ++ unfreePkgs
-    );
+          ### stuff ###
+          chromium
+          deluge-gtk
+          zulip
+          libreoffice-fresh
+        ]
+        ++ unfreePkgs
+      );
     #############################################################################
     ## Programs                                                                 #
     #############################################################################
@@ -71,7 +77,7 @@ in {
       keychain = {
         enable = true;
         enableXsessionIntegration = true;
-        keys = ["id_ed25519"];
+        keys = [ "id_ed25519" ];
       };
       obs-studio = {
         enable = true;
@@ -99,10 +105,10 @@ in {
     systemd.user.services."1password" = {
       Unit = {
         Description = "1Password";
-        PartOf = ["graphical-session.target"];
-        After = ["graphical-session.target"];
+        PartOf = [ "graphical-session.target" ];
+        After = [ "graphical-session.target" ];
       };
-      Install.WantedBy = ["graphical-session.target"];
+      Install.WantedBy = [ "graphical-session.target" ];
       Service = {
         ExecStart = "${pkgs._1password-gui}/bin/1password --silent";
         Restart = "on-failure";
