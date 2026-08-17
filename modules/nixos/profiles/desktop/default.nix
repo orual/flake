@@ -87,7 +87,7 @@ in
     };
 
     networking.wireless.enable = true;
-    networking.wireless.userControlled.enable = true;
+    networking.wireless.userControlled = true;
 
     #networking.wireless.iwd.enable = lib.mkDefault true;
     #networking.networkmanager.wifi.backend = lib.mkDefault "iwd";

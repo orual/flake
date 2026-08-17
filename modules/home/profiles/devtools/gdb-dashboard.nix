@@ -4,15 +4,12 @@
   pkgs,
   ...
 }:
-
-with lib;
-let
-  gdbinitPkg =
-    {
-      stdenv,
-      lib,
-      pkgs,
-    }:
+with lib; let
+  gdbinitPkg = {
+    stdenv,
+    lib,
+    pkgs,
+  }:
     stdenv.mkDerivation {
       pname = "gdb-dashboard";
       version = "latest";
@@ -39,14 +36,15 @@ let
       };
     };
   cfg = config.programs.gdb.dashboard;
-in
-{
+in {
   options.programs.gdb.dashboard = {
     enable = mkEnableOption "dashboard";
 
-    enablePygments = mkEnableOption "pygments" // {
-      description = "whether to enable Pygments syntax highlighting";
-    };
+    enablePygments =
+      mkEnableOption "pygments"
+      // {
+        description = "whether to enable Pygments syntax highlighting";
+      };
 
     extraConfig = mkOption {
       default = "";
@@ -69,20 +67,17 @@ in
       defaultText = literalExample "pkgs.gdb";
       description = "The package to use for gdb.";
     };
-
   };
 
   config = mkIf cfg.enable {
-
     home.packages = mkMerge [
-      (mkIf cfg.enablePygments [ pkgs.python312Packages.pygments ])
-      [ cfg.gdbPackage ]
+      (mkIf cfg.enablePygments [pkgs.python313Packages.pygments])
+      [cfg.gdbPackage]
     ];
 
-    home.file.".gdbinit".text =
-      let
-        pkg = pkgs.callPackage gdbinitPkg { };
-      in
+    home.file.".gdbinit".text = let
+      pkg = pkgs.callPackage gdbinitPkg {};
+    in
       builtins.readFile "${pkg}/.gdbinit";
 
     xdg.configFile."gdb-dashboard/extraConfig".text = cfg.extraConfig;

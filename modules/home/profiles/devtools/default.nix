@@ -38,6 +38,7 @@ in {
           claude-code-latest
           claude-code-modes
           popup-mcp
+          orca-ade
           codex
 
           # TURNS OUT THIS HAS TO BE IN SYSTEMPACKAGES LOL
@@ -88,6 +89,7 @@ in {
           # stm32cubemx
           #
           lazyjj
+          gg-jj
 
           kicad
           #kicadAddons.kikit
@@ -131,8 +133,8 @@ in {
 
       (mkIf cfg.enablePython {
         home.packages = with pkgs; [
-          python312
-          python312Packages.pip
+          python313
+          python313Packages.pip
         ];
       })
 

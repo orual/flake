@@ -3,80 +3,81 @@
 
   ############################################################################
   #### OUTPUTS ###############################################################
-  outputs =
-    {
-      self,
-      nixpkgs,
-      nixos-hardware,
-      nixos-raspberrypi,
-      home,
-      utils,
-      rust-overlay,
-      deploy-rs,
-      flake-parts,
-      ...
-    }@inputs:
-    let
-      config = {
-        allowUnfree = true;
-        input-fonts.acceptLicense = true;
-        # needed for Obsidian 1.4.16; this version of Electron is EOL but the nixpkgs
-        # package for Obsidian hasn't been updated to a newer electron yet.
-        #
-        # TODO: remove this once https://github.com/NixOS/nixpkgs/issues/263764
-        # is resolved...
-        #permittedInsecurePackages = ["electron-26.3.0"];
-      };
-      overlays = [
-        (import ./pkgs/overlay.nix)
-        rust-overlay.overlays.default
-        # inputs.atuin.overlays.default
+  outputs = {
+    self,
+    nixpkgs,
+    nixos-hardware,
+    nixos-raspberrypi,
+    home,
+    utils,
+    rust-overlay,
+    deploy-rs,
+    flake-parts,
+    ...
+  } @ inputs: let
+    config = {
+      allowUnfree = true;
+      input-fonts.acceptLicense = true;
+      # needed for Obsidian 1.4.16; this version of Electron is EOL but the nixpkgs
+      # package for Obsidian hasn't been updated to a newer electron yet.
+      #
+      # TODO: remove this once https://github.com/NixOS/nixpkgs/issues/263764
+      # is resolved...
+      #permittedInsecurePackages = ["electron-26.3.0"];
+    };
+    overlays = [
+      (import ./pkgs/overlay.nix)
+      rust-overlay.overlays.default
+      # inputs.atuin.overlays.default
 
-        (_: prev: {
-          claude-desktop =
-            inputs.claude-desktop.packages.${prev.stdenv.hostPlatform.system}.claude-desktop-with-fhs;
-        })
-        (_: prev: {
-          vesktop = inputs.nixpkgs-stable.legacyPackages.${prev.stdenv.hostPlatform.system}.vesktop;
-        })
-        # add alejandra package
-        (_: prev: { alejandra = inputs.alejandra.defaultPackage.${prev.stdenv.hostPlatform.system}; })
-        # add ghostty package
-        (_: prev: { ghostty = inputs.ghostty.packages.${prev.stdenv.hostPlatform.system}.ghostty; })
-        # add ECLSSD
-        (_: prev: { eclssd = inputs.eclssd.packages.${prev.stdenv.hostPlatform.system}.eclssd; })
-        # add fw-ectool package
-        # TODO(orual): it would be nice if this was only added for the framework
-        # system config...
-        # (_: prev: { fw-ectool = inputs.fw-ectool.packages.${prev.stdenv.hostPlatform.system}.ectool; })
-        # add niri overlay
-        # TODO(orual): similar to the above, would be good to add only for desktop configs
-        inputs.niri.overlays.niri
-        (_: prev: { quickshell = inputs.quickshell.packages.${prev.stdenv.hostPlatform.system}.default; })
-        # (_: prev: {zed-editor = prev.zed-prerelease;})
-        # add astal package
-        #inputs.astal-shell.overlays.default
-        #
-        # Fix this when unstable gets updated with this patch
-        (_: prev: {
-          azure-cli = inputs.nixpkgs-stable.legacyPackages.${prev.stdenv.hostPlatform.system}.azure-cli;
-        })
-        (_: prev: { opencode = inputs.opencode.packages.${prev.stdenv.hostPlatform.system}.default; })
-        (_: prev: { popup-mcp = inputs.popup-mcp.packages.${prev.stdenv.hostPlatform.system}.default; })
-      ];
+      (_: prev: {
+        claude-desktop =
+          inputs.claude-desktop.packages.${prev.stdenv.hostPlatform.system}.claude-desktop-with-fhs;
+      })
+      (_: prev: {
+        vesktop = inputs.nixpkgs-stable.legacyPackages.${prev.stdenv.hostPlatform.system}.vesktop;
+      })
+      # add alejandra package
+      (_: prev: {alejandra = inputs.alejandra.defaultPackage.${prev.stdenv.hostPlatform.system};})
+      # add ghostty package
+      (_: prev: {ghostty = inputs.ghostty.packages.${prev.stdenv.hostPlatform.system}.ghostty;})
+      # add ECLSSD
+      (_: prev: {eclssd = inputs.eclssd.packages.${prev.stdenv.hostPlatform.system}.eclssd;})
+      # add fw-ectool package
+      # TODO(orual): it would be nice if this was only added for the framework
+      # system config...
+      # (_: prev: { fw-ectool = inputs.fw-ectool.packages.${prev.stdenv.hostPlatform.system}.ectool; })
+      # add niri overlay
+      # TODO(orual): similar to the above, would be good to add only for desktop configs
+      inputs.niri.overlays.niri
+      # Temporary compatibility for niri until its nixpkgs dependency is updated.
+      (_: prev: {
+        libdisplay-info_0_2 = inputs.niri.inputs.nixpkgs.legacyPackages.${prev.stdenv.hostPlatform.system}.libdisplay-info_0_2;
+      })
+      (_: prev: {quickshell = inputs.quickshell.packages.${prev.stdenv.hostPlatform.system}.default;})
+      # (_: prev: {zed-editor = prev.zed-prerelease;})
+      # add astal package
+      #inputs.astal-shell.overlays.default
+      #
+      # Fix this when unstable gets updated with this patch
+      (_: prev: {
+        azure-cli = inputs.nixpkgs-stable.legacyPackages.${prev.stdenv.hostPlatform.system}.azure-cli;
+      })
+      (_: prev: {opencode = inputs.opencode.packages.${prev.stdenv.hostPlatform.system}.default;})
+      (_: prev: {popup-mcp = inputs.popup-mcp.packages.${prev.stdenv.hostPlatform.system}.default;})
+      (_: prev: {orca-ade = inputs.orca.packages.${prev.stdenv.hostPlatform.system}.default;})
+    ];
 
-      lib = import ./lib;
-    in
-    flake-parts.lib.mkFlake { inherit inputs; } {
-      perSystem =
-        {
-          pkgs,
-          system,
-          ...
-        }:
+    lib = import ./lib;
+  in
+    flake-parts.lib.mkFlake {inherit inputs;} {
+      perSystem = {
+        pkgs,
+        system,
+        ...
+      }:
         with pkgs;
-        with lib;
-        {
+        with lib; {
           devShells.default = mkShell {
             buildInputs = [
               deploy-rs.packages.${system}.default
@@ -176,52 +177,49 @@
         #####################
         ## deploy-rs nodes ##
         #####################
-        deploy.nodes =
-          let
-            mkNode =
+        deploy.nodes = let
+          mkNode = {
+            hostname,
+            system ? "x86_64-linux",
+            extraOpts ? {},
+          }: {
+            inherit hostname;
+            profiles.system =
               {
-                hostname,
-                system ? "x86_64-linux",
-                extraOpts ? { },
-              }:
-              {
-                inherit hostname;
-                profiles.system = {
-                  sshUser = "orual";
-                  path = deploy-rs.lib.${system}.activate.nixos self.nixosConfigurations.${hostname};
-                  user = "root";
-                }
-                // extraOpts;
-              };
-          in
-          {
-            chasmfiend = mkNode {
-              hostname = "chasmfiend";
-            };
-
-            tai-na = mkNode {
-              hostname = "tai-na";
-            };
-
-            saanthid = mkNode {
-              hostname = "saanthid";
-            };
-
-            #               clavius = mkNode {
-            #                 hostname = "clavius";
-            #                 system = "aarch64-linux";
-            #                 extraOpts = { sshOpts = [ "-t" ]; };
-            #               };
-            #
-            #               tycho = mkNode {
-            #                 hostname = "tycho";
-            #                 system = "aarch64-linux";
-            #                 extraOpts = { sshOpts = [ "-t" ]; };
-            #               };
-
-            pattern = mkNode { hostname = "pattern"; };
-            sja-anat = mkNode { hostname = "sja-anat"; };
+                sshUser = "orual";
+                path = deploy-rs.lib.${system}.activate.nixos self.nixosConfigurations.${hostname};
+                user = "root";
+              }
+              // extraOpts;
           };
+        in {
+          chasmfiend = mkNode {
+            hostname = "chasmfiend";
+          };
+
+          tai-na = mkNode {
+            hostname = "tai-na";
+          };
+
+          saanthid = mkNode {
+            hostname = "saanthid";
+          };
+
+          #               clavius = mkNode {
+          #                 hostname = "clavius";
+          #                 system = "aarch64-linux";
+          #                 extraOpts = { sshOpts = [ "-t" ]; };
+          #               };
+          #
+          #               tycho = mkNode {
+          #                 hostname = "tycho";
+          #                 system = "aarch64-linux";
+          #                 extraOpts = { sshOpts = [ "-t" ]; };
+          #               };
+
+          pattern = mkNode {hostname = "pattern";};
+          sja-anat = mkNode {hostname = "sja-anat";};
+        };
 
         ##################
         ## Home Manager ##
@@ -319,7 +317,7 @@
     };
 
     noctalia = {
-      url = "github:noctalia-dev/noctalia-shell";
+      url = "github:noctalia-dev/noctalia-shell/legacy-v4";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
@@ -412,8 +410,6 @@
     };
     vscode-server = {
       url = "github:nix-community/nixos-vscode-server";
-      inputs.nixpkgs.follows = "nixpkgs";
-      inputs.flake-utils.follows = "flake-utils";
     };
 
     zen-browser = {
@@ -460,5 +456,7 @@
         flake-utils.follows = "flake-utils";
       };
     };
+
+    orca.url = "github:kevinpita/orca-nix";
   };
 }

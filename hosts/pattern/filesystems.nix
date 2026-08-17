@@ -45,6 +45,11 @@
     fsType = "ext4";
   };
 
+  fileSystems."/run/media/orual/Data" = {
+    device = "/dev/disk/by-label/Data";
+    fsType = "ext4";
+  };
+
   swapDevices = [
     {
       device = "/dev/disk/by-id/nvme-CT2000P3PSSD8_2504E9A23FD6_1-part1";
