@@ -33,7 +33,7 @@
   ];
 
   # Set your time zone.
-  time.timeZone = "America/Toronto";
+  time.timeZone = "America/Montreal";
 
   # Select internationalisation properties.
   console = {keyMap = "us";};
@@ -153,6 +153,7 @@
       "dialout" # allows writing to serial ports
       "video"
       "render"
+      "networkmanager"
       "uinput"
     ];
     shell = pkgs.fish;

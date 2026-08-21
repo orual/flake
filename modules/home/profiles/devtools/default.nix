@@ -19,7 +19,10 @@ in {
         home.packages = with pkgs; [
           vscode
           # ## toolchains ###
-          rustup
+          rustc
+          cargo
+          rustfmt
+          clippy
           # clang
 
           ### devtools ###

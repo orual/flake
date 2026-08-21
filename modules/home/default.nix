@@ -9,6 +9,8 @@
   };
 in
   with lib; rec {
+    disabledModules = ["programs/noctalia.nix"];
+
     imports = [
       ./fonts.nix
       ./profiles

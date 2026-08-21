@@ -175,6 +175,33 @@
         #               clavius = mkPiImage { hostname = "clavius"; };
         #               tycho = mkPiImage { hostname = "tycho"; };
         #             };
+        #
+
+
+        ##################
+        ## Home Manager ##
+        ##################
+        homeConfigurations = lib.genHomeHosts {
+          inherit inputs config overlays;
+
+          user = "orual";
+
+          baseModules = [
+            self.homeModules.default
+            inputs.zed-extensions.homeManagerModules.default
+            inputs.zen-browser.homeModules.twilight
+            inputs.niri.homeModules.niri
+            inputs.stylix.homeModules.stylix
+            inputs.noctalia.homeModules.default
+            inputs.meridian.homeModules.default
+            inputs.codex-desktop.homeManagerModules.default
+            inputs.steamos-etc.homeManagerModules.default
+            inputs.frametop.homeManagerModules.default
+          ];
+        };
+
+        homeModules.default = import ./modules/home;
+
 
         #####################
         ## deploy-rs nodes ##
@@ -221,29 +248,20 @@
 
           pattern = mkNode {hostname = "pattern";};
           sja-anat = mkNode {hostname = "sja-anat";};
+
+          soulcaster = {
+            hostname = "soulcaster";
+            profiles.system = {
+              sshUser = "steamos";
+              path = deploy-rs.lib.aarch64-linux.activate.home-manager self.homeConfigurations.soulcaster;
+            };
+          };
         };
 
-        ##################
-        ## Home Manager ##
-        ##################
-        homeConfigurations = lib.genHomeHosts {
-          inherit inputs config overlays;
 
-          user = "orual";
 
-          baseModules = [
-            self.homeModules.default
-            inputs.zed-extensions.homeManagerModules.default
-            inputs.zen-browser.homeModules.twilight
-            inputs.niri.homeModules.niri
-            inputs.stylix.homeModules.stylix
-            inputs.noctalia.homeModules.default
-            inputs.meridian.homeModules.default
-            inputs.codex-desktop.homeManagerModules.default
-          ];
-        };
 
-        homeModules.default = import ./modules/home;
+
 
         ################
         ## checks ######
@@ -330,7 +348,9 @@
     };
 
     noctalia = {
-      url = "github:noctalia-dev/noctalia-shell/legacy-v4";
+     # url = "github:noctalia-dev/noctalia/a064c063f204518619b8c032c944138a0349966b";
+
+      url = "github:noctalia-dev/noctalia";
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
@@ -475,6 +495,15 @@
       };
     };
 
-    orca.url = "github:kevinpita/orca-nix";
+    orca.url = "github:orual/orca-nix";
+
+    steamos-etc = {
+      url = "github:JRMurr/steamos-etc-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+    frametop = {
+      url = "github:orual/frametop-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 }

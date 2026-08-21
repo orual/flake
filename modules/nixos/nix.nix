@@ -15,11 +15,18 @@ with lib; {
       nixpkgs.config.allowUnfree = true;
       nixpkgs.overlays = [
         (self: super: {
+          # https://github.com/NixOS/nix/pull/16066: filter jj workspace flake sources.
+          nix = super.nixVersions.nix_2_35.appendPatches [
+            (super.fetchurl {
+              url = "https://github.com/NixOS/nix/commit/51e079f733cc4d00e9cc1ee3794b05804abdd27b.patch";
+              hash = "sha256-og6G/FuZRV6K95a6XfYbZimUTxLFoD5poMECXrede94=";
+            })
+          ];
           nixos-rebuild = super.nixos-rebuild.override {
-            nix = super.nix-monitored;
+            nix = self.nix-monitored;
           };
           nix-direnv = super.nix-direnv.override {
-            nix = super.nix-monitored;
+            nix = self.nix-monitored;
           };
         })
       ];

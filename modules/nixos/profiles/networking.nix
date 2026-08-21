@@ -35,10 +35,20 @@ in
         # networking.firewall.enable = false;
         firewall.allowedTCPPorts = [
           24800
+          27036
+          27037
           6768
         ];
         firewall.allowedUDPPorts = [
           24800
+          27031
+          27032
+          27033
+          27034
+          27035
+          27036
+          10400
+          10401
           6768
         ];
 

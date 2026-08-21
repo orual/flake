@@ -100,7 +100,7 @@ in
           ++ lib.optionals cfg.noctaliaShell [
             {
               command = [
-                "noctalia-shell"
+                "noctalia"
               ];
             }
           ];

@@ -31,7 +31,7 @@ in
             # Add opencode to PATH
             fish_add_path -g $HOME/.opencode/bin
 
-            # Cargo/Rust
+            # Cargo tools
             fish_add_path -g $HOME/.cargo/bin
 
             # Go
@@ -74,6 +74,10 @@ in
             if string match -q 'alacritty*' $TERM
               set -gx TERM_PROGRAM $TERM
               set -gx TERM xterm-256color
+            end
+
+            function __reset_mouse_tracking --on-event fish_prompt
+                printf '\e[?1000l\e[?1002l\e[?1003l\e[?1005l\e[?1006l\e[?1015l\e[?1016l'
             end
           '';
 

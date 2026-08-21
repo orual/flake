@@ -10,6 +10,7 @@ in {
     enable = mkEnableOption "games profile";
   };
 
+
   config = lib.mkIf cfg.enable {
     # some steam games need 32-bit driver support
     services.pulseaudio.support32Bit = true;
@@ -18,6 +19,8 @@ in {
         extraPackages32 = with pkgs.pkgsi686Linux; [libva];
         enable32Bit = true;
       };
+      enableRedistributableFirmware = true;
+      wirelessRegulatoryDatabase = true;
     };
 
     services.sunshine = {
@@ -29,6 +32,12 @@ in {
 
     # Steam controller
     hardware.steam-hardware.enable = true;
+
+    programs.gamescope = {
+      enable = true;
+      enableWsi = true;
+      capSysNice = false;
+    };
     # Steam
     programs.steam = {
       enable = true;
@@ -39,41 +48,43 @@ in {
         mangohud
         gamescope
         xwayland-run
+        libXcursor
+        hidapi
+            libXi
+            libXinerama
+            libXScrnSaver
+            libpng
+            libpulseaudio
+            libvorbis
+            stdenv.cc.cc.lib # Provides libstdc++.so.6
+            libkrb5
+            keyutils
       ];
       extraCompatPackages = with pkgs; [
         proton-ge-bin
       ];
-      # package = let
-      #   x-wrapped = steam:
-      #     pkgs.runCommand "x-run-steam"
-      #     {
-      #       inherit (steam) passthru meta;
-      #     }
-      #     ''
-      #       cp -r ${steam} $out
-
-      #       # $out/share is a symlink to ${steam}/share
-      #       # but since we need to edit its internals, we need to expand it to a real directory
-      #       # that can be edited
-
-      #       # first we need to make sure we can remove it
-      #       chmod -R +w $out
-
-      #       # then remove, recreate, and populate it
-      #       rm $out/share
-      #       mkdir $out/share
-      #       cp -r ${steam}/share/* $out/share/
-
-      #       # and of course, make sure we can edit the desktop file again
-      #       chmod -R +w $out
-
-      #       sed -i 's/Exec=steam/Exec=x-run steam/g' $out/share/applications/steam.desktop
-      #     '';
-      # in
-      #   x-wrapped pkgs.steam
-      #   // {
-      #     override = f: x-wrapped (pkgs.steam.override f);
-      #   };
+      extest.enable = true;
+      # fix steam input mouse cursor stuff
+      package = pkgs.steam.override {
+          # extraProfile = ''export LD_PRELOAD=${pkgs.extest}/lib/libextest.so:$LD_PRELOAD'';
+          extraArgs = ''-pipewire -xcb'';
+      };
     };
+
+    boot.kernelPatches = [
+      {
+        name = "amdgpu-ignore-ctx-privileges";
+        patch = pkgs.fetchpatch {
+          name = "cap_sys_nice_begone.patch";
+          url = "https://github.com/Frogging-Family/community-patches/raw/master/linux61-tkg/cap_sys_nice_begone.mypatch";
+          hash = "sha256-Y3a0+x2xvHsfLax/uwycdJf3xLxvVfkfDVqjkxNaYEo=";
+        };
+      }
+    ];
+
+    boot.extraModprobeConfig = ''
+      options cfg80211 ieee80211_regdom=CA
+    '';
+
   };
 }

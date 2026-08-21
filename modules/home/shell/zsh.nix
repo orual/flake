@@ -55,6 +55,17 @@ in
                 sshd|*/sshd) SESSION_TYPE=remote/ssh;TERM=xterm-256color;;
               esac
             fi
+
+            # ssh wrapper: if a remote app (tmux, TUI, etc.) enabled mouse reporting and the
+            # connection dies ungracefully (VPN drop, timeout), the terminal is left in mouse
+            # tracking mode and mouse movement sprays escape-sequence garbage into the local
+            # shell. Disable all mouse tracking modes whenever ssh exits.
+            ssh() {
+              command ssh "$@"
+              local rc=$?
+              printf '\e[?1000l\e[?1002l\e[?1003l\e[?1005l\e[?1006l\e[?1015l\e[?1016l'
+              return $rc
+            }
           '';
 
           ### nicer autocomplete ###
