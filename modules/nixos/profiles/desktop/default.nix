@@ -4,11 +4,9 @@
   lib,
   pkgs,
   ...
-}:
-let
+}: let
   cfg = config.profiles.desktop;
-in
-{
+in {
   imports = [
     ./gnome3.nix
     ./kde.nix
@@ -75,6 +73,7 @@ in
           variant = mkDefault "";
         };
       };
+      system76-scheduler.enable = lib.mkDefault true;
 
       # Enable CUPS to print documents.
       printing.enable = lib.mkDefault true;
@@ -86,10 +85,10 @@ in
       keyboard.qmk.enable = lib.mkDefault true;
     };
 
-    networking.wireless.enable = true;
+    networking.wireless.enable = lib.mkDefault true;
     networking.wireless.userControlled = true;
 
-    #networking.wireless.iwd.enable = lib.mkDefault true;
+    # networking.wireless.iwd.enable = lib.mkDefault true;
     #networking.networkmanager.wifi.backend = lib.mkDefault "iwd";
     # networking.wireless.iwd.settings = {
     #   Network = {
@@ -113,7 +112,7 @@ in
       _1password.enable = true;
       _1password-gui = {
         enable = true;
-        polkitPolicyOwners = [ "orual" ];
+        polkitPolicyOwners = ["orual"];
       };
 
       firefox.enable = true;

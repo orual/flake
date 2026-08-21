@@ -193,6 +193,9 @@ in
         input.trackball = {
           accel-profile = "adaptive";
         };
+        input.mouse = {
+          scroll-factor = 3.0;
+        };
         input.touchpad = {
           tap = true;
           dwt = true;
@@ -290,6 +293,22 @@ in
               "${Mod}+X".action = focus-window-or-workspace-down;
               "${Mod}+S".action = focus-window-or-workspace-up;
               "${Mod}+C".action = focus-column-right;
+              "${Mod}+WheelScrollDown" = {
+                cooldown-ms = 150;
+                action = focus-window-or-workspace-down;
+              };
+              "${Mod}+WheelScrollUp" = {
+                cooldown-ms = 150;
+                action = focus-window-or-workspace-up;
+              };
+              "${Mod}+WheelScrollLeft" = {
+                cooldown-ms = 150;
+                action = focus-column-left;
+              };
+              "${Mod}+WheelScrollRight" = {
+                cooldown-ms = 150;
+                action = focus-column-right;
+              };
               "${Mod}+Shift+Ctrl+F".action = toggle-windowed-fullscreen;
             }
             (binds {
@@ -370,8 +389,13 @@ in
             variable-refresh-rate = "on-demand";
           };
           "GIGA-BYTE TECHNOLOGY CO., LTD. AORUS FO48U 22020B008648" = {
+            mode = {
+              width = 3840;
+              height = 2160;
+              refresh = 119.999;
+            };
+            variable-refresh-rate = true;
             scale = 1.0;
-            variable-refresh-rate = "on-demand";
             backdrop-color = "#191724";
           };
 
@@ -379,6 +403,17 @@ in
             scale = 1.5;
             variable-refresh-rate = "on-demand";
             backdrop-color = "#191724";
+            position = {
+              x = 2560;
+              y = 0;
+            };
+          };
+          "GIGA-BYTE TECHNOLOGY CO., LTD. M27Q 21240B003280" = {
+            variable-refresh-rate = "on-demand";
+            position = {
+              x = 0;
+              y = 0;
+            };
           };
         };
         window-rules = let

@@ -3,11 +3,9 @@
   config,
   pkgs,
   ...
-}:
-let
+}: let
   cfg = config.profiles.laptop;
-in
-{
+in {
   options.profiles.laptop = with lib; {
     enable = mkEnableOption "laptop profile";
     suspendThenHibernate = {
@@ -40,8 +38,7 @@ in
     # };
   };
 
-  config =
-    with lib;
+  config = with lib;
     mkIf cfg.enable {
       # Enabling the laptop profile automatically enables the
       # desktop profile too.
@@ -60,11 +57,14 @@ in
 
       powerManagement.powertop.enable = mkDefault true;
 
-      environment.systemPackages = with pkgs; [ powertop ];
+      environment.systemPackages = with pkgs; [powertop];
+      networking.networkmanager.wifi.powersave = true;
 
       # Setup suspend then hibernate.
-      services.logind.lidSwitch =
-        if cfg.suspendThenHibernate.enable then "suspend-then-hibernate" else "suspend";
+      services.logind.settings.Login.HandleLidSwitch =
+        if cfg.suspendThenHibernate.enable
+        then "suspend-then-hibernate"
+        else "suspend";
       # systemd.sleep.settings.Sleep = lib.optionalString cfg.suspendThenHibernate.enable ''
       #   HibernateDelaySec=${toString cfg.suspendThenHibernate.delayHours}h
       # '';

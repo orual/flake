@@ -75,6 +75,7 @@
     extraModprobeConfig = ''
       options snd_usb_audio vid=0x1235 pid=0x8212 device_setup=1
     '';
+
     # Use this to track the latest Linux kernel that has ZFS support.
     # This is generally not as necessary while using `zfsUnstable = true`.
     # kernelPackages = config.boot.zfs.package.latestCompatibleLinuxPackages;
@@ -94,7 +95,15 @@
     # <enter password>
     #
     # kernel modules for network adapters
-    kernelModules = ["e1000e" "alx" "r8169" "igb" "cdc_ether" "r8152"];
+    kernelModules = [
+      "e1000e"
+      "alx"
+      "r8169"
+      "igb"
+      "cdc_ether"
+      "r8152"
+      "v4l2loopback"
+    ];
     # TODO(orual): this could be a static IP so that we don't depend on DHCP
     # working to boot...
     kernelParams = [
@@ -174,6 +183,9 @@
     ffmpeg
     cloudflared
     llama-cpp-vulkan
+    v4l-utils
+    lmstudio
+    cpulimit
   ];
 
   # This is a deskop machine. Use the high-performance frequency profile rather

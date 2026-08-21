@@ -40,6 +40,10 @@ in {
           popup-mcp
           orca-ade
           codex
+          herdr
+
+          python314Packages.huggingface-hub
+          git-xet
 
           # TURNS OUT THIS HAS TO BE IN SYSTEMPACKAGES LOL
           # # xfel --- FEL tools for Allwinner SoCs
@@ -128,13 +132,24 @@ in {
             enable = mkDefault true;
             nix-direnv.enable = mkDefault true;
           };
+
+          codexDesktopLinux = {
+            enable = config.profiles.desktop.enable;
+            computerUseUi.enable = true;
+            remoteMobileControl.enable = true;
+            linuxFeatures = [
+              "appshots"
+              "open-target-discovery"
+            ];
+            remoteControl.enable = true;
+          };
         };
       })
 
       (mkIf cfg.enablePython {
         home.packages = with pkgs; [
-          python313
-          python313Packages.pip
+          python314
+          python314Packages.pip
         ];
       })
 

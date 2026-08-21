@@ -22,7 +22,7 @@ in {
         # enable manpages
         enable = true;
         # generate manpage index caches to enable searching using `man -k`.
-        generateCaches = true;
+        cache.enable = true;
       };
       # info.enable = true;
 

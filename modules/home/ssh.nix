@@ -15,38 +15,25 @@ in
 
     config = {
       home.packages = with pkgs; [ssh-tools];
-      programs.ssh = mkMerge [
-        {
-          enable = true;
-          enableDefaultConfig = false;
-          matchBlocks = let
-            pattern = "pattern";
-            pattern-tailscale = "${pattern}-tailscale";
-          in {
-            # "${pattern}-local" = hm.dag.entryBefore [ pattern-tailscale ] {
-            #   match = ''host ${pattern} exec "ping -c1 -W1 -q ${pattern}.local"'';
-            #   hostname = "pattern.local";
-            # };
-            ${pattern-tailscale} = hm.dag.entryBefore ["notSsh"] {
-              host = "pattern";
-              hostname = "pattern";
+      programs.ssh = {
+        enable = true;
+        enableDefaultConfig = false;
+        settings =
+          {
+            "Host pattern" = {
+              HostName = "pattern";
             };
-          };
-        }
-        (mkIf _1passwordAgent.enable {
-          matchBlocks = {
+          }
+          // (optionalAttrs _1passwordAgent.enable {
             "*" = {
-              forwardAgent = _1passwordAgent.enable;
-              addKeysToAgent = "yes";
+              ForwardAgent = "yes";
+              AddKeysToAgent = "yes";
             };
             "notSsh" = {
-              match = ''Host * exec "test -z $SSH_CONNECTION"'';
-              extraOptions = {
-                IdentityAgent = _1passwordAgent.path;
-              };
+              header = ''Match host * exec "test -z $SSH_CONNECTION"'';
+              IdentityAgent = _1passwordAgent.path;
             };
-          };
-        })
-      ];
+          });
+      };
     };
   }

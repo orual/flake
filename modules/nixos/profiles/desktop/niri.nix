@@ -114,7 +114,7 @@ in
               wl-paste = lib.getExe' final.wl-clipboard "wl-paste";
               xclip = lib.getExe final.xclip;
               clipnotify = lib.getExe final.clipnotify;
-              metacity = lib.getExe final.metacity;
+              metacity = lib.getExe' final.metacity "metacity";
             in
               # Here, we use xclip over xsel because it supports binary data.
               # Additionally, we sha256sum that binary data so no shell fuckery happens to null bytes.
@@ -169,7 +169,7 @@ in
               '';
 
             sodi-x-run = final.writeShellScriptBin "x-run" ''
-              ${lib.getExe final.xwayland-run} -- ${lib.getExe final.sodi-x-run-env} "$@"
+              ${lib.getExe' final.xwayland-run "xwayland-run"} -- ${lib.getExe final.sodi-x-run-env} "$@"
             '';
 
             xwlsat-run = final.writeShellScriptBin "xwlsat-run" ''
@@ -195,7 +195,6 @@ in
             #package = mkForce pkgs.firefox-wayland;
             nativeMessagingHosts.packages = with pkgs; [
               tridactyl-native
-              firefoxpwa
             ];
           };
           niri.enable = true;

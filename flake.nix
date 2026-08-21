@@ -23,11 +23,12 @@
       #
       # TODO: remove this once https://github.com/NixOS/nixpkgs/issues/263764
       # is resolved...
-      #permittedInsecurePackages = ["electron-26.3.0"];
+      permittedInsecurePackages = ["electron-39.8.10"];
     };
     overlays = [
       (import ./pkgs/overlay.nix)
       rust-overlay.overlays.default
+      inputs.herdr.overlays.default
       # inputs.atuin.overlays.default
 
       (_: prev: {
@@ -38,7 +39,7 @@
         vesktop = inputs.nixpkgs-stable.legacyPackages.${prev.stdenv.hostPlatform.system}.vesktop;
       })
       # add alejandra package
-      (_: prev: {alejandra = inputs.alejandra.defaultPackage.${prev.stdenv.hostPlatform.system};})
+      (_: prev: {alejandra = inputs.alejandra.packages.${prev.stdenv.hostPlatform.system}.default;})
       # add ghostty package
       (_: prev: {ghostty = inputs.ghostty.packages.${prev.stdenv.hostPlatform.system}.ghostty;})
       # add ECLSSD
@@ -114,6 +115,7 @@
           apps.update-packages = {
             type = "app";
             program = "${self.packages.${system}.update-packages}/bin/update-packages";
+            meta.description = "Update custom packages";
           };
         };
       flake = {
@@ -139,7 +141,7 @@
             inputs.niri.nixosModules.niri
             inputs.vscode-server.nixosModules.default
             inputs.opnix.nixosModules.default
-            inputs.tranquil-pds.nixosModules.default
+            # inputs.tranquil-pds.nixosModules.default
           ];
         };
 
@@ -236,6 +238,8 @@
             inputs.niri.homeModules.niri
             inputs.stylix.homeModules.stylix
             inputs.noctalia.homeModules.default
+            inputs.meridian.homeModules.default
+            inputs.codex-desktop.homeManagerModules.default
           ];
         };
 
@@ -244,7 +248,13 @@
         ################
         ## checks ######
         ################
-        checks = builtins.mapAttrs (system: deployLib: deployLib.deployChecks self.deploy) deploy-rs.lib;
+        checks = builtins.listToAttrs (map (system: {
+            name = system;
+            value = deploy-rs.lib.${system}.deployChecks self.deploy;
+          }) [
+            "x86_64-linux"
+            "aarch64-linux"
+          ]);
       };
 
       systems = [
@@ -282,6 +292,9 @@
 
     flake-utils.url = "github:numtide/flake-utils";
     flake-parts.url = "github:hercules-ci/flake-parts";
+
+    meridian.url = "github:rynfar/meridian";
+    herdr.url = "github:ogulcancelik/herdr";
 
     # for building Rust packages
     rust-overlay = {
@@ -321,6 +334,11 @@
       inputs.nixpkgs.follows = "nixpkgs-unstable";
     };
 
+    codex-desktop = {
+      url = "github:ilysenko/codex-desktop-linux";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     nixos-hardware.url = "github:nixos/nixos-hardware/master";
 
     nixos-raspberrypi = {
@@ -338,13 +356,12 @@
 
     # for secureboot support on sylpherena
     lanzaboote = {
-      url = "github:nix-community/lanzaboote/v0.4.2";
+      url = "github:nix-community/lanzaboote";
 
       # Optional but recommended to limit the size of your system closure.
       inputs = {
         nixpkgs.follows = "nixpkgs";
         rust-overlay.follows = "rust-overlay";
-        flake-parts.follows = "flake-parts";
       };
     };
 
@@ -396,7 +413,7 @@
     nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
 
     stylix = {
-      url = "github:danth/stylix";
+      url = "github:nix-community/stylix/pull/2337/head";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
@@ -410,6 +427,7 @@
     };
     vscode-server = {
       url = "github:nix-community/nixos-vscode-server";
+      inputs.flake-parts.follows = "flake-parts";
     };
 
     zen-browser = {

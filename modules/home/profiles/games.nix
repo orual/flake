@@ -18,6 +18,7 @@ in {
       ckan
       # disable this, currently broken due to some kind of python thing
       # playonlinux
+      moonlight
     ];
   };
 }

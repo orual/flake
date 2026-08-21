@@ -62,7 +62,6 @@ in {
         email = mkIf (cfg.email.fromAddress != null) {
           from_address = cfg.email.fromAddress;
           from_name = cfg.email.fromName;
-          sendmail_path = "${pkgs.msmtp}/bin/msmtp";
         };
       };
     };

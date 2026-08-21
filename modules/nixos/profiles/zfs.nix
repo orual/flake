@@ -40,6 +40,8 @@ in
           kernelParams = ["elevator=none"];
           zfs.devNodes = "/dev/disk/by-id";
           zfs.extraPools = ["ssd-pool"];
+          zfs.forceImportRoot = false;
+          extraModulePackages = [latestZfsKernel.v4l2loopback];
         };
 
         # ZFS configuration

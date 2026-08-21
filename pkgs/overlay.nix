@@ -23,4 +23,5 @@ final: prev: {
   conversation-search = prev.callPackage ./conversation-search {};
   cosmic-ext-alternative-startup = prev.callPackage ./cosmic-ext-alternative-startup {};
   claude-code-modes = prev.callPackage ./claude-code-modes.nix {};
+  social-cli = prev.callPackage ./social-cli {};
 }
