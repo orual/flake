@@ -20,7 +20,7 @@ in {
   config = lib.mkIf cfg.enable {
     home.packages = with pkgs; let
       unfreePkgs = [
-        slack
+        #slack
         (vesktop.override {withSystemVencord = false;})
         signal-desktop
         zoom-us
