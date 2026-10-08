@@ -46,7 +46,7 @@ in {
         mpv
         #plex-desktop
         ghostscriptX
-        losslesscut-bin
+
 
         ### stuff ###
         chromium

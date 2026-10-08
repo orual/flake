@@ -36,6 +36,7 @@
     atuin-desktop
     claude-desktop
     social-cli
+    losslesscut-bin
   ];
 
   services = {
