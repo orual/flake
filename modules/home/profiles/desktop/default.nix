@@ -6,6 +6,7 @@
   ...
 }: let
   cfg = config.profiles.desktop;
+  platform = pkgs.stdenv.hostPlatform;
 in {
   imports = [
     ./gnome3.nix
@@ -23,14 +24,16 @@ in {
         #slack
         (vesktop.override {withSystemVencord = false;})
         signal-desktop
-        zoom-us
-        spotify
         obsidian
         beeper
         beeper-bridge-manager
         davinci-resolve
         parsec-bin
       ];
+      x86Pkgs = if platform.isx86_64 then [
+        zoom-us
+        spotify
+      ] else [];
     in (
       [
         ### images, media, etc ###
@@ -55,7 +58,7 @@ in {
         libreoffice-fresh
         zmk-studio
       ]
-      ++ unfreePkgs
+      ++ unfreePkgs ++ x86Pkgs
     );
     #############################################################################
     ## Programs                                                                 #
