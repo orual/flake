@@ -40,8 +40,8 @@
       })
       # add alejandra package
       (_: prev: {alejandra = inputs.alejandra.packages.${prev.stdenv.hostPlatform.system}.default;})
-      # add ghostty package
-      (_: prev: {ghostty = inputs.ghostty.packages.${prev.stdenv.hostPlatform.system}.ghostty;})
+      # add ghostty package - currently broken somewhere between nixpkgs version and current pin
+      # (_: prev: {ghostty = inputs.ghostty.packages.${prev.stdenv.hostPlatform.system}.ghostty;})
       # add ECLSSD
       (_: prev: {eclssd = inputs.eclssd.packages.${prev.stdenv.hostPlatform.system}.eclssd;})
       # add fw-ectool package
@@ -250,10 +250,10 @@
           sja-anat = mkNode {hostname = "sja-anat";};
 
           soulcaster = {
-            hostname = "soulcaster";
+            hostname = "soulcaster.local";
             profiles.system = {
               sshUser = "steamos";
-              path = deploy-rs.lib.aarch64-linux.activate.home-manager self.homeConfigurations.soulcaster;
+              path = deploy-rs.lib.aarch64-linux.activate.home-manager self.homeConfigurations."orual@soulcaster";
             };
           };
         };

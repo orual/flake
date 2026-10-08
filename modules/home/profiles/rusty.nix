@@ -34,7 +34,7 @@ in
             fd
             # ytop
             bottom
-            glances
+            #glances
             # dust: like `du` but good
             dust
             # procs: list processes

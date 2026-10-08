@@ -18,6 +18,24 @@ let
         in
         if hasDefault then [ (loadConf dir n) ] else [ ])
       hosts';
+
+  loadNixosHosts = dir: inputs:
+    let
+      loadConf = dir: n: (import "${dir}/${n}" inputs) // { hostname = n; };
+
+      hosts' =
+        let contents = readDir dir;
+        in filter (n: contents."${n}" == "directory") (attrNames contents);
+    in
+    concatMap
+      (n:
+        let
+          contents = readDir "${dir}/${n}";
+          hasDefault = (hasAttr "default.nix" contents) &&  (hasAttr "configuration.nix" contents)
+            && (contents."default.nix" == "regular");
+        in
+        if hasDefault then [ (loadConf dir n) ] else [ ])
+      hosts';
 in
 {
   # Discover NixOS configurations.
@@ -55,7 +73,7 @@ in
         name = conf.hostname;
         value = mkHost (removeAttrs conf [ "home" ]);
       })
-      (loadHosts directory inputs));
+      (loadNixosHosts directory inputs));
 
   # Discover home-manager configurations.
   # It will find all sub-directories in `directory` and

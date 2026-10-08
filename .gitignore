@@ -5,4 +5,5 @@ result-*
 # Ignore automatically generated direnv output
 .direnv
 .claude
+.deploy-gc
 docs

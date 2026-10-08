@@ -43,17 +43,14 @@ in {
     # global pkgconfig too
     pkg-config
     yubioath-flutter
-    protonup-qt
-    bitwig-studio
     atuin-desktop
   ];
 
-  #programs.frametop.enable = true;
+  programs.frametop.enable = true;
 
   home.username = "steamos";
   home.homeDirectory = "/home/steamos";
 
-  #programs.gdb.dashboard.enable = false;
 
   services = {
     gpg-agent = {

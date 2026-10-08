@@ -96,7 +96,6 @@ in {
           # stm32cubemx
           #
           lazyjj
-          gg-jj
 
           kicad
           #kicadAddons.kikit

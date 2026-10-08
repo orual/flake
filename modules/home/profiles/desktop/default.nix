@@ -27,12 +27,12 @@ in {
         obsidian
         beeper
         beeper-bridge-manager
-        davinci-resolve
         parsec-bin
       ];
       x86Pkgs = if platform.isx86_64 then [
         zoom-us
         spotify
+        davinci-resolve
       ] else [];
     in (
       [
@@ -55,7 +55,7 @@ in {
         chromium
         deluge-gtk
         zulip
-        libreoffice-fresh
+        libreoffice
         zmk-studio
       ]
       ++ unfreePkgs ++ x86Pkgs
