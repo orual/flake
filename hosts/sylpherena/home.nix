@@ -25,6 +25,7 @@
     protonup-qt
     bitwig-studio
     atuin-desktop
+    herdr
   ];
 
   #programs.gdb.dashboard.enable = false;

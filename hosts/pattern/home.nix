@@ -37,6 +37,7 @@
     claude-desktop
     social-cli
     losslesscut-bin
+    herdr
   ];
 
   services = {
