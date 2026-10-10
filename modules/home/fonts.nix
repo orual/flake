@@ -212,6 +212,9 @@ in
   #   # all nerdfonts
   #   nerdfonts = builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.nerd-fonts);
   # in
+  let
+    ioskeley = builtins.filter lib.attrsets.isDerivation (builtins.attrValues pkgs.ioskeley-mono);
+    in
   {
     fonts.fontconfig.enable = true;
 
@@ -222,7 +225,6 @@ in
       (iosevka-bin.override {variant = "Aile";})
       (iosevka-bin.override {variant = "Etoile";})
       (iosevka-bin.override {variant = "SS15";}) # ibm plex mono style
-      ioskeley-mono
       # iosevkaOrual
       # iosevkaOrualTerm
       # iosevkaOrualEtoile
@@ -259,6 +261,6 @@ in
       nerd-fonts.iosevka
       nerd-fonts.iosevka-term
       nerd-fonts.iosevka-term-slab
-    ];
-    #++ nerdfonts;
+    ]
+    ++ ioskeley;
   }
