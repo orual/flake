@@ -312,7 +312,7 @@
     flake-parts.url = "github:hercules-ci/flake-parts";
 
     meridian.url = "github:rynfar/meridian";
-    herdr.url = "github:ogulcancelik/herdr";
+    herdr.url = "github:ogulcancelik/herdr/0.9.3";
 
     # for building Rust packages
     rust-overlay = {
