@@ -14,7 +14,7 @@
           split(rest, words, " ")
           cmd = words[1]
 
-          if (cmd !~ /// && system("test -e "" bin "/" cmd """) == 0)
+          if (index(cmd, "/") == 0 && system("test -e \"" bin "/" cmd "\"") == 0)
             $0 = key profile "/" cmd substr(rest, length(cmd) + 1)
         }
         { print }
