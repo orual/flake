@@ -1,7 +1,7 @@
 # Tranquil PDS profile
 #
 # Configures a Tranquil PDS (AT Protocol Personal Data Server) with NGINX
-# reverse proxy, wildcard ACME TLS via CloudFlare DNS-01, and opnix secrets.
+# reverse proxy, wildcard ACME TLS via CloudFlare DNS-01, and Bitwarden secrets.
 #
 # Uses the upstream nixosModules.tranquil-pds from the Tranquil PDS flake
 # for the systemd service, PostgreSQL, and binary management.

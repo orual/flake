@@ -1,131 +1,146 @@
-#
-# Secrets management via 1Password and opnix (brizzbuzz/opnix).
-#
-# This module configures opnix to pull secrets from 1Password at system
-# activation time.
-#
 {
   config,
   lib,
+  pkgs,
   ...
 }: let
   cfg = config.profiles.secrets;
-  opnixCfg = config.services.onepassword-secrets;
-in {
-  options.profiles.secrets = with lib; {
-    enable = mkEnableOption "1Password secrets management via opnix";
-
-    vault = mkOption {
-      type = types.str;
-      default = "Dev";
-      description = "The 1Password vault to pull secrets from";
+  definitions = {
+    cloudflareApiKey = {
+      key = "Nixos cloudflare acme token";
+      owner = "acme";
+      group = "acme";
+      enable = acmeServices != [];
     };
-
-    tokenFile = mkOption {
-      type = types.path;
-      default = "/etc/opnix-token";
-      description = ''
-        Path to the 1Password service account token file.
-        This file should be root-readable only (mode 0400).
-        Use `sudo opnix token set` to configure.
-      '';
+    homeassistantApiKey = {
+      key = "Home Assistant Prometheus";
+      owner = "prometheus";
+      group = "prometheus";
+      enable = config.services.prometheus.enable && config.profiles.observability.observer.enable;
     };
-
-    # Expose secret paths for other modules to reference
-    paths = {
-      cloudflareApiKey = mkOption {
-        type = types.str;
-        default = opnixCfg.secretPaths.cloudflareApiKey or "/etc/secrets/cloudflare-api-key.key";
-        readOnly = true;
-        description = "Path to the Cloudflare API key secret";
-      };
-      homeassistantApiKey = mkOption {
-        type = types.str;
-        default = opnixCfg.secretPaths.homeassistantApiKey or "/etc/secrets/homeassistant.key";
-        readOnly = true;
-        description = "Path to the Home Assistant API key secret";
-      };
-      unifiApiKey = mkOption {
-        type = types.str;
-        default = opnixCfg.secretPaths.unifiApiKey or "/etc/secrets/unifi-api-key.key";
-        readOnly = true;
-        description = "Path to the Unifi API key secret";
-      };
-      k3sToken = mkOption {
-        type = types.str;
-        default = opnixCfg.secretPaths.k3sToken or "/etc/secrets/k3s-token";
-        readOnly = true;
-        description = "Path to the K3s cluster token secret";
-      };
-      tranquilPdsEnv = mkOption {
-        type = types.str;
-        default = opnixCfg.secretPaths.tranquilPdsEnv or "/etc/secrets/tranquil-pds.env";
-        readOnly = true;
-        description = "Path to the Tranquil PDS environment file (JWT_SECRET, DPOP_SECRET, MASTER_KEY)";
-      };
-      resendApiKey = mkOption {
-        type = types.str;
-        default = opnixCfg.secretPaths.resendApiKey or "/etc/secrets/resend-api-key";
-        readOnly = true;
-        description = "Path to the Resend API key for SMTP relay";
-      };
+    unifiApiKey = {
+      key = "Unifi api key";
+      owner = config.services.prometheus.exporters.unpoller.user;
+      group = config.services.prometheus.exporters.unpoller.group;
+      enable = config.services.prometheus.exporters.unpoller.enable;
+    };
+    k3sToken = {
+      key = "K3s Cluster Token";
+      owner = "root";
+      group = "root";
+      enable = config.profiles.k3s-node.enable && config.profiles.k3s-node.tokenFile == null;
+    };
+    tranquilPdsEnv = {
+      key = "atproto.systems secrets";
+      owner = "tranquil-pds";
+      group = "tranquil-pds";
+      enable = config.profiles.tranquil-pds.enable;
+    };
+    resendApiKey = {
+      key = "Resend API Key";
+      owner = "tranquil-pds";
+      group = "tranquil-pds";
+      enable = config.profiles.tranquil-pds.enable && config.profiles.tranquil-pds.email.fromAddress != null;
     };
   };
+  selected = lib.filterAttrs (_: secret: secret.enable) definitions;
+  manifest = pkgs.writeText "bitwarden-secrets.json" (builtins.toJSON (
+    lib.mapAttrs (name: secret: {
+      inherit (secret) owner group;
+      key = cfg.names.${name};
+    })
+    selected
+  ));
+  cliConfig = (pkgs.formats.toml {}).generate "bws.toml" {
+    profiles.default = {
+      server_base = cfg.serverUrl;
+      state_dir = "/var/lib/bitwarden-secrets";
+    };
+  };
+  acmeServices = lib.mapAttrsToList (name: _: "acme-order-renew-${name}") (
+    lib.filterAttrs (_: cert: cert.environmentFile == cfg.paths.cloudflareApiKey) config.security.acme.certs
+  );
+  consumers =
+    acmeServices
+    ++ lib.optional definitions.homeassistantApiKey.enable "prometheus"
+    ++ lib.optional definitions.unifiApiKey.enable "prometheus-unpoller-exporter"
+    ++ lib.optional definitions.k3sToken.enable "k3s"
+    ++ lib.optional definitions.tranquilPdsEnv.enable "tranquil-pds";
+  dependency = {
+    requires = ["bitwarden-secrets.service"];
+    after = ["bitwarden-secrets.service"];
+  };
+  fetcher = pkgs.writeShellApplication {
+    name = "fetch-bitwarden-secrets";
+    runtimeInputs = [pkgs.python3];
+    text = ''
+      exec python3 ${./secrets/fetch.py} ${manifest} ${cliConfig} ${lib.getExe pkgs.bws} /run/bitwarden-secrets
+    '';
+  };
+in {
+  options.profiles.secrets = with lib; {
+    enable = mkEnableOption "Bitwarden Secrets Manager retrieval";
+    tokenFile = mkOption {
+      type = types.str;
+      default = "/etc/bitwarden/access-token";
+      description = "Absolute path to a locally provisioned, root-only Bitwarden machine access token. Never use a Nix store path.";
+    };
+    serverUrl = mkOption {
+      type = types.str;
+      default = "https://vault.bitwarden.com";
+      description = "Bitwarden server URL; use https://vault.bitwarden.eu for the EU region.";
+    };
+    names = mapAttrs (_: secret:
+      mkOption {
+        type = types.str;
+        default = secret.key;
+        description = "Unique key of this secret in the Bitwarden machine account's accessible projects.";
+      })
+    definitions;
+    paths = mapAttrs (name: _:
+      mkOption {
+        type = types.str;
+        default = "/run/bitwarden-secrets/current/${name}";
+        readOnly = true;
+        description = "Runtime path to the managed ${name} secret.";
+      })
+    definitions;
+  };
 
-  config = lib.mkIf cfg.enable {
-    services.onepassword-secrets = {
-      enable = true;
-      tokenFile = cfg.tokenFile;
-
-      secrets = {
-        # Cloudflare API key for ACME DNS validation
-        cloudflareApiKey = {
-          reference = "op://${cfg.vault}/Nixos cloudflare acme token/credential";
-          owner = "acme";
-          group = "acme";
-          mode = "0400";
-        };
-
-        # Home Assistant API key for Prometheus scraping
-        homeassistantApiKey = {
-          reference = "op://${cfg.vault}/Home Assistant Prometheus/credential";
-          owner = "prometheus";
-          group = "prometheus";
-          mode = "0400";
-        };
-
-        # Unifi API key for observability polling
-        unifiApiKey = {
-          reference = "op://${cfg.vault}/Unifi api key/credential";
-          owner = "root";
-          group = "root";
-          mode = "0400";
-        };
-
-        # K3s cluster join token
-        k3sToken = {
-          reference = "op://${cfg.vault}/K3s Cluster Token/credential";
-          owner = "root";
-          group = "root";
-          mode = "0400";
-        };
-
-        # Tranquil PDS secrets (JWT_SECRET, DPOP_SECRET, MASTER_KEY as env file)
-        tranquilPdsEnv = {
-          reference = "op://${cfg.vault}/atproto.systems secrets/.env";
-          owner = "tranquil-pds";
-          group = "tranquil-pds";
-          mode = "0400";
-        };
-
-        # Resend API key for SMTP relay
-        resendApiKey = {
-          reference = "op://${cfg.vault}/Resend API Key/credential";
-          owner = "root";
-          group = "root";
-          mode = "0400";
+  config = lib.mkIf (cfg.enable && selected != {}) {
+    assertions = [
+      {
+        assertion = lib.hasPrefix "/" cfg.tokenFile && !(lib.hasPrefix "/nix/store/" cfg.tokenFile);
+        message = "profiles.secrets.tokenFile must be an absolute runtime path outside the Nix store.";
+      }
+    ];
+    systemd.services =
+      lib.genAttrs consumers (_: dependency)
+      // {
+        bitwarden-secrets = {
+          description = "Fetch service secrets from Bitwarden Secrets Manager";
+          wants = ["network-online.target"];
+          after = ["network-online.target"];
+          wantedBy = ["multi-user.target"];
+          restartTriggers = [manifest cliConfig];
+          serviceConfig = {
+            Type = "oneshot";
+            RemainAfterExit = true;
+            ExecStart = lib.getExe fetcher;
+            LoadCredential = ["access-token:${cfg.tokenFile}"];
+            RuntimeDirectory = "bitwarden-secrets";
+            RuntimeDirectoryMode = "0755";
+            RuntimeDirectoryPreserve = "yes";
+            StateDirectory = "bitwarden-secrets";
+            StateDirectoryMode = "0700";
+            UMask = "0077";
+            TimeoutStartSec = "120s";
+            ProtectSystem = "strict";
+            ProtectHome = true;
+            PrivateTmp = true;
+            NoNewPrivileges = true;
+          };
         };
       };
-    };
   };
 }

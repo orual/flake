@@ -1,6 +1,6 @@
 # flake
 
-
+See [Bitwarden secrets and SSH keys](SECRETS.md) for secret provisioning and desktop signing setup.
 
 # Package Update Script
 

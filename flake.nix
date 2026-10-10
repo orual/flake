@@ -79,10 +79,11 @@
       }:
         with pkgs;
         with lib; {
+          _module.args.pkgs = import nixpkgs {inherit system config overlays;};
           devShells.default = mkShell {
             buildInputs = [
               deploy-rs.packages.${system}.default
-              inputs.opnix.packages.${system}.default
+              bws
               alejandra
               nix-update
               nodejs
@@ -140,7 +141,6 @@
             inputs.nix-monitored.nixosModules.default
             inputs.niri.nixosModules.niri
             inputs.vscode-server.nixosModules.default
-            inputs.opnix.nixosModules.default
             # inputs.tranquil-pds.nixosModules.default
           ];
         };
@@ -472,12 +472,6 @@
     claude-desktop.url = "github:k3d3/claude-desktop-linux-flake";
     # claude-desktop.inputs.nixpkgs.follows = "nixpkgs";
     # claude-desktop.inputs.flake-utils.follows = "flake-utils";
-
-    # 1Password secrets management
-    opnix = {
-      url = "github:brizzbuzz/opnix";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
 
     # Tranquil PDS (AT Protocol Personal Data Server)
     tranquil-pds = {

@@ -3,7 +3,7 @@
 
   networking.hostName = "sja-anat";
 
-  # 1Password secrets management
+  # Bitwarden secrets management
   profiles.secrets.enable = true;
 
   # Proxmox VM image generation

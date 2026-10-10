@@ -442,7 +442,7 @@ in
             # float auth stuff
             matches = [
               {app-id = "^org.kde.polkit-kde-authentication-agent";}
-              {app-id = "^1Password$";}
+              {app-id = "^bitwarden$";}
               {app-id = "^popup-mcp$";}
             ];
             open-floating = true;

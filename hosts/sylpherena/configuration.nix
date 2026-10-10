@@ -119,8 +119,7 @@ with lib;
     id = [ "26917133" ];
   };
 
-  # disable the Gnome keyring, since we are using 1password to manage secrets
-  # instead.
+  # Bitwarden manages passwords; GNOME Keyring remains available for desktop services.
   # services.gnome.gnome-keyring.enable = mkForce false;
   # security.pam.services.login.enableGnomeKeyring = mkForce false;
 

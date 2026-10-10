@@ -6,4 +6,5 @@ result-*
 .direnv
 .claude
 .deploy-gc
+**/__pycache__/
 docs

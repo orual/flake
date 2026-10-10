@@ -58,10 +58,9 @@ in {
           certs.${acmeDomain} = {
             domain = "${acmeDomain}";
             dnsProvider = "cloudflare";
-            # Use opnix secret path when secrets profile is enabled
             environmentFile =
               if config.profiles.secrets.enable
-              then config.services.onepassword-secrets.secretPaths.cloudflareApiKey
+              then config.profiles.secrets.paths.cloudflareApiKey
               else "/etc/secrets/cloudflare-api-key.key";
             group = config.services.nginx.group;
             # Check Cloudflare DNS directly for propagation instead of local resolver

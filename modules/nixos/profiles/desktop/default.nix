@@ -108,13 +108,6 @@ in {
 
     ### programs ###
     programs = {
-      # Enable 1password and 1password-gui
-      _1password.enable = true;
-      _1password-gui = {
-        enable = true;
-        polkitPolicyOwners = ["orual"];
-      };
-
       firefox.enable = true;
       kdeconnect.enable = true;
 

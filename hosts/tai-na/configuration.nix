@@ -3,14 +3,14 @@
 
   networking.hostName = "tai-na";
 
-  # 1Password secrets management
+  # Bitwarden secrets management
   profiles.secrets.enable = true;
 
   profiles.k3s-node = {
     enable = true;
     role = "server";
     serverAddr = "https://chasmfiend.local:6443";
-    # Token automatically provided by opnix via profiles.secrets
+    # Token provided by profiles.secrets
 
     # Additional TLS SANs for cluster access
     tlsSans = [

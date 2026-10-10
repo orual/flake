@@ -11,7 +11,7 @@
   profiles = let
     rootDomain = "nonbinary.computer";
   in {
-    # 1Password secrets management
+    # Bitwarden secrets management
     secrets.enable = true;
 
     docs.enable = true;
@@ -277,8 +277,7 @@
   #     ];
   #   };
 
-  # disable the Gnome keyring, since we are using 1password to manage secrets
-  # instead.
+  # Bitwarden manages passwords; GNOME Keyring remains available for desktop services.
   # services.gnome.gnome-keyring.enable = lib.mkForce false;
   # security.pam.services.login.enableGnomeKeyring = lib.mkForce false;
 

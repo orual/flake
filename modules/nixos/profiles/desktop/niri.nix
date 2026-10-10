@@ -203,14 +203,6 @@ in
         };
         environment.variables.NIXOS_OZONE_WL = "1";
         environment.variables.ELECTRON_OZONE_PLATFORM_HINT = "auto";
-        environment.etc = {
-          "1password/custom_allowed_browsers" = {
-            text = ''
-              .zen-twilight-wrapped
-            ''; # or just "zen" if you use unwrapped package
-            mode = "0755";
-          };
-        };
 
         programs.nm-applet.enable = lib.mkForce false;
         ### gnome-keyring #########################################################

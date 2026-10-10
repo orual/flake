@@ -34,7 +34,7 @@ in {
       default = null;
       description = ''
         Path to file containing cluster token.
-        When profiles.secrets is enabled, defaults to opnix k3s-token.
+        When profiles.secrets is enabled, defaults to the managed K3s token.
       '';
     };
 
@@ -115,7 +115,7 @@ in {
           tokenFile =
             if cfg.tokenFile != null
             then cfg.tokenFile
-            else config.services.onepassword-secrets.secretPaths.k3sToken;
+            else config.profiles.secrets.paths.k3sToken;
         };
     }
 

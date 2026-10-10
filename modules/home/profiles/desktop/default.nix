@@ -29,11 +29,14 @@ in {
         beeper-bridge-manager
         parsec-bin
       ];
-      x86Pkgs = if platform.isx86_64 then [
-        zoom-us
-        spotify
-        davinci-resolve
-      ] else [];
+      x86Pkgs =
+        if platform.isx86_64
+        then [
+          zoom-us
+          spotify
+          davinci-resolve
+        ]
+        else [];
     in (
       [
         ### images, media, etc ###
@@ -50,15 +53,17 @@ in {
         #plex-desktop
         ghostscriptX
 
-
         ### stuff ###
+        bitwarden-desktop
+        bitwarden-cli
         chromium
         deluge-gtk
         zulip
         libreoffice
         zmk-studio
       ]
-      ++ unfreePkgs ++ x86Pkgs
+      ++ unfreePkgs
+      ++ x86Pkgs
     );
     #############################################################################
     ## Programs                                                                 #
@@ -72,7 +77,7 @@ in {
         configPath = "${config.xdg.configHome}/mozilla/firefox";
       };
       ghostty.enable = true;
-      _1password-gui.enableSshAgent = lib.mkDefault true;
+      bitwarden.enableSshAgent = lib.mkDefault true;
       keychain = {
         enable = true;
         enableXsessionIntegration = true;
@@ -100,16 +105,15 @@ in {
       gpg-agent.enable = true;
     };
 
-    # 1password autostart
-    systemd.user.services."1password" = {
+    systemd.user.services.bitwarden = {
       Unit = {
-        Description = "1Password";
+        Description = "Bitwarden";
         PartOf = ["graphical-session.target"];
         After = ["graphical-session.target"];
       };
       Install.WantedBy = ["graphical-session.target"];
       Service = {
-        ExecStart = "${pkgs._1password-gui}/bin/1password --silent";
+        ExecStart = "${pkgs.bitwarden-desktop}/bin/bitwarden --autostart";
         Restart = "on-failure";
       };
     };

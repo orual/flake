@@ -5,7 +5,7 @@
   ...
 }: let
   cfg = config.profiles.git;
-  enable1PasswordSshAgent = config.programs._1password-gui.enableSshAgent;
+  enableBitwardenSshAgent = config.programs.bitwarden.enableSshAgent;
 in
   with lib; {
     options = {
@@ -187,38 +187,32 @@ in
               };
               # Set the default branch name to `main`.
               init.defaultBranch = "main";
-              # use 1password to manage commit signing if available
-              gpg = {
-                format = lib.mkForce "ssh";
-                # "ssh".program = lib.mkIf enable1PasswordSshAgent
-                #   "${pkgs._1password-gui}/bin/op-ssh-sign";
-              };
+              gpg.format = lib.mkForce "ssh";
               commit.gpgsign = true;
             };
           };
         };
       }
-      (mkIf enable1PasswordSshAgent (
+      (
         let
           signingScript = with pkgs;
             writeShellApplication {
               name = "ssh-sign";
-              runtimeInputs = [_1password-gui];
-              # If we're not in a SSH session, use `op-ssh-sign` to sign commits.
-              # Otherwise, use `ssh-keygen` to sign commits with a forwarded key
-              # in `SSH_AUTH_SOCK`.
-              text = ''
-                if [ -z "''${SSH_CONNECTION-}" ]; then
-                  exec "op-ssh-sign" "$@"
-                else
+              runtimeInputs = [openssh];
+              text =
+                optionalString enableBitwardenSshAgent ''
+                  if [ -z "''${SSH_CONNECTION-}" ] && [ -z "''${SSH_CLIENT-}" ]; then
+                    export SSH_AUTH_SOCK=${escapeShellArg "${config.home.homeDirectory}/.bitwarden-ssh-agent.sock"}
+                  fi
+                ''
+                + ''
                   exec ssh-keygen "$@"
-                fi
-              '';
+                '';
             };
         in {
           home.packages = [signingScript];
           programs.git.settings."gpg \"ssh\"".program = "ssh-sign";
         }
-      ))
+      )
     ]);
   }
