@@ -43,7 +43,7 @@ in {
           popup-mcp
           orca-ade
           codex
-          herdr
+
 
           python314Packages.huggingface-hub
           git-xet
