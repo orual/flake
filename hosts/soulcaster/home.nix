@@ -71,7 +71,9 @@ in {
 
   programs.home-manager.enable = true; # standalone installs need this to get the home-manager cli
 
-
+  programs.bash.shellAliases = {
+    hm-switch = "home-manager switch --flake /home/steamos/flake#orual@soulcaster -b backup && steamos-etc";
+  };
 
 
 
@@ -110,4 +112,6 @@ in {
 
     Install.WantedBy = [ "multi-user.target" ];
   };
+
+  systemd.user.sessionVariables.PATH = "${config.home.profileDirectory}/bin:/nix/var/nix/profiles/default/bin${PATH:+:$PATH}";
 }

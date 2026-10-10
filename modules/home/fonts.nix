@@ -222,7 +222,8 @@ in
       (iosevka-bin.override {variant = "Aile";})
       (iosevka-bin.override {variant = "Etoile";})
       (iosevka-bin.override {variant = "SS15";}) # ibm plex mono style
-      iosevkaOrual
+      ioskeley-mono
+      # iosevkaOrual
       # iosevkaOrualTerm
       # iosevkaOrualEtoile
 
