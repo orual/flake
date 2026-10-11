@@ -26,7 +26,7 @@ sudo install -d -m 0700 /etc/bitwarden
 sudo bash -c 'umask 077; read -r -s -p "Bitwarden access token: " token; printf "\n"; printf "%s" "$token" > /etc/bitwarden/access-token'
 ```
 
-This keeps the token out of command arguments and shell history. Override `profiles.secrets.tokenFile` with another absolute runtime path if needed. EU accounts must set `profiles.secrets.serverUrl = "https://vault.bitwarden.eu";`.
+This keeps the token out of command arguments and shell history. Override `profiles.secrets.tokenFile` with another absolute runtime path if needed. US accounts must set `profiles.secrets.serverUrl = "https://vault.bitwarden.com";`.
 
 ## Retrieval and rotation
 

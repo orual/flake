@@ -20,7 +20,7 @@
       #gnome3.enable = true;
       niri.enable = true;
       #niri.cosmicOnNiri = true;
-      cosmic.enable = true;
+      #cosmic.enable = true;
     };
     observability = {
       enable = true;
@@ -173,6 +173,7 @@
     in {
       eno1 = {inherit wakeOnLan useDHCP;};
       wlp12s0 = {inherit useDHCP;};
+
     };
   };
 

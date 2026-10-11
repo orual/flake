@@ -554,6 +554,12 @@ in
             };
           }
           {
+            matches = [{app-id = "steam"; title=''^notificationtoasts_\d+_desktop$'';}];
+            default-floating-position = {
+              x=10; y=10; relative-to="bottom-right";
+            };
+          }
+          {
             matches = [{app-id = "^niri$";}];
             opacity = 1.0;
           }

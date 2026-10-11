@@ -50,15 +50,15 @@ in {
         xwayland-run
         libXcursor
         hidapi
-            libXi
-            libXinerama
-            libXScrnSaver
-            libpng
-            libpulseaudio
-            libvorbis
-            stdenv.cc.cc.lib # Provides libstdc++.so.6
-            libkrb5
-            keyutils
+        libXi
+        libXinerama
+        libXScrnSaver
+        libpng
+        libpulseaudio
+        libvorbis
+        stdenv.cc.cc.lib # Provides libstdc++.so.6
+        libkrb5
+        keyutils
       ];
       extraCompatPackages = with pkgs; [
         proton-ge-bin
@@ -66,7 +66,10 @@ in {
       extest.enable = true;
       # fix steam input mouse cursor stuff
       package = pkgs.steam.override {
-          # extraProfile = ''export LD_PRELOAD=${pkgs.extest}/lib/libextest.so:$LD_PRELOAD'';
+          extraProfile = ''
+            export LD_PRELOAD=${pkgs.extest}/lib/libextest.so:$LD_PRELOAD
+            export PRESSURE_VESSEL_IMPORT_OPENXR_1_RUNTIMES=1
+          '';
           extraArgs = ''-pipewire -xcb'';
       };
     };
@@ -83,7 +86,7 @@ in {
     ];
 
     boot.extraModprobeConfig = ''
-      options cfg80211 ieee80211_regdom=CA
+      options cfg80211 ieee80211_regdom=US
     '';
 
   };

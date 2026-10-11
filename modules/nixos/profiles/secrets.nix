@@ -87,8 +87,8 @@ in {
     };
     serverUrl = mkOption {
       type = types.str;
-      default = "https://vault.bitwarden.com";
-      description = "Bitwarden server URL; use https://vault.bitwarden.eu for the EU region.";
+      default = "https://vault.bitwarden.eu";
+      description = "Bitwarden server URL; use https://vault.bitwarden.com for the US region.";
     };
     names = mapAttrs (_: secret:
       mkOption {
