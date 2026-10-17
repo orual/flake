@@ -83,24 +83,43 @@ in
             cosmic-greeter.enable = mkDefault true;
           };
         };
-        xdg = {
-          portal = {
+        xdg.portal = {
+          enable = true;
+          xdgOpenUsePortal = true;
+
+          wlr = {
             enable = true;
-            xdgOpenUsePortal = true;
-            extraPortals = with pkgs; [
-              xdg-desktop-portal-gnome
-              xdg-desktop-portal-gtk
-            ];
+            settings = {
+              screencast = {
+                #max_fps = 60;
+                #force_mod_linear = true;
+              };
+            };
+          };
+
+          extraPortals = with pkgs; [
+            xdg-desktop-portal-wlr
+            xdg-desktop-portal-gtk
+            xdg-desktop-portal-gnome
+          ];
+
+          config = {
+            niri = {
+              default = lib.mkForce [ "gnome" ];
+              "org.freedesktop.impl.portal.ScreenCast" = lib.mkForce [ "gnome" ];
+              "org.freedesktop.impl.portal.Screenshot" = lib.mkForce [ "gnome" ];
+              "org.freedesktop.impl.portal.FileChooser" = lib.mkForce [ "gtk" ];
+            };
           };
         };
+
 
         environment.systemPackages = with pkgs; [
           xwayland-run
           sodi-x-run
           xwlsat-run
           libnotify
-          xwayland-satellite
-          cage
+          xwayland-satellite-stable
           wl-clipboard
           wayland-utils
           libsecret

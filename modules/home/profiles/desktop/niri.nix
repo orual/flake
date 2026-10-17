@@ -105,6 +105,10 @@ in
             }
           ];
 
+        includes = lib.mkAfter [
+          (./noctalia.kdl)
+        ];
+
         layout = {
           gaps = 12;
           struts.left = 64;
@@ -207,7 +211,10 @@ in
         };
         input.touch.map-to-output = "eDP-1";
         xwayland-satellite.enable = true;
-        xwayland-satellite.path = "${pkgs.xwayland-satellite}/bin/xwayland-satellite";
+        xwayland-satellite.path = lib.getExe pkgs.xwayland-satellite-stable;
+
+
+
         #hotkey-overlay.skip-at-startup = !nixosConfig.is-virtual-machine;
         #clipboard.disable-primary = true;
 
@@ -263,6 +270,8 @@ in
 
               "${Mod}+L".action = spawn "blurred-locker";
               "${Mod}+B".action = toggle-overview;
+              "${Mod}+G".action = spawn-sh "voxtype record toggle";
+              "${Mod}+Shift+G".action = spawn-sh "voxtype record cancel";
               "${Mod}+Shift+S".action.screenshot = [];
               "Print".action.screenshot-screen = [];
               "${Mod}+Print".action.screenshot-window = [];
@@ -360,7 +369,7 @@ in
               "${Mod}+R".action = switch-preset-column-width;
               "${Mod}+F".action = maximize-column;
               "${Mod}+Shift+F".action = fullscreen-window;
-              "${Mod}+G".action = center-column;
+              #"${Mod}+G".action = center-column;
 
               "${Mod}+Minus".action.set-column-width = "-10%";
               "${Mod}+Plus".action.set-column-width = "+10%";
@@ -377,6 +386,11 @@ in
             (lib.optionalAttrs cfg.cosmicOnNiri {
               "${Mod}+Shift+D".action = spawn "cosmic-app-library";
               "${Mod}+Alt+L".action = spawn "cosmic-greeter";
+            })
+
+            (lib.optionalAttrs cfg.noctaliaShell {
+              "${Mod}+Space".action = spawn-sh "noctalia msg panel-toggle launcher";
+              "Alt+Tab".action = spawn-sh "noctalia msg window-switcher hold";
             })
           ];
 
@@ -433,6 +447,7 @@ in
               bottom-right = r;
             };
             clip-to-geometry = true;
+
           }
           {
             matches = [{is-focused = false;}];
@@ -503,6 +518,35 @@ in
               x = 0;
               y = 0;
             };
+          }
+          {
+            matches = [
+              {
+                app-id = "org.kde.kdeconnect.daemon";
+              }
+            ];
+            opacity = 1.0;
+            default-window-height = {
+              proportion = 1.0;
+            };
+            open-floating = true;
+            open-fullscreen = false;
+            tiled-state = true;
+            default-column-width = {
+              proportion = 1.0;
+            };
+            default-floating-position = {
+              relative-to = "top-left";
+              x = 0;
+              y = 0;
+            };
+            draw-border-with-background = false;
+            focus-ring.enable = false;
+            shadow.enable = false;
+            border.enable = false;
+            # background-effect = {
+            #   blur = false;
+            # };
           }
           {
             matches = [

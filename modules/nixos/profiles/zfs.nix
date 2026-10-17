@@ -41,7 +41,18 @@ in
           zfs.devNodes = "/dev/disk/by-id";
           zfs.extraPools = ["ssd-pool"];
           zfs.forceImportRoot = false;
-          extraModulePackages = [latestZfsKernel.v4l2loopback];
+          extraModulePackages = let
+              v4l2loopback-workaround = pkgs.runCommand "v4l2loopback-workaround" { } ''
+                subdir=lib/modules/${config.boot.kernelPackages.kernel.version}
+                mkdir -p $out/$subdir
+                cd ${config.boot.kernelPackages.v4l2loopback}
+                for f in *; do
+                  if [[ $f =~ ^modules ]]; then continue; fi
+                  cp -r $f $out/$subdir/$f
+                done
+              '';
+            in
+            [ v4l2loopback-workaround ];
         };
 
         # ZFS configuration

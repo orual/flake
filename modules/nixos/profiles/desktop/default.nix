@@ -36,8 +36,21 @@ in {
       pulse.enable = true;
       wireplumber.enable = true;
       socketActivation = true;
+      raopOpenFirewall = true;
       extraConfig = {
         pipewire = {
+          "10-airplay" = {
+                "context.modules" = [
+                  {
+                    name = "libpipewire-module-raop-discover";
+
+                    # increase the buffer size if you get dropouts/glitches
+                    # args = {
+                    #   "raop.latency.ms" = 500;
+                    # };
+                  }
+                ];
+              };
           "10-clock-rate" = {
             "context.properties" = {
               "default.clock.rate" = 96000;

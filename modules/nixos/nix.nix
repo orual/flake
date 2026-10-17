@@ -47,7 +47,7 @@ with lib; {
             system = {
               keep-booted-system = true;
               keep-current-system = true;
-              keep-latest-n = 10;
+              keep-latest-n = 4;
               keep-since = "14d";
               profile-paths = [
                 "/nix/var/nix/profiles/system"

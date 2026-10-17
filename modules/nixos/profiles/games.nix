@@ -70,7 +70,7 @@ in {
             export LD_PRELOAD=${pkgs.extest}/lib/libextest.so:$LD_PRELOAD
             export PRESSURE_VESSEL_IMPORT_OPENXR_1_RUNTIMES=1
           '';
-          extraArgs = ''-pipewire -xcb'';
+          extraArgs = ''-pipewire'';
       };
     };
 

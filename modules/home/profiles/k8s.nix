@@ -29,7 +29,7 @@ in {
 
     programs.zsh = {
       shellAliases = {k = "kubectl";};
-      initExtra = ''
+      initContent = ''
         # Import all docker images matching a glob into k3d.
         function k3d-import-all() {
             docker images "$1" --format "{{.Repository}}:{{.Tag}}" | xargs k3d image import

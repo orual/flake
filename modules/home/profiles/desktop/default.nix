@@ -3,6 +3,7 @@
   config,
   lib,
   pkgs,
+  inputs,
   ...
 }: let
   cfg = config.profiles.desktop;
@@ -96,6 +97,19 @@ in {
           obs-aitum-multistream
         ];
       };
+
+        voxtype = {
+          enable = true;
+          #engine = "parakeet";
+          package = inputs.voxtype.packages.${platform.system}.vulkan;
+          model.name = "base.en";
+          #model.path = "${config.home.homeDirectory}.local/share/voxtype/models/parakeet-tdt-0.6b-v3";
+          service.enable = true;
+          settings = {
+            hotkey.enabled = false;
+            whisper.language = "en";
+          };
+        };
     };
 
     #############################################################################

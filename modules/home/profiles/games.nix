@@ -31,26 +31,26 @@ in {
           }
       }
       '';
-    xdg.configFile."openvr/openvrpaths.vrpath".text = let
-        steam = "${config.xdg.dataHome}/Steam";
-      in builtins.toJSON {
-        version = 1;
-        jsonid = "vrpathreg";
+    # xdg.configFile."openvr/openvrpaths.vrpath".text = let
+    #     steam = "${config.xdg.dataHome}/Steam";
+    #   in builtins.toJSON {
+    #     version = 1;
+    #     jsonid = "vrpathreg";
 
-        external_drivers = null;
-        config = [ "${steam}/config" ];
+    #     external_drivers = null;
+    #     config = [ "${steam}/config" ];
 
-        log = [ "${steam}/logs" ];
+    #     log = [ "${steam}/logs" ];
 
-        runtime = [
-          "${config.home.homeDirectory}/.local/share/Steam/steamapps/common/SteamVR/bin/linux64/vrccompositor-launcher.sh"
-          #"${pkgs.xrizer}/lib/xrizer"
-          # OR
-          #"${pkgs.opencomposite}/lib/opencomposite"
-          # OR (using nixpkgs-xr)
-          # "${pkgs.vapor}/lib/VapoR"
-        ];
-      };
+    #     runtime = [
+    #       "${config.home.homeDirectory}/.local/share/Steam/steamapps/common/SteamVR/bin/linux64/vrccompositor-launcher.sh"
+    #       #"${pkgs.xrizer}/lib/xrizer"
+    #       # OR
+    #       #"${pkgs.opencomposite}/lib/opencomposite"
+    #       # OR (using nixpkgs-xr)
+    #       # "${pkgs.vapor}/lib/VapoR"
+    #     ];
+    #   };
   };
 
 

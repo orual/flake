@@ -31,7 +31,7 @@
     droidcam
 
     systemctl-tui
-    vmware-workstation
+    #vmware-workstation
     remmina
     atuin-desktop
     claude-desktop

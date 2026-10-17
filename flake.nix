@@ -52,19 +52,15 @@
       # TODO(orual): similar to the above, would be good to add only for desktop configs
       inputs.niri.overlays.niri
       # Temporary compatibility for niri until its nixpkgs dependency is updated.
-      (_: prev: {
-        libdisplay-info_0_2 = inputs.niri.inputs.nixpkgs.legacyPackages.${prev.stdenv.hostPlatform.system}.libdisplay-info_0_2;
-      })
-      (_: prev: {quickshell = inputs.quickshell.packages.${prev.stdenv.hostPlatform.system}.default;})
+      # (_: prev: {
+      #   libdisplay-info_0_2 = inputs.niri.inputs.nixpkgs.legacyPackages.${prev.stdenv.hostPlatform.system}.libdisplay-info_0_2;
+      # })
       # (_: prev: {zed-editor = prev.zed-prerelease;})
-      # add astal package
-      #inputs.astal-shell.overlays.default
       #
       # Fix this when unstable gets updated with this patch
       (_: prev: {
         azure-cli = inputs.nixpkgs-stable.legacyPackages.${prev.stdenv.hostPlatform.system}.azure-cli;
       })
-      (_: prev: {opencode = inputs.opencode.packages.${prev.stdenv.hostPlatform.system}.default;})
       (_: prev: {popup-mcp = inputs.popup-mcp.packages.${prev.stdenv.hostPlatform.system}.default;})
       (_: prev: {orca-ade = inputs.orca.packages.${prev.stdenv.hostPlatform.system}.default;})
     ];
@@ -141,6 +137,7 @@
             inputs.nix-monitored.nixosModules.default
             inputs.niri.nixosModules.niri
             inputs.vscode-server.nixosModules.default
+            inputs.voxtype.nixosModules.default
             # inputs.tranquil-pds.nixosModules.default
           ];
         };
@@ -189,7 +186,6 @@
           baseModules = [
             self.homeModules.default
             inputs.zed-extensions.homeManagerModules.default
-            inputs.zen-browser.homeModules.twilight
             inputs.niri.homeModules.niri
             inputs.stylix.homeModules.stylix
             inputs.noctalia.homeModules.default
@@ -197,6 +193,7 @@
             inputs.codex-desktop.homeManagerModules.default
             inputs.steamos-etc.homeManagerModules.default
             inputs.frametop.homeManagerModules.default
+            inputs.voxtype.homeManagerModules.default
           ];
         };
 
@@ -321,12 +318,6 @@
         nixpkgs.follows = "nixpkgs";
       };
     };
-    opencode = {
-      url = "github:sst/opencode";
-      inputs = {
-        nixpkgs.follows = "nixpkgs";
-      };
-    };
 
     # deploy-rs: for remote deployments
     deploy-rs = {
@@ -429,7 +420,7 @@
 
     nix-monitored.url = "github:ners/nix-monitored";
 
-    niri.url = "github:sodiboo/niri-flake";
+    niri.url = "github:epireyn/niri-flake/very-refactor";
     nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
 
     stylix = {
@@ -437,24 +428,9 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    quickshell = {
-      # add ?ref=<tag> to track a tag
-      url = "git+https://git.outfoxxed.me/outfoxxed/quickshell";
-
-      # THIS IS IMPORTANT
-      # Mismatched system dependencies will lead to crashes and other issues.
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
     vscode-server = {
       url = "github:nix-community/nixos-vscode-server";
       inputs.flake-parts.follows = "flake-parts";
-    };
-
-    zen-browser = {
-      url = "github:0xc000022070/zen-browser-flake";
-      # IMPORTANT: we're using "libgbm" and is only available in unstable so ensure
-      # to have it up-to-date or simply don't specify the nixpkgs input
-      inputs.nixpkgs.follows = "nixpkgs";
     };
 
     zed-editor-flake = {
@@ -499,5 +475,15 @@
       url = "github:orual/frametop-nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    voxtype = {
+      url = "github:peteonrails/voxtype";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    # albedo = {
+    #   url = "git+https://tangled.org/okami.mom/albedo";
+    #   inputs.nixpkgs.follows = "nixpkgs";
+    # };
   };
 }
