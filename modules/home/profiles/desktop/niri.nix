@@ -73,7 +73,7 @@ in
     };
 
     config = mkIf cfg.enable {
-      programs.niri.package = pkgs.niri-unstable;
+      programs.niri.package = pkgs.niri;
       gtk = {
         enable = true;
         iconTheme = {
@@ -270,7 +270,6 @@ in
 
               "${Mod}+L".action = spawn "blurred-locker";
               "${Mod}+B".action = toggle-overview;
-              "${Mod}+G".action = spawn-sh "voxtype record toggle";
               "${Mod}+Shift+G".action = spawn-sh "voxtype record cancel";
               "${Mod}+Shift+S".action.screenshot = [];
               "Print".action.screenshot-screen = [];
@@ -379,6 +378,7 @@ in
               "${Mod}+Shift+Escape".action = toggle-keyboard-shortcuts-inhibit;
               "${Mod}+Shift+E".action = quit;
               "${Mod}+Shift+P".action = power-off-monitors;
+              # deeply amusing to do this one when your monitor is your KVM
 
               "${Mod}+Shift+Ctrl+T".action = toggle-debug-tint;
             }
@@ -652,10 +652,6 @@ in
 
             place-within-backdrop = true;
           }
-          # {
-          #   matches = [{namespace = "wallpaper$";}];
-          #   place-within-backdrop = true;
-          # }
         ];
       };
       home.packages = with pkgs; [
@@ -665,18 +661,6 @@ in
         brightnessctl
       ];
 
-      # programs.zen-browser = {
-      #   enable = true;
-      #   policies = {
-      #     DisableAppUpdate = true;
-      #     DisableTelemetry = true;
-      #     # find more options here: https://mozilla.github.io/policy-templates/
-      #   };
-      #   nativeMessagingHosts = [
-      #     pkgs.tridactyl-native
-      #     pkgs.firefoxpwa
-      #   ];
-      # };
       programs.fuzzel = {
         enable = true;
         settings = {

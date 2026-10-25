@@ -155,6 +155,7 @@
       "render"
       "networkmanager"
       "uinput"
+      "input"
     ];
     shell = pkgs.fish;
     openssh.authorizedKeys.keys = [

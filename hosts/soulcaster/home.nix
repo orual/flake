@@ -1,9 +1,13 @@
-{pkgs, config, ...}: let
+{
+  pkgs,
+  config,
+  ...
+}: let
   profileBin = "${config.home.profileDirectory}/bin";
 
   # The profile's desktop entries with Exec/TryExec pointing at the profile's bin.
   # The profile link rather than a store path, so entries don't change every generation.
-  entries = pkgs.runCommand "frame-desktop-entries" { } ''
+  entries = pkgs.runCommand "frame-desktop-entries" {} ''
     mkdir -p $out
 
     for src in ${config.home.path}/share/applications/*.desktop; do
@@ -23,6 +27,10 @@
   '';
 in {
   profiles = {
+    voxtype = {
+      enable = true;
+      meetings.model = "parakeet-tdt";
+    };
     desktop = {
       enable = true;
       niri.enable = true;
@@ -51,7 +59,6 @@ in {
   home.username = "steamos";
   home.homeDirectory = "/home/steamos";
 
-
   services = {
     gpg-agent = {
       enable = true;
@@ -67,15 +74,13 @@ in {
     gpuDrivers = true;
   };
 
-  targets.genericLinux.enable = true;  # enables some options to make home manager work better on non-nixos setups
+  targets.genericLinux.enable = true; # enables some options to make home manager work better on non-nixos setups
 
   programs.home-manager.enable = true; # standalone installs need this to get the home-manager cli
 
   programs.bash.shellAliases = {
     hm-switch = "home-manager switch --flake /home/steamos/flake#orual@soulcaster -b backup && steamos-etc";
   };
-
-
 
   # Linked file by file (recursive) so Steam's own shortcuts in there stay.
   xdg.dataFile."applications" = {
@@ -87,7 +92,7 @@ in {
     Unit = {
       Description = "Tailscale node agent";
       Documentation = "https://tailscale.com/docs/";
-      Wants = [ "network-pre.target" ];
+      Wants = ["network-pre.target"];
       After = [
         "network-pre.target"
         "NetworkManager.service"
@@ -110,7 +115,7 @@ in {
       CacheDirectoryMode = "0750";
     };
 
-    Install.WantedBy = [ "multi-user.target" ];
+    Install.WantedBy = ["multi-user.target"];
   };
 
   systemd.user.sessionVariables.PATH = "${config.home.profileDirectory}/bin:/nix/var/nix/profiles/default/bin${PATH:+:$PATH}";

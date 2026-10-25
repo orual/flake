@@ -51,6 +51,7 @@
       # add niri overlay
       # TODO(orual): similar to the above, would be good to add only for desktop configs
       inputs.niri.overlays.niri
+      inputs.niri-pkg.overlays.default
       # Temporary compatibility for niri until its nixpkgs dependency is updated.
       # (_: prev: {
       #   libdisplay-info_0_2 = inputs.niri.inputs.nixpkgs.legacyPackages.${prev.stdenv.hostPlatform.system}.libdisplay-info_0_2;
@@ -420,6 +421,7 @@
 
     nix-monitored.url = "github:ners/nix-monitored";
 
+    niri-pkg.url = "github:niri-wm/niri";
     niri.url = "github:epireyn/niri-flake/very-refactor";
     nixpkgs-wayland.url = "github:nix-community/nixpkgs-wayland";
 

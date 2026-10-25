@@ -3,7 +3,6 @@
   config,
   lib,
   pkgs,
-  inputs,
   ...
 }: let
   cfg = config.profiles.desktop;
@@ -20,6 +19,8 @@ in {
   };
 
   config = lib.mkIf cfg.enable {
+    profiles.voxtype.enable = lib.mkDefault true;
+
     home.packages = with pkgs; let
       unfreePkgs = [
         #slack
@@ -62,6 +63,7 @@ in {
         zulip
         libreoffice
         zmk-studio
+        dotool
       ]
       ++ unfreePkgs
       ++ x86Pkgs
@@ -97,19 +99,6 @@ in {
           obs-aitum-multistream
         ];
       };
-
-        voxtype = {
-          enable = true;
-          #engine = "parakeet";
-          package = inputs.voxtype.packages.${platform.system}.vulkan;
-          model.name = "base.en";
-          #model.path = "${config.home.homeDirectory}.local/share/voxtype/models/parakeet-tdt-0.6b-v3";
-          service.enable = true;
-          settings = {
-            hotkey.enabled = false;
-            whisper.language = "en";
-          };
-        };
     };
 
     #############################################################################
@@ -128,6 +117,19 @@ in {
       Install.WantedBy = ["graphical-session.target"];
       Service = {
         ExecStart = "${pkgs.bitwarden-desktop}/bin/bitwarden --autostart";
+        Restart = "on-failure";
+      };
+    };
+
+    systemd.user.services.dotoold = {
+      Unit = {
+        Description = "dotool daemon";
+        After = ["default.target"];
+      };
+      Install.WantedBy = ["default.target"];
+      Service = {
+        Environment = "DOTOOL_XKB_LAYOUT=us";
+        ExecStart = "${pkgs.dotool}/bin/dotoold";
         Restart = "on-failure";
       };
     };

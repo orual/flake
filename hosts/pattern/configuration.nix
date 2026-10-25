@@ -179,8 +179,6 @@
 
   environment.systemPackages = with pkgs; [
     #vllm
-    openai-whisper
-    whisper-cpp-vulkan
     ffmpeg
     cloudflared
     llama-cpp-vulkan

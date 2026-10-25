@@ -10,5 +10,6 @@
     ./opstools.nix
     ./waybar.nix
     ./noctalia.nix
+    ./voxtype
   ];
 }

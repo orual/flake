@@ -1,6 +1,14 @@
 {pkgs, ...}: {
   profiles = {
     games.enable = true;
+    voxtype = {
+      enable = true;
+      amdAcceleration = true;
+      meetings = {
+        model = "cohere";
+        diarization = "ml";
+      };
+    };
     desktop = {
       enable = true;
       #gnome3.enable = true;
@@ -38,6 +46,7 @@
     social-cli
     losslesscut-bin
     herdr
+    alsa-scarlett-gui
   ];
 
   services = {
